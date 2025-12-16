@@ -39,7 +39,6 @@ export default function SettingsPage() {
         materialPickerOptions: [],
         defaultMass: 1000,
         seenSearchTips: false,
-        seenDialogs: [],
         additionalFilamentModifier: 0,
     });
 
