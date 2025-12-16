@@ -8,7 +8,6 @@ import Subtext from "@/components/Subtext";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { randomFrom, randomInt } from "./random";
-import { setUserSeenDialog } from "./db/settings";
 import { endpoints, lastPrivacyPolicyUpdate } from "./constants";
 import { ExternalLink } from "lucide-react";
 
@@ -91,7 +90,7 @@ export const dialogs: Record<string, Dialog> = {
                     <a href="https://github.com/sponsors/MrDiamondDog" target="_blank"><Button className="text-xs">Support</Button></a>
                     <Button
                         onClick={() => {
-                            setUserSeenDialog("support");
+                            setSeenDialog("support");
                             closeToast?.();
                         }}
                         className="text-xs"

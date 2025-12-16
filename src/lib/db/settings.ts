@@ -110,30 +110,3 @@ export async function deleteUser(): Promise<ApiRes<null>> {
 
     return { data: null };
 }
-
-/**
- * Quick method to set if a user has seen a dialog.
- * @param id The ID of the dialog.
- * @returns Nothing if successful.
- */
-export async function setUserSeenDialog(id: string): Promise<ApiRes<null>> {
-    const session = await apiAuth();
-
-    if (!session)
-        return ApiError("NotAuthenticated");
-
-    const userSettings = await getUserSettings();
-
-    if (userSettings.error)
-        return { error: userSettings.error };
-
-    if ((userSettings.data?.seenDialogs ?? []).includes(id))
-        return { data: null };
-
-    await db.update(userSettingsTable).set({
-        seenDialogs: [...(userSettings.data.seenDialogs ?? []), id],
-    })
-        .where(eq(userSettingsTable.userId, session.user.id!));
-
-    return { data: null };
-}
