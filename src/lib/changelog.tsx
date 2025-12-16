@@ -8,6 +8,7 @@ export const changelog = [
             <li>Fixed adding material picker options and increased material name max length</li>
             <li>Fixed issues with bulk adding filament in boxes</li>
             <li>Fixed filament count in boxes when deleting filament (will not apply retroactively)</li>
+            <li>Reworked how random toasts work</li>
         </ul>,
     },
     {

@@ -3,28 +3,40 @@
 import Button, { ButtonStyles } from "@/components/Button";
 import Divider from "@/components/Divider";
 import Input from "@/components/Input";
-import Modal, { ModalProps } from "@/components/Modal";
+import Modal, { ModalFooter, ModalProps } from "@/components/Modal";
 import Subtext from "@/components/Subtext";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { randomFrom, randomInt } from "./random";
-import { getUserSettings, setUserSeenDialog } from "./db/settings";
+import { setUserSeenDialog } from "./db/settings";
 import { endpoints, lastPrivacyPolicyUpdate } from "./constants";
+import { ExternalLink } from "lucide-react";
 
 type Dialog = {
-    toast: (openModal?: () => void, closeToast?: () => void) => number | string,
+    toast?: (openModal?: () => void, closeToast?: () => void) => number | string,
     modal?: (props: ModalProps) => React.ReactNode
 }
 
+function getSeenDialogs(): string[] {
+    return JSON.parse(localStorage.getItem("dialogs") || "[]");
+}
+
+function setSeenDialog(dialog: string) {
+    if (getSeenDialogs().includes(dialog))
+        return;
+
+    localStorage.setItem("dialogs", JSON.stringify([...getSeenDialogs(), dialog]));
+}
+
 export const dialogs: Record<string, Dialog> = {
-    feedback2: {
+    feedback: {
         toast: (openModal, closeToast) => toast.info("Feedback", {
             description: <div className="flex flex-col gap-2">
                 <p>Something bothering you about Filatrack, or want something changed? Help us out!</p>
                 <div className="flex flex-row gap-2">
                     <Button onClick={openModal} className="text-xs">Give Feedback</Button>
                     <Button onClick={() => {
-                        setUserSeenDialog("feedback");
+                        setSeenDialog("feedback");
                         closeToast?.();
                     }} className="text-xs" look={ButtonStyles.secondary}>
                         Don't Show Again
@@ -76,7 +88,7 @@ export const dialogs: Record<string, Dialog> = {
                     donations. If you would like to help Filatrack keep running, please consider supporting the project!
                 </p>
                 <div className="flex flex-row gap-2">
-                    <a href="https://mrdiamond.is-a.dev/support" target="_blank"><Button className="text-xs">Support</Button></a>
+                    <a href="https://github.com/sponsors/MrDiamondDog" target="_blank"><Button className="text-xs">Support</Button></a>
                     <Button
                         onClick={() => {
                             setUserSeenDialog("support");
@@ -92,7 +104,45 @@ export const dialogs: Record<string, Dialog> = {
             duration: 99999,
         }),
     },
-    discord2: {
+    supportModal: {
+        modal: props => <Modal {...props} title="Help Keep Filatrack Running">
+            <Subtext>We need your help.</Subtext>
+
+            <Divider />
+
+            <p>
+                Hosting Filatrack isn't free— the domain, hosting services, and database all contribute
+                to the costs required to run Filatrack.
+            </p>
+
+            <Divider />
+
+            <p>
+                Please consider donating either through GitHub sponsors or Buy Me a Coffee. Anything helps, and
+                you are not required to donate.
+            </p>
+
+            <Subtext>
+                P.S.: Some donations have benefits!
+            </Subtext>
+
+            <Divider />
+
+            <div className="w-full flex gap-2 justify-center">
+                <a href="https://github.com/sponsors/MrDiamondDog" target="_blank">
+                    <Button>GitHub Sponsors <ExternalLink /></Button>
+                </a>
+                <a href="https://buymeacoffee.com/zoy33nftqp" target="_blank">
+                    <Button>Buy Me a Coffee <ExternalLink /></Button>
+                </a>
+            </div>
+
+            <ModalFooter>
+                <Button onClick={props.onClose}>Close</Button>
+            </ModalFooter>
+        </Modal>,
+    },
+    discord: {
         toast: (_, closeToast) => toast.info("Discord", {
             description: <div className="flex flex-col gap-2">
                 <p>
@@ -102,7 +152,7 @@ export const dialogs: Record<string, Dialog> = {
                     <a href={endpoints.discord} target="_blank"><Button className="text-xs">Join</Button></a>
                     <Button
                         onClick={() => {
-                            setUserSeenDialog("discord");
+                            setSeenDialog("discord");
                             closeToast?.();
                         }}
                         className="text-xs"
@@ -143,52 +193,52 @@ const privacyPolicyUpdateDialog: Dialog = {
 export function RandomDialogs() {
     const dialogIds = Object.keys(dialogs);
 
-    const [selectedDialog, setSelectedDialog] = useState(randomFrom(dialogIds));
+    const [selectedDialog, setSelectedDialog] = useState(randomFrom(dialogIds.filter(id => !getSeenDialogs().includes(id))));
     const [modalOpen, setModalOpen] = useState(false);
     const [toastId, setToastId] = useState<number | string>();
 
     useEffect(() => {
         (async() => {
-            const res = await getUserSettings();
+            await new Promise(resolve => setTimeout(resolve, 3000));
 
-            if (res.error || !res.data)
-                return;
-
-            const userSettings = res.data;
-
-            const lastSeenPrivacyPolicy = userSettings.seenDialogs?.find(d => d.startsWith("privacy-policy:"));
+            const lastSeenPrivacyPolicy = getSeenDialogs().find(d => d.startsWith("privacy-policy:"));
 
             if (!lastSeenPrivacyPolicy) {
-                setToastId(privacyPolicyUpdateDialog.toast(undefined, () => toast.dismiss(toastId)));
-                setUserSeenDialog(`privacy-policy:${new Date()}`);
+                setToastId(privacyPolicyUpdateDialog.toast!(undefined, () => toast.dismiss(toastId)));
+                setSeenDialog(`privacy-policy:${new Date()}`);
                 return;
             }
 
             const lastSeenDate = lastSeenPrivacyPolicy.split(":")[1];
 
             if (new Date(lastSeenDate) < lastPrivacyPolicyUpdate) {
-                setToastId(privacyPolicyUpdateDialog.toast(undefined, () => toast.dismiss(toastId)));
-                setUserSeenDialog(`privacy-policy:${new Date()}`);
+                setToastId(privacyPolicyUpdateDialog.toast!(undefined, () => toast.dismiss(toastId)));
+                setSeenDialog(`privacy-policy:${new Date()}`);
                 return;
             }
 
             if (!selectedDialog)
                 return;
 
-            if (userSettings.seenDialogs?.includes(selectedDialog))
+            if (getSeenDialogs().includes(selectedDialog))
                 return;
 
             if (randomInt(0, 100) < 60)
                 return;
 
-            setToastId(dialogs[selectedDialog].toast(() => setModalOpen(true), () => toast.dismiss(toastId)));
+            if (dialogs[selectedDialog].toast) {
+                setToastId(dialogs[selectedDialog].toast(() => setModalOpen(true), () => toast.dismiss(toastId)));
+                return;
+            }
+
+            setModalOpen(true);
         })();
     }, [selectedDialog]);
 
     return dialogs[selectedDialog].modal?.({
         open: modalOpen,
         onClose: () => {
-            setUserSeenDialog(selectedDialog);
+            setSeenDialog(selectedDialog);
             setModalOpen(false);
             toast.dismiss(toastId);
         },
