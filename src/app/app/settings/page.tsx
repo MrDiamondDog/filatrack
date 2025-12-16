@@ -46,6 +46,8 @@ export default function SettingsPage() {
     const [modal, setModal] = useState("");
     const [deleteAccountConfirm, setDeleteAccountConfirm] = useState(false);
 
+    const [newMaterialValue, setNewMaterialValue] = useState("");
+
     useEffect(() => {
         if (!session)
             return;
@@ -94,6 +96,23 @@ export default function SettingsPage() {
         signOut();
     }
 
+    function submitMaterialPickerOption() {
+        if (!newMaterialValue)
+            return;
+
+        if (userSettings.materialPickerOptions.includes(newMaterialValue))
+            return;
+
+        setUserSettingsData({
+            materialPickerOptions: [
+                ...userSettings.materialPickerOptions,
+                newMaterialValue,
+            ],
+        });
+
+        setNewMaterialValue("");
+    }
+
     return (<div
         className="bg-bg w-full p-4 pt-2 mb-[75px] md:mb-0 h-full"
         style={{ marginLeft: (!width || isMobile) ? undefined : sidebarWidth }}
@@ -125,7 +144,7 @@ export default function SettingsPage() {
                     <p className="min-w-[300px] md:min-w-0">
                         Are you SURE you want to DELETE your Filatrack account?
                         This will delete ALL data, including added filament and their logs.
-                        Your account will not be recoverable.
+                        This action is IRREVERSABLE.
                     </p>
 
                     <Divider />
@@ -212,24 +231,24 @@ export default function SettingsPage() {
                         <Subtext>Edit the default options for the material picker</Subtext>
                         <Divider />
 
-                        <Input
-                            placeholder="Press enter to add option"
-                            onKeyDown={e => {
-                                if (e.key !== "Enter")
-                                    return;
+                        <div className="flex gap-2 w-full">
+                            <Input
+                                placeholder="PLA, ABS, etc."
+                                className="w-full"
+                                onKeyDown={e => {
+                                    if (e.key !== "Enter")
+                                        return;
 
-                                setUserSettingsData({
-                                    materialPickerOptions: [
-                                        ...userSettings.materialPickerOptions,
-                                        (e.target as HTMLInputElement).value,
-                                    ],
-                                });
+                                    submitMaterialPickerOption();
+                                }}
+                                maxLength={15}
+                                value={newMaterialValue}
+                                onChange={e => setNewMaterialValue(e.target.value)}
+                            />
+                            <Button onClick={submitMaterialPickerOption}>Add</Button>
+                        </div>
 
-                                (e.target as HTMLInputElement).value = "";
-                            }}
-                            maxLength={7}
-                        />
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-1 mt-2">
+                        <div className="flex flex-wrap gap-1 mt-2 max-w-[400px]">
                             {userSettings.materialPickerOptions.map((v, i) => (
                                 <div
                                     className={`bg-bg-lighter rounded-full px-3 py-1 

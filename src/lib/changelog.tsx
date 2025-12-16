@@ -1,6 +1,13 @@
-export const version = "v1.2.3";
+export const version = "v1.2.4";
 
 export const changelog = [
+    {
+        date: "12/16/2025",
+        version: "v1.2.4",
+        content: <ul>
+            <li>Fixed adding material picker options and increased material name max length</li>
+        </ul>,
+    },
     {
         date: "7/22/2025",
         version: "v1.2.3",

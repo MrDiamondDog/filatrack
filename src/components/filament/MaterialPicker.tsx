@@ -9,7 +9,7 @@ export default function MaterialPicker({ value, onChange, userSettings }:
     const [otherMat, setOtherMat] = useState(false);
 
     return (<div className="max-w-[400px]">
-        <div className="grid [grid-template-columns:repeat(auto-fit,minmax(min(100%,24%),1fr))] gap-1 my-2">
+        <div className="flex flex-wrap max-w-[400px] gap-1 my-2">
             {userSettings.materialPickerOptions.map(f => <MaterialEntry
                 key={f}
                 selected={!otherMat && value === f}
@@ -38,7 +38,7 @@ export default function MaterialPicker({ value, onChange, userSettings }:
 export function MaterialEntry({ children, selected, onClick }:
     { selected?: boolean, onClick?: () => void } & React.PropsWithChildren) {
     return (
-        <div className={`rounded-full bg-bg-lighter px-2 py-1 text-center cursor-pointer transition-all w-full
+        <div className={`rounded-full bg-bg-lighter px-4 py-1 text-center cursor-pointer transition-all
             border-2 border-transparent hover:border-primary ${selected && "!border-primary"} select-none`}
         onClick={onClick}
         >
