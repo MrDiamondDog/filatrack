@@ -9,6 +9,7 @@ import { addOrUpdateAnalyticEntry } from "./analytics";
 import { apiAuth } from "./helpers";
 import { ApiError } from "../errors";
 import { app } from ".";
+import { boxesTable } from "@/db/schema/boxes";
 
 /**
  * Gets all of the filament a user has created.
@@ -167,6 +168,15 @@ export async function createMultipleFilament(filament: DBObjectParams<Omit<Filam
             .returning())[0]);
     }
 
+    if (filament.box) {
+        const box = (await app.boxes.getBox(filament.box)).data!;
+
+        await db.update(boxesTable).set({
+            filamentIds: [...box.filamentIds, ...newFilament.map(f => f.id)],
+        })
+            .where(eq(boxesTable.id, box.id));
+    }
+
     return {
         data: newFilament,
     };
@@ -231,6 +241,15 @@ export async function deleteFilament(filamentId: string): Promise<ApiRes<null>> 
 
     await db.delete(filamentTable).where(eq(filamentTable.id, filamentId));
 
+    if (filament.box) {
+        const box = (await app.boxes.getBox(filament.box)).data!;
+
+        await db.update(boxesTable).set({
+            filamentIds: [...box.filamentIds.filter(id => id !== filamentId)],
+        })
+            .where(eq(boxesTable.id, box.id));
+    }
+
     return { data: null };
 }
 
@@ -254,6 +273,22 @@ export async function deleteFilaments(filamentIds: string[]): Promise<ApiRes<nul
     }
 
     await db.delete(filamentTable).where(inArray(filamentTable.id, filamentIds));
+
+    const boxIds = filaments.map(f => f.box).filter(Boolean);
+
+    if (boxIds.length > 0) {
+        for (const boxId of boxIds) {
+            if (!boxId)
+                continue;
+
+            const box = (await app.boxes.getBox(boxId)).data!;
+
+            await db.update(boxesTable).set({
+                filamentIds: [...box.filamentIds.filter(id => !filamentIds.includes(id))],
+            })
+                .where(eq(boxesTable.id, box.id));
+        }
+    }
 
     return { data: null };
 }

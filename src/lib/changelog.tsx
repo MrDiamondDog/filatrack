@@ -6,6 +6,8 @@ export const changelog = [
         version: "v1.2.4",
         content: <ul>
             <li>Fixed adding material picker options and increased material name max length</li>
+            <li>Fixed issues with bulk adding filament in boxes</li>
+            <li>Fixed filament count in boxes when deleting filament (will not apply retroactively)</li>
         </ul>,
     },
     {
