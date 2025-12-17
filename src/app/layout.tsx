@@ -6,6 +6,7 @@ import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
 import { CheckCircle2, CircleAlert, Info } from "lucide-react";
 import { prodUrl } from "../lib/constants";
+import Script from "next/script";
 // import { RandomDialogs } from "./lib/dialogs";
 
 const lexend = Lexend({
@@ -72,14 +73,20 @@ export default function RootLayout({
         <html lang="en">
             <head>
                 {/* <!-- Google tag (gtag.js) --> */}
-                <script async src="https://www.googletagmanager.com/gtag/js?id=G-9KPCZN25YJ"></script>
+                {/* <script async src="https://www.googletagmanager.com/gtag/js?id=G-9KPCZN25YJ"></script>
                 <script>
                     {`window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
 
                     gtag('config', 'G-9KPCZN25YJ');`}
-                </script>
+                </script> */}
+                <Script
+                    src="https://a.drewrat.dev/api/script.js"
+                    data-site-id="1"
+                    strategy="afterInteractive"
+                    data-session-replay="true"
+                />
             </head>
             <body
                 className={`${lexend.variable} antialiased has-[.nobg]:bg-white bg-bg`}

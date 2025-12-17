@@ -234,7 +234,7 @@ export function RandomDialogs() {
         })();
     }, [selectedDialog]);
 
-    return dialogs[selectedDialog].modal?.({
+    return selectedDialog && dialogs[selectedDialog].modal?.({
         open: modalOpen,
         onClose: () => {
             setSeenDialog(selectedDialog);
