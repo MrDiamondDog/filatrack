@@ -14,7 +14,7 @@ function Analytics() {
 
             gtag('config', 'G-9KPCZN25YJ');`}
         </script> */}
-        {((window.localStorage.getItem("allowAnalytics") ?? "false") === "true") && <Script
+        {((window.localStorage.getItem("allowAnalytics") ?? "true") === "true") && <Script
             src="https://a.drewrat.dev/api/script.js"
             data-site-id="1"
             strategy="afterInteractive"
