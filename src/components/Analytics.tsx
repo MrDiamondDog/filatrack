@@ -1,8 +1,9 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Script from "next/script";
 
-export function Analytics() {
+function Analytics() {
     return (<>
         {/* <!-- Google tag (gtag.js) --> */}
         {/* <script async src="https://www.googletagmanager.com/gtag/js?id=G-9KPCZN25YJ"></script>
@@ -13,7 +14,7 @@ export function Analytics() {
 
             gtag('config', 'G-9KPCZN25YJ');`}
         </script> */}
-        {localStorage.getItem("allowAnalytics") === "true" && <Script
+        {((window.localStorage.getItem("allowAnalytics") ?? "false") === "true") && <Script
             src="https://a.drewrat.dev/api/script.js"
             data-site-id="1"
             strategy="afterInteractive"
@@ -22,3 +23,5 @@ export function Analytics() {
         />}
     </>);
 }
+
+export default dynamic(() => Promise.resolve(Analytics), { ssr: false });

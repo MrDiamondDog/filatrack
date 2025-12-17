@@ -47,7 +47,7 @@ export default function SettingsPage() {
 
     const [newMaterialValue, setNewMaterialValue] = useState("");
 
-    const [allowAnalytics, setAllowAnalytics] = useState((localStorage.getItem("allowAnalytics") ?? "true") === "true");
+    const [allowAnalytics, setAllowAnalytics] = useState((window.localStorage.getItem("allowAnalytics") ?? "true") === "true");
 
     useEffect(() => {
         if (!session)
@@ -63,7 +63,7 @@ export default function SettingsPage() {
     }, [session]);
 
     useEffect(() => {
-        localStorage.setItem("allowAnalytics", `${allowAnalytics}`);
+        window.localStorage.setItem("allowAnalytics", `${allowAnalytics}`);
     }, [allowAnalytics]);
 
     async function saveUsername() {
