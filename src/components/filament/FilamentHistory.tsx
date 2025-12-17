@@ -25,7 +25,7 @@ function FilamentHistoryEntry({ log, onDelete, onEdit, preview, filament }:
         <div className="bg-bg-lighter rounded-lg w-full p-2 flex flex-row justify-between items-center">
             <div className="flex flex-row items-center gap-2">
                 <div className="w-full">
-                    <div className="flex flex-row items-center gap-1">
+                    <div className="flex flex-row items-center gap-1 a-hide">
                         {log.filamentUsed}g {!!log.note && `- ${log.note}`}
                     </div>
                     <Subtext className="flex flex-row items-center gap-1 text-xs">

@@ -21,7 +21,7 @@ export default function FilamentDetailsModal({ filament, openLogModal, ...props 
                         filament={filament}
                         light
                     />
-                    {!!filament.note && <div className="flex flex-row gap-1 items-center mt-1 text-sm">
+                    {!!filament.note && <div className="flex flex-row gap-1 items-center mt-1 text-sm a-hide">
                         <Text className="min-w-[24px]" />
                         {filament.note}
                     </div>}

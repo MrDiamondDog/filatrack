@@ -34,8 +34,8 @@ export default function AccountCard({ session }: { session: Session }) {
                 onClick={() => setOpen(!open)}
             >
                 <div className="flex flex-row gap-2 items-center w-full">
-                    <img src={session.user!.image!} className="rounded-full md:w-7 w-[48px]" />
-                    <p className="text-nowrap truncate hidden md:block text-sm">{session.user!.name!}</p>
+                    <img src={session.user!.image!} className="rounded-full md:w-7 w-[48px] a-hide" />
+                    <p className="text-nowrap truncate hidden md:block text-sm a-hide">{session.user!.name!}</p>
                 </div>
             </div>
             {visible && <div

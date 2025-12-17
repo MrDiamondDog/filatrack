@@ -47,6 +47,8 @@ export default function SettingsPage() {
 
     const [newMaterialValue, setNewMaterialValue] = useState("");
 
+    const [allowAnalytics, setAllowAnalytics] = useState((localStorage.getItem("allowAnalytics") ?? "true") === "true");
+
     useEffect(() => {
         if (!session)
             return;
@@ -59,6 +61,10 @@ export default function SettingsPage() {
 
         setLoading(false);
     }, [session]);
+
+    useEffect(() => {
+        localStorage.setItem("allowAnalytics", `${allowAnalytics}`);
+    }, [allowAnalytics]);
 
     async function saveUsername() {
         setSaveLoading(true);
@@ -123,13 +129,25 @@ export default function SettingsPage() {
                 {(!session || loading) && <Spinner />}
 
                 {(session && !loading) && <>
-                    <img src={session.user!.image!} className="rounded-full w-[100px]" />
+                    <img src={session.user!.image!} className="rounded-full w-[100px] a-hide" />
 
-                    <Input label="Username" value={username} onChange={e => setUsernameInput(e.target.value)} maxLength={12} />
+                    <Input label="Username" value={username} onChange={e => setUsernameInput(e.target.value)} maxLength={12}
+                        className="a-hide" />
 
                     <Divider />
 
                     <Button look={ButtonStyles.danger} onClick={() => setModal("delete")}>Delete Account</Button>
+
+                    <Divider />
+
+                    <Input type="checkbox" label="Analytics" checked={allowAnalytics}
+                        onChange={e => setAllowAnalytics(e.target.checked)}
+                    />
+                    <Subtext className="w-[250%]">
+                        Filatrack collects completely anonymous, analytics to see how many
+                        people are using Filatrack and to see how we can improve.<br />
+                        Please feel free to turn this off; we understand privacy.
+                    </Subtext>
 
                     <Divider />
 

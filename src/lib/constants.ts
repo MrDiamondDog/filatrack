@@ -41,3 +41,12 @@ export const endpoints = {
     privacyPolicy: `${baseUrl}about/privacy-policy`,
     contact: `${baseUrl}about/contact`,
 };
+
+declare global {
+  interface Window {
+    rybbit?: {
+      event: (eventName: string, eventData?: Record<string, any>) => void;
+      pageview: () => void;
+    };
+  }
+}
