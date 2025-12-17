@@ -19,6 +19,7 @@ function Analytics() {
             data-site-id="1"
             strategy="afterInteractive"
             data-session-replay="true"
+            data-track-errors="true"
             data-replay-mask-text-selectors='[".a-hide"]'
         />}
     </>);
