@@ -4,6 +4,7 @@ import Google from "next-auth/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "./db/drizzle";
 import { app } from "./lib/db";
+import { setSeenDialog } from "./lib/dialogs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: DrizzleAdapter(db),
@@ -32,6 +33,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 await app.analytics.addOrUpdateAnalyticEntry(new Date(), {
                     signUps: 1,
                 });
+
+                setSeenDialog(`privacy-policy:${new Date()}`);
             }
         },
         session() {

@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { randomFrom, randomInt } from "./random";
 import { endpoints, lastPrivacyPolicyUpdate } from "./constants";
 import { ExternalLink } from "lucide-react";
+import { getUser } from "./db/users";
 
 type Dialog = {
     toast?: (openModal?: () => void, closeToast?: () => void) => number | string,
@@ -20,7 +21,7 @@ function getSeenDialogs(): string[] {
     return JSON.parse(localStorage.getItem("dialogs") || "[]");
 }
 
-function setSeenDialog(dialog: string) {
+export function setSeenDialog(dialog: string) {
     if (getSeenDialogs().includes(dialog))
         return;
 
@@ -216,13 +217,18 @@ export function RandomDialogs() {
                 return;
             }
 
+            const user = await getUser();
+
+            if (user.data!.createdAt.getTime() > Date.now() - 1000 * 60 * 60 * 24)
+                return;
+
             if (!selectedDialog)
                 return;
 
             if (getSeenDialogs().includes(selectedDialog))
                 return;
 
-            if (randomInt(0, 100) < 60)
+            if (randomInt(0, 100) < 20)
                 return;
 
             if (dialogs[selectedDialog].toast) {
