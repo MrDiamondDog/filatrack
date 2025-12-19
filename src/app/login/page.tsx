@@ -16,6 +16,8 @@ function LogInButton({ provider, children }: { provider: string } & React.PropsW
             onClick={() => signIn(provider, {
                 redirectTo: "/app",
             })}
+            data-rybbit-event="login"
+            data-rybbit-prop-provider={provider}
         >
             {children}
         </Button>

@@ -56,7 +56,7 @@ export default function CreateBoxModal({ onAdd, currentBox, ...props }: { onAdd:
         />
 
         <ModalFooter error={error}>
-            <Button onClick={addBox} loading={loading}>Create</Button>
+            <Button onClick={addBox} loading={loading} data-rybbit-event="create-box">Create</Button>
         </ModalFooter>
     </Modal>);
 }

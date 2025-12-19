@@ -207,7 +207,9 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
                         Previous
                     </Button>
                 </>}
-                <Button onClick={() => (step === 2 ? addFilament() : setStep(step + 1))} loading={loading}>
+                <Button onClick={() => (step === 2 ? addFilament() : setStep(step + 1))} loading={loading}
+                    data-rybbit-event={step === 2 ? "create-filament" : undefined}
+                >
                     {step === 2 ? (currentFilament ? "Edit" : "Add") : "Next"}
                 </Button>
             </ModalFooter>

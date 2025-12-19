@@ -218,7 +218,9 @@ export default function FilamentEntry({
                     error={error}
                 >
                     <Button look={ButtonStyles.secondary} onClick={() => setOpenModal("")}>Cancel</Button>
-                    <Button look={ButtonStyles.danger} onClick={onDeleteConfirm} loading={loading}>Confirm</Button>
+                    <Button look={ButtonStyles.danger} onClick={onDeleteConfirm} loading={loading} data-rybbit-event="delete-filament">
+                        Confirm
+                    </Button>
                 </ModalFooter>
             </Modal>
         </>}

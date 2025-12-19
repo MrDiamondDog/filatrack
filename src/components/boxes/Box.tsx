@@ -104,7 +104,9 @@ export default function BoxEntry({ box, allFilament, onEdit, onDelete, editMode 
                 error={error}
             >
                 <Button look={ButtonStyles.secondary} onClick={() => setOpenModal("")}>Cancel</Button>
-                <Button look={ButtonStyles.danger} onClick={onDeleteConfirm} loading={loading}>Confirm</Button>
+                <Button look={ButtonStyles.danger} onClick={onDeleteConfirm} loading={loading} data-rybbit-event="delete-box">
+                    Confirm
+                </Button>
             </ModalFooter>
         </Modal>
     </>);

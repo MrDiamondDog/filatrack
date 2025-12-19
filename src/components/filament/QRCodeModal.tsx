@@ -80,7 +80,12 @@ export default function QRCodeModal({ filament, ...props }: { filament: Filament
                     href={generateQrUrl(filament, options)}
                     target="_blank"
                 >
-                    <Button>Print</Button>
+                    <Button
+                        data-rybbit-event="print-qr"
+                        data-rybbit-prop-count={Array.isArray(filament) ? `${filament.length}` : "1"}
+                    >
+                        Print
+                    </Button>
                 </a>
             </ModalFooter>
         </Modal>

@@ -116,7 +116,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
 
             <ModalFooter
                 error={error}>
-                <Button loading={loading} onClick={logFilament}>Confirm</Button>
+                <Button loading={loading} onClick={logFilament} data-rybbit-event="log">Confirm</Button>
             </ModalFooter>
         </Modal>
     );
