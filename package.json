@@ -39,5 +39,9 @@
     "eslint-plugin-unused-imports": "3.1.0",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": "^20.18.3"
   }
 }
