@@ -1,13 +1,7 @@
-import type { Metadata } from "next";
-import { Lexend } from "next/font/google";
+import { prodUrl } from "@/constants";
 import "./globals.css";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { SessionProvider } from "next-auth/react";
-import { Toaster } from "sonner";
-import { CheckCircle2, CircleAlert, Info } from "lucide-react";
-import { prodUrl } from "../lib/constants";
-import Analytics from "@/components/Analytics";
-// import { RandomDialogs } from "./lib/dialogs";
+import { Metadata } from "next";
+import { Lexend } from "next/font/google";
 
 const lexend = Lexend({
     variable: "--font-lexend",
@@ -67,42 +61,15 @@ export const metadata: Metadata = {
 export default function RootLayout({
     children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
     return (
         <html lang="en">
-            <head>
-                <Analytics />
-            </head>
             <body
-                className={`${lexend.variable} antialiased has-[.nobg]:bg-white bg-bg`}
+                className={`${lexend.className} antialiased bg-bg`}
             >
-                <SessionProvider
-                    refetchOnWindowFocus={false}
-                >
-                    {children}
-                </SessionProvider>
+                {children}
 
-                <SpeedInsights />
-
-                <Toaster
-                    className="toaster group"
-                    theme="dark"
-                    richColors
-                    style={{
-                        "--normal-bg": "var(--color-bg-light)",
-                        "--normal-text": "white",
-                        "--normal-border": "var(--color-bg-lightest)",
-                    } as React.CSSProperties}
-                    visibleToasts={5}
-                    icons={{
-                        success: <CheckCircle2 size={20} />,
-                        error: <CircleAlert size={20} />,
-                        info: <Info size={20} />,
-                    }}
-                />
-
-                {/* For modals */}
                 <div id="portal-root" />
             </body>
         </html>

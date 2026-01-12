@@ -1,9 +1,5 @@
-onlyBuiltDependencies:
-  - '@prisma/client'
-  - '@prisma/engines'
-  - '@tailwindcss/oxide'
-  - '@vercel/speed-insights'
-  - esbuild
-  - prisma
+packages:
+  - .
+ignoredBuiltDependencies:
   - sharp
-  - workerd
+  - unrs-resolver

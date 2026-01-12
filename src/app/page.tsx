@@ -1,12 +1,12 @@
-import Button from "@/components/Button";
-import Divider from "@/components/Divider";
-import Subtext from "@/components/Subtext";
-import { ChevronDown, CircleDollarSign, Code, GlobeLock, QrCode, ScrollText, Smartphone } from "lucide-react";
-import { getTotalFilament, getTotalLogs, getTotalUsers } from "../lib/db/analytics";
-import Footer from "@/components/Footer";
-import { endpoints } from "../lib/constants";
-import RandomizedFilament from "@/components/filament/RandomizedFilament";
-import LandingBackground from "@/components/LandingBackground";
+import Button, { ButtonStyles } from "@/components/base/Button";
+import Divider from "@/components/base/Divider";
+import Subtext from "@/components/base/Subtext";
+import LandingBackground from "@/components/landing/LandingBackground";
+import RotatingFilament from "@/components/landing/RotatingFilament";
+import { endpoints } from "@/constants";
+import { bigNum } from "@/lib/number";
+import { ArrowRight, ChevronDown, CircleDollarSign, Code, GlobeLock, QrCode, ScrollText, Smartphone } from "lucide-react";
+import Link from "next/link";
 
 function LandingCard({ children }: React.PropsWithChildren) {
     return (
@@ -25,45 +25,63 @@ function LandingCardHeader({ children }: React.PropsWithChildren) {
 }
 
 export default async function Home() {
+    function getTotalUsers() {
+        return { data: 1234 };
+    }
+
+    function getTotalFilament() {
+        return { data: 4321 };
+    }
+
+    function getTotalLogs() {
+        return { data: 54321 };
+    }
+
     return (<>
         <LandingBackground />
 
-        <main className="absolute-center">
-            <div className="flex flex-col md:flex-row gap-2 items-center">
-                <RandomizedFilament />
+        <div className="absolute-center">
+            <div className="flex gap-4 items-center">
+                <RotatingFilament />
                 <div>
-                    <h1 className="text-shadow-lg text-shadow-gray-500/50">Filatrack</h1>
-                    <Subtext className="whitespace-pre-wrap mb-2 text-shadow-lg text-shadow-bg/50">
-                        Keep track of all your filament rolls in the simplest way possible.{"\n"}
-                        Free, forever. No ads. All open-source.
+                    <h1>Filatrack</h1>
+                    <Subtext className="whitespace-pre-wrap">
+                        The simplest way to track your 3d printing filament.{"\n"}
+                        No ads, open source, free forever.
                     </Subtext>
-                    <a href="/login">
-                        <Button className="w-full">Get Started</Button>
-                    </a>
+
+                    <div className="flex gap-2 mt-1 *:w-full *:*:w-full">
+                        <Link href="/#About" className="unstyled">
+                            <Button look={ButtonStyles.secondary}>Learn More <ArrowRight /></Button>
+                        </Link>
+                        <Link href="/app" className="unstyled">
+                            <Button>Get Started <ArrowRight /></Button>
+                        </Link>
+                    </div>
                 </div>
             </div>
-        </main>
+        </div>
 
         <div className="mt-[100vh] md:mt-[70vh] w-full flex justify-center">
             <div className="bg-bg-light rounded-lg p-4 drop-shadow-lg">
                 <div className="flex flex-row gap-2">
                     <div>
                         <Subtext className="text-xl">Users</Subtext>
-                        <h2>{(await getTotalUsers()).data}</h2>
+                        <h2>{bigNum((await getTotalUsers()).data)}</h2>
                     </div>
 
                     <Divider vertical />
 
                     <div>
                         <Subtext className="text-xl">Filament</Subtext>
-                        <h2>{(await getTotalFilament()).data}</h2>
+                        <h2>{bigNum((await getTotalFilament()).data)}</h2>
                     </div>
 
                     <Divider vertical />
 
                     <div>
                         <Subtext className="text-xl">Logs</Subtext>
-                        <h2>{(await getTotalLogs()).data}</h2>
+                        <h2>{bigNum((await getTotalLogs()).data)}</h2>
                     </div>
                 </div>
             </div>
@@ -72,7 +90,7 @@ export default async function Home() {
         <ChevronDown className="bounce w-full text-center mt-15" size={48} />
 
         <div className="absolute top-[150%] md:top-full pb-20">
-            <h1 className="w-full text-center">About Filatrack</h1>
+            <h1 className="w-full text-center" id="About">About Filatrack</h1>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:w-1/2 mx-auto overflow-hidden">
                 <LandingCard>
                     <LandingCardHeader>
@@ -81,6 +99,7 @@ export default async function Home() {
                     </LandingCardHeader>
                     <Subtext>
                         Filatrack is completely free open source software. We are welcome to bug reports and contributions as well!
+                        Learn more on the <Link href="https://github.com/mrdiamonddog/filatrack">GitHub</Link>.
                     </Subtext>
                 </LandingCard>
                 <LandingCard>
@@ -128,8 +147,9 @@ export default async function Home() {
                         <p className="text-md md:text-xl">Complete Privacy</p>
                     </LandingCardHeader>
                     <Subtext>
-                        No data is sold or shared with any third-parties. No identifying analytics are gathered by Filatrack.
-                        View our{" "} <a href={endpoints.privacyPolicy} className="style">privacy policy</a> for more info.
+                        Your data is never shared or sold to any third parties. We only collect anonymous, toggleable analytics
+                        that never link back to you or your data. See our{" "}
+                        <Link href="/about/privacy-policy">Privacy Policy</Link> for more information.
                     </Subtext>
                 </LandingCard>
             </div>
@@ -141,10 +161,8 @@ export default async function Home() {
             <Divider className="my-4" />
 
             <h3 className="w-full text-center">
-                Want to learn more? Join the <a href={endpoints.discord} className="style">Discord server</a>!
+                Want to learn more? Join the <Link href={endpoints.discord} className="style">Discord server</Link>!
             </h3>
-
-            <Footer />
         </div>
     </>);
 }
