@@ -28,7 +28,7 @@ export default function FilamentList({ filament, title, viewLock }:
             <Divider />
         </>}
 
-        {view === "cards" && <div className="flex flex-row flex-wrap w-full gap-2">
+        {view === "cards" && <div className="grid grid-cols-2 md:flex flex-row flex-wrap w-full gap-2 mb-2">
             {filament.map(f => <FilamentCard filament={f} key={f.id} />)}
         </div>}
 

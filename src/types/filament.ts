@@ -17,5 +17,5 @@ export type Filament = {
     temperature?: number,
     diameter?: number,
     cost?: number,
-    spoolType?: "full" | "refill" | "nospool",
+    spoolType?: "plastic" | "cardboard" | "refill" | "nospool",
 } & DBDates

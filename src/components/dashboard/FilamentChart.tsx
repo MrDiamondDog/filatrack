@@ -22,14 +22,14 @@ export default function FilamentChart() {
     const [allFilament, setAllFilament] = useState([
         { color: "#fff", currentMass: 1000, startingMass: 2000, brand: "Elegoo", material: "PLA" },
     ]);
-    const [chartMode, setChartMode] = useState("Color");
+    const [chartMode, setChartMode] = useState("color");
     const [chartData, setChartData] = useState<PieValueType[]>([]);
 
     useEffect(() => {
         if (!allFilament)
             return;
 
-        if (chartMode === "Color") {
+        if (chartMode === "color") {
             const colors: Record<string, number> = {};
 
             allFilament.forEach(f => colors[f.color] = colors[f.color] ?
@@ -41,7 +41,7 @@ export default function FilamentChart() {
                 color: k,
                 label: k || "[unset]",
             })));
-        } else if (chartMode === "Brand") {
+        } else if (chartMode === "brand") {
             const brands: Record<string, number> = {};
 
             allFilament.forEach(f => brands[f.brand] = brands[f.brand] ?
@@ -52,7 +52,7 @@ export default function FilamentChart() {
                 value: brands[k],
                 label: k || "[unset]",
             })));
-        } else if (chartMode === "Material") {
+        } else if (chartMode === "material") {
             const materials: Record<string, number> = {};
 
             allFilament.forEach(f => materials[f.material] = materials[f.material] ?
@@ -70,7 +70,7 @@ export default function FilamentChart() {
         <div className="w-full flex justify-center mb-2">
             <Tablist
                 tabs={{ color: "Color", brand: "Brand", material: "Material" }}
-                activeTab="color"
+                activeTab={chartMode}
                 onTabChange={v => setChartMode(v as typeof chartMode)}
                 className="w-fit"
             />

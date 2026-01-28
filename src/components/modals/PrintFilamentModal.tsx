@@ -7,7 +7,6 @@ import { useState } from "react";
 import FilamentCard from "../filament/FilamentCard";
 import { grams } from "@/lib/units";
 import { Print } from "@/types/print";
-import Subtext from "../base/Subtext";
 import Link from "next/link";
 
 export default function PrintFilamentModal({ filament, ...props }: { filament: Filament } & ModalProps) {
@@ -36,7 +35,7 @@ export default function PrintFilamentModal({ filament, ...props }: { filament: F
     return <Modal {...props} title="Print Filament">
         <ModalHeader>
             Log how much filament you used to keep track of how much you have left.<br />
-            <Subtext>If you want to make a print with multiple filaments, go <Link href="/app/prints">here</Link>.</Subtext>
+            If you want to make a print with multiple filaments, go <Link href="/app/prints">here</Link>.
         </ModalHeader>
 
         <div className="flex gap-2">

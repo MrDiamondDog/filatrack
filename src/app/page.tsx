@@ -25,6 +25,7 @@ function LandingCardHeader({ children }: React.PropsWithChildren) {
 }
 
 export default async function Home() {
+    // TODO: backend
     function getTotalUsers() {
         return { data: 1234 };
     }

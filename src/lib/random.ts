@@ -63,8 +63,8 @@ export function randomFilament(): Filament {
         color: randomFilamentNames[name as keyof typeof randomFilamentNames]!,
         material: randomFrom(randomFilamentMaterials),
         mass: randomInt(1, maxMass),
-        // temperature: 220,
-        // diameter: 1.75,
+        temperature: 220,
+        diameter: 1.75,
         initialMass: maxMass,
         note: "Test",
 

@@ -12,7 +12,6 @@ export type ModalProps = {
     onClose: () => void
 }
 
-// TODO: width doesn't change after initial width
 export default function Modal({ children, title, open, onClose, danger }:
 { title: string, open: boolean, onClose: () => void, level?: number, danger?: boolean } & React.PropsWithChildren) {
     return (<Portal>

@@ -10,15 +10,17 @@ import CardDetail from "../util/CardDetail";
 import { useState } from "react";
 import PrintFilamentModal from "../modals/PrintFilamentModal";
 import { useRouter } from "next/navigation";
+import { useDevice } from "@/lib/hooks";
 
 export default function FilamentCard({ filament, noninteractable, className }:
     { filament: Filament, noninteractable?: boolean, className?: string }) {
     const [openModal, setOpenModal] = useState("");
+    const [isMobile, _] = useDevice();
 
     const router = useRouter();
 
     return <><div
-        className={`bg-bg-light rounded-lg pt-4 p-2 flex flex-col gap-1 justify-center items-center w-40 relative overflow-hidden
+        className={`bg-bg-light rounded-lg pt-4 p-2 flex flex-col gap-1 justify-center items-center md:w-40 relative overflow-hidden
             border-2 border-transparent ${!noninteractable && "hover:border-primary cursor-pointer"} transition-colors unstyled 
             ${className}`}
         onClick={() => !noninteractable && router.push(`/app/filament/${filament.id}`)}
@@ -39,10 +41,9 @@ export default function FilamentCard({ filament, noninteractable, className }:
             <EllipsisVertical />
         </button>}
 
-        <FilamentIcon filament={filament} size={72} />
+        <FilamentIcon filament={filament} size={isMobile ? 48 : 72} />
 
-        {/* TODO: why doesn't text clamp work??? */}
-        <p className="line-clamp-1 text-[clamp(12px,120%,24px)] text-nowrap overflow-hidden font-bold text-center">{filament.name}</p>
+        <p className="line-clamp-1 text-md md:text-lg text-nowrap overflow-hidden font-bold text-center">{filament.name}</p>
         <Subtext>{filament.brand}</Subtext>
 
         <div className="flex flex-col text-gray-400 text-sm mb-2 items-center">

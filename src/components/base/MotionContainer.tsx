@@ -8,7 +8,7 @@ export default function MotionContainer({ children }: React.PropsWithChildren) {
         initial={{ opacity: 0 }}
         exit={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="w-full p-4 overflow-scroll ml-50"
+        className="w-full p-4 overflow-scroll mb-15 md:ml-50"
     >
         {children}
     </motion.main>;

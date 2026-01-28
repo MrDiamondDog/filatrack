@@ -9,7 +9,7 @@ import { randomFilament } from "@/lib/random";
 export default function DashboardPage() {
     return (<MotionContainer>
         <div className="flex justify-between items-center">
-            <h1>Your Dashboard</h1>
+            <h1>Dashboard</h1>
 
             <CreateButton />
         </div>
@@ -18,7 +18,7 @@ export default function DashboardPage() {
 
         <FilamentChart />
 
-        <div className="w-full flex mt-5">
+        <div className="w-full flex flex-col md:flex-row mt-5">
             <div className="w-full">
                 <h2>Storage</h2>
                 <Divider />

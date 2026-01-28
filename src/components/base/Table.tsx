@@ -58,7 +58,7 @@ export default function Table<T extends Record<string, any>>({ columns, data, so
     }, []);
 
     return (
-        <table className="w-full bg-bg-light rounded-lg overflow-hidden">
+        <table className="w-full bg-bg-light rounded-lg overflow-x-scroll md:overflow-hidden">
             <thead>
                 <tr>
                     {columns.map(c => <th

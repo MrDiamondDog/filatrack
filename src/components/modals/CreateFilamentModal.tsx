@@ -26,7 +26,7 @@ export default function CreateFilamentModal(props: ModalProps) {
         color: "#fff",
         mass: 1000,
         initialMass: 1000,
-        spoolType: "full",
+        spoolType: "plastic",
     });
 
     function createFilament() {
@@ -86,7 +86,7 @@ export default function CreateFilamentModal(props: ModalProps) {
 
                 <p>Spool Type<RequiredStar /></p>
                 <Select
-                    options={{ full: "Full Spool", refill: "Refill", spoolless: "No Spool" }}
+                    options={{ plastic: "Plastic Spool", cardboard: "Cardboard Spool", refill: "Refill", nospool: "No Spool" }}
                     value={filament.spoolType ?? "full"}
                     onChange={v => setFilament({ spoolType: v as keyof Filament["spoolType"] })}
                 />
