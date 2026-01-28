@@ -34,32 +34,48 @@ select, option {
 }
 
 @layer base {
-  h1 {
-    font-size: 2rem;
-    font-weight: 700;
+  @media (min-width: 768px) {
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 500;
+    }
   }
 
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
 
-  h3 {
-    font-size: 1.25rem;
-    font-weight: 500;
-  }
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
 
-  h4 {
-    font-size: 1rem;
-    font-weight: 500;
-  }
+    h3 {
+      font-size: 1rem;
+      font-weight: 500;
+    }
 
-  :root {
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    h4 {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
   }
 }
 
@@ -324,20 +340,6 @@ select, option {
   background-color: #777;
 }
 
-.MuiChartsAxis-root * {
-  fill: #777 !important;
-  stroke: #777 !important;
-}
-
-.MuiChartsLegend-series span {
-  color: white;
-  font-family: "Lexend";
-}
-
-path.MuiChartsAxisHighlight-root {
-  stroke: #777 !important;
-}
-
 ul, ol {
   padding-left: 1.5rem;
 }
@@ -346,7 +348,7 @@ li {
   list-style: circle;
 }
 
-a.style {
+a:not(.unstyled) {
   color: var(--color-primary);
   text-decoration: none;
   transition: color 0.2s ease-in-out;
@@ -360,7 +362,7 @@ a.style {
   }
 }
 
-table {
+/* table {
   border: 2px solid var(--color-bg-lighter);
   border-radius: 0.5rem;
   padding: 0.5rem;
@@ -386,4 +388,4 @@ td, th {
 
 td:not(:last-child), th:not(:last-child) {
   border-right: 2px solid var(--color-bg-lighter);
-}
+} */

@@ -4,3 +4,7 @@ export function grams(g: number) {
 
     return `${Math.max(0, g)}g`;
 }
+
+export function celcius(c: number) {
+    return `${c}°C`;
+}

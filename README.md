@@ -14,7 +14,22 @@ There definitely are bugs. Please report bugs in the issues on this repo instead
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md)
+Here's how to set up a basic Filatrack development enviornment:
+
+- `git clone https://github.com/MrDiamondDog/filatrack`
+- `pnpm i`
+- `pnpm dev`
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for more, or join the Discord.
+
+## Self-Hosting
+
+Filatrack is fully self-hostable through Docker!
+
+- `git clone https://github.com/MrDiamondDog/filatrack`
+- `docker build -t filatrack-docker .`
+- `docker run -p 3000:3000 filatrack-docker`
+- http://localhost:3000/
 
 ## Star History
 
