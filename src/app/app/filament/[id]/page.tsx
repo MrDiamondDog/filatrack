@@ -17,9 +17,9 @@ export default async function FilamentPage({ params }: { params: Promise<{ id: s
     const filament = randomFilament();
     const prints: Print[] = [
         // @ts-ignore temp
-        { name: "a Test Print", totalFilament: 124, totalRolls: 2, created: new Date() },
+        { label: "a Test Print", totalFilamentUsed: 124, totalRollsUsed: 2, created: new Date() },
         // @ts-ignore temp
-        { name: "z Test Print 2", totalFilament: 2, totalRolls: 1, created: new Date(Date.now() - 998 * 60 * 24) },
+        { label: "z Test Print 2", totalFilamentUsed: 2, totalRollsUsed: 1, created: new Date(Date.now() - 998 * 60 * 24) },
     ];
 
     return <MotionContainer>
@@ -47,8 +47,8 @@ export default async function FilamentPage({ params }: { params: Promise<{ id: s
                 {grams(filament.mass)}/{grams(filament.initialMass)}
             </div>
             <Divider vertical />
-            {filament.temperature && <>
-                <div className="text-center"><Subtext>Print Temperature</Subtext> {celcius(filament.temperature)}</div>
+            {filament.nozzleTemperature && <>
+                <div className="text-center"><Subtext>Print Temperature</Subtext> {celcius(filament.nozzleTemperature)}</div>
                 <Divider vertical />
             </>}
             {filament.diameter && <>

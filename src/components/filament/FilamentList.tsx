@@ -45,7 +45,7 @@ export default function FilamentList({ filament, title, viewLock }:
                     { label: "Initial Mass", key: "initialMass", render: data => grams(data.initialMass) },
                     { label: "Material", key: "material" },
                     { label: "Brand", key: "brand" },
-                    { label: "Temp.", key: "temperature", render: data => `${data.temperature}°C` },
+                    { label: "Temp.", key: "temperature", render: data => `${data.nozzleTemperature}°C` },
                     { label: "Diameter", key: "diameter", render: data => `${data.diameter}mm` },
                 ]}
                 data={filament}

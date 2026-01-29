@@ -1,15 +1,26 @@
-import { Filament } from "./filament";
 import { DBDates } from "./general";
 
 export type Print = {
     id: string,
     user: string,
 
-    name: string,
+    label: string,
 
-    totalFilament: number,
-    totalRolls: number,
-
+    /**
+     * Record of filament IDs to amount of filament used from that filament in g.
+     */
     filamentUsage: Record<string, number>,
-    filamentRolls: Filament[],
+    /**
+     * The IDs of the rolls used.
+     */
+    filamentRolls: string[],
+
+    /**
+     * Total filament used in g.
+     */
+    totalFilamentUsed: number,
+    /**
+     * Total number of rolls used during this print
+     */
+    totalRollsUsed: number,
 } & DBDates

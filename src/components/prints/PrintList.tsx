@@ -11,7 +11,7 @@ export default function PrintList({ prints }: { prints: Print[] }) {
         <Table
             columns={[
                 { label: "Name", key: "name" },
-                { label: "Filament Used", key: "totalFilament", render: data => grams(data.totalFilament) },
+                { label: "Filament Used", key: "totalFilament", render: data => grams(data.totalFilamentUsed) },
                 { label: "Rolls Used", key: "totalRolls" },
                 {
                     label: "Date", key: "created",

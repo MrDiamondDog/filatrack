@@ -7,6 +7,8 @@ import Button from "../base/Button";
 
 export default function CreateCustomAttributeModal(props: ModalProps) {
     const [customAttribute, setCustomAttribute] = useObjectState<CustomAttribute>({
+        user: "",
+
         name: "",
         type: "string",
     });

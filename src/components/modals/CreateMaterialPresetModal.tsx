@@ -7,6 +7,7 @@ import { MaterialPreset } from "@/types/settings";
 
 export default function CreateMaterialPresetModal(props: ModalProps) {
     const [materialPreset, setMaterialPreset] = useObjectState<MaterialPreset>({
+        user: "",
         material: "PLA",
     });
 

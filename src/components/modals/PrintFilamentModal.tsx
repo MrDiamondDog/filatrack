@@ -14,9 +14,9 @@ export default function PrintFilamentModal({ filament, ...props }: { filament: F
         filamentRolls: [filament],
         filamentUsage: { [filament.id]: 0 },
 
-        name: "",
-        totalFilament: 0,
-        totalRolls: 1,
+        label: "",
+        totalFilamentUsed: 0,
+        totalRollsUsed: 1,
     });
 
     const [error, setError] = useState("");
@@ -57,11 +57,11 @@ export default function PrintFilamentModal({ filament, ...props }: { filament: F
                 <Input
                     label="Label"
                     subtext="An additional note to later identify what this log was for."
-                    value={print.name}
-                    onChange={e => setPrint({ name: e.target.value })}
+                    value={print.label}
+                    onChange={e => setPrint({ label: e.target.value })}
                 />
 
-                <p>You will have {grams(filament.mass - print.totalFilament)}/{grams(filament.initialMass)} remaining.</p>
+                <p>You will have {grams(filament.mass - print.totalFilamentUsed)}/{grams(filament.initialMass)} remaining.</p>
             </div>
         </div>
 

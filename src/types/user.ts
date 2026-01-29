@@ -13,4 +13,6 @@ export type User = {
     filament: string[],
     storage: string[],
     logs: string[],
+
+    settings: string,
 } & DBDates

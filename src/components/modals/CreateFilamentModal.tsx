@@ -94,8 +94,8 @@ export default function CreateFilamentModal(props: ModalProps) {
                 <Input
                     label="Purchase Link"
                     placeholder=""
-                    value={filament.link}
-                    onChange={e => setFilament({ link: e.target.value })}
+                    value={filament.purchaseLink}
+                    onChange={e => setFilament({ purchaseLink: e.target.value })}
                 />
 
                 <Input
@@ -120,8 +120,8 @@ export default function CreateFilamentModal(props: ModalProps) {
                     label="Temperature (°C)"
                     placeholder="200"
                     type="number"
-                    value={filament.temperature}
-                    onChange={e => setFilament({ temperature: parseInt(e.target.value) })}
+                    value={filament.nozzleTemperature}
+                    onChange={e => setFilament({ nozzleTemperature: parseInt(e.target.value) })}
                 />
 
                 <Input

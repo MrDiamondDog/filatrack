@@ -49,8 +49,8 @@ export default function FilamentCard({ filament, noninteractable, className }:
         <div className="flex flex-col text-gray-400 text-sm mb-2 items-center">
             <CardDetail><Weight size={20} /> {grams(filament.mass)}/{grams(filament.initialMass)}</CardDetail>
             <CardDetail><Box size={20} /> {filament.material}</CardDetail>
-            {filament.temperature &&
-                <CardDetail><Thermometer size={20} /> {celcius(filament.temperature)}</CardDetail>
+            {filament.nozzleTemperature &&
+                <CardDetail><Thermometer size={20} /> {celcius(filament.nozzleTemperature)}</CardDetail>
             }
             {filament.diameter &&
                 <CardDetail><Diameter size={20} /> {filament.diameter}mm</CardDetail>

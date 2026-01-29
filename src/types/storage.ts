@@ -1,4 +1,3 @@
-import { Filament } from "./filament";
 import { DBDates } from "./general";
 
 export type Storage = {
@@ -8,5 +7,8 @@ export type Storage = {
     name: string,
     icon: string,
 
-    filament: Filament[],
+    /**
+     * IDs of all the filament in the storage.
+     */
+    filament: string[],
 } & DBDates
