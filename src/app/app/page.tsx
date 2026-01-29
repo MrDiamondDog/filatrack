@@ -22,8 +22,12 @@ export default function DashboardPage() {
             <div className="w-full">
                 <h2>Storage</h2>
                 <Divider />
-                {/* @ts-ignore temporary */}
-                <StorageList storage={[{ id: "0", name: "Storage 1", icon: "", filament: [randomFilament(), randomFilament()] }]} />
+                <StorageList storage={[
+                    // @ts-ignore temporary
+                    { id: "0", name: "Storage 1", icon: "", filament: [randomFilament(), randomFilament()] },
+                    // @ts-ignore temporary
+                    { id: "1", name: "Storage 1", icon: "", filament: [randomFilament(), randomFilament()] },
+                ]} />
             </div>
 
             <Divider vertical />

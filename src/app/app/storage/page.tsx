@@ -11,7 +11,7 @@ export default function StoragePage() {
         {/* @ts-ignore temporary */}
         <StorageList storage={[{ id: "0", name: "Storage 1", icon: "", filament: [randomFilament(), randomFilament()] },
         // @ts-ignore temporary
-            { id: "0", name: "Storage 1", icon: "", filament: [randomFilament(), randomFilament()] },
+            { id: "1", name: "Storage 1", icon: "", filament: [randomFilament(), randomFilament()] },
         ]} />
     </MotionContainer>;
 }
