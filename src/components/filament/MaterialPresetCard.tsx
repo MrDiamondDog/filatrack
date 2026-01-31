@@ -1,6 +1,6 @@
 import { MaterialPreset } from "@/types/settings";
 import Subtext from "../base/Subtext";
-import { celcius } from "@/lib/units";
+import { celcius } from "@/lib/util/units";
 
 export default function MaterialPresetCard({ preset, editable }: { preset: MaterialPreset, editable?: boolean }) {
     return (<div className={`flex gap-2 items-center w-full ${editable && "bg-bg-light rounded-lg p-2 px-3"}`}>

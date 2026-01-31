@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "build-types": "pocketbase-typegen --json=pb_schema.json"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -17,6 +18,7 @@
     "lucide-react": "^0.562.0",
     "motion": "^12.24.0",
     "next": "16.1.1",
+    "pocketbase": "^0.26.7",
     "react": "19.2.3",
     "react-colorful": "^5.6.1",
     "react-dom": "19.2.3",
@@ -37,11 +39,18 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-path-alias": "1.0.0",
     "eslint-plugin-unused-imports": "3.1.0",
+    "pocketbase-typegen": "^1.3.3",
+    "sqlite3": "^5.1.7",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
   "packageManager": "pnpm@10.28.0",
   "engines": {
     "node": "^v20.18.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sqlite3"
+    ]
   }
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { pb } from "@/api/pb";
 import Button, { ButtonStyles } from "@/components/base/Button";
 import Divider from "@/components/base/Divider";
 import MotionContainer from "@/components/base/MotionContainer";
@@ -11,24 +12,28 @@ import CustomAttributeCard from "@/components/filament/CustomAttributeCard";
 import MaterialPresetCard from "@/components/filament/MaterialPresetCard";
 import CreateCustomAttributeModal from "@/components/modals/CreateCustomAttributeModal";
 import CreateMaterialPresetModal from "@/components/modals/CreateMaterialPresetModal";
-import { useObjectState } from "@/lib/hooks";
+import { logout } from "@/lib/auth";
+import { useObjectState } from "@/lib/util/hooks";
+import { UsersRecord } from "@/types/pb";
 import { UserSettings } from "@/types/settings";
 import { Plus } from "lucide-react";
+import { redirect } from "next/navigation";
 import { useState } from "react";
 
 export default function SettingsPage() {
-    // TODO: backend
+    const user = pb.authStore.record as unknown as UsersRecord | null;
+
+    if (!user)
+        return redirect("/login");
+
     const [userSettings, setUserSettings] = useObjectState<UserSettings>({
+        id: "",
         user: "lalala",
         tempUnit: "c",
         massUnit: "g",
         lengthUnit: "mm",
-        materialPresets: [{ material: "PLA", nozzleTemperature: 220, bedTemperature: 60, transmissionDistance: 1.00, flowRatio: 1 },
-            { material: "PLA", nozzleTemperature: 220, bedTemperature: 60, transmissionDistance: 1.00, flowRatio: 1 },
-        ],
-        customAttributes: [{ name: "Density", type: "number", units: "g/mm^3" },
-            { name: "Location", type: "string" },
-        ],
+        materialPresets: [],
+        customAttributes: [],
         created: new Date(),
         updated: new Date(),
     });
@@ -39,11 +44,12 @@ export default function SettingsPage() {
         <MotionContainer>
             <Tablist tabs={{ account: "Account", preferences: "Preferences" }} activeTab="account">
                 <Tab name="account">
-                    <div className="bg-bg-light rounded-lg p-4 flex gap-2 w-fit mt-2">
-                        <img src="/apple-touch-icon.png" className="rounded-full" />
-                        <div>
-                            <h2>Username</h2>
+                    <div className="bg-bg-light rounded-lg p-4 flex gap-2 w-fit mt-2 items-center">
+                        <img src={pb.files.getURL(user, user.avatar!)} className="rounded-full size-30" />
+                        <div className="*:w-full">
+                            <h2>{user.name}</h2>
                             <Divider />
+                            <Button look={ButtonStyles.secondary} className="mb-1" onClick={logout}>Log Out</Button>
                             <Button look={ButtonStyles.secondary} className="mb-1">Edit Username</Button>
                             <Button look={ButtonStyles.danger}>Delete Account</Button>
                         </div>

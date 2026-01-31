@@ -8,7 +8,7 @@ import { useState } from "react";
 import { Images, TableIcon } from "lucide-react";
 import Table from "../base/Table";
 import { sortFn as colorSort } from "color-sorter";
-import { grams } from "@/lib/units";
+import { grams } from "@/lib/util/units";
 
 export default function FilamentList({ filament, title, viewLock }:
     { filament: Filament[], title?: string, viewLock?: "cards" | "table" }) {

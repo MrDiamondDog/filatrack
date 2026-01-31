@@ -4,13 +4,13 @@ import { Filament } from "@/types/filament";
 import FilamentIcon from "./FilamentIcon";
 import Subtext from "../base/Subtext";
 import Button from "../base/Button";
-import { celcius, grams } from "@/lib/units";
+import { celcius, grams } from "@/lib/util/units";
 import { Box, Diameter, EllipsisVertical, Thermometer, Weight } from "lucide-react";
 import CardDetail from "../util/CardDetail";
 import { useState } from "react";
 import PrintFilamentModal from "../modals/PrintFilamentModal";
 import { useRouter } from "next/navigation";
-import { useDevice } from "@/lib/hooks";
+import { useDevice } from "@/lib/util/hooks";
 
 export default function FilamentCard({ filament, noninteractable, className }:
     { filament: Filament, noninteractable?: boolean, className?: string }) {

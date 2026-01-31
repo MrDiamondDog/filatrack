@@ -1,6 +1,6 @@
 "use client";
 
-import { randomFrom, randomInt } from "@/lib/random";
+import { randomFrom, randomInt } from "@/lib/util/random";
 import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
 

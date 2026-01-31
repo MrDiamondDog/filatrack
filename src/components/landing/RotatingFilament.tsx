@@ -1,6 +1,6 @@
 "use client";
 
-import { randomFilament } from "@/lib/random";
+import { randomFilament } from "@/lib/util/random";
 import { useEffect, useState } from "react";
 import FilamentCard from "../filament/FilamentCard";
 

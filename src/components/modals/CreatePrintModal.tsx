@@ -8,7 +8,7 @@ import FilamentMiniRow from "../filament/FilamentMiniRow";
 import Divider from "../base/Divider";
 import Button from "../base/Button";
 import Subtext from "../base/Subtext";
-import { grams } from "@/lib/units";
+import { grams } from "@/lib/util/units";
 
 export default function CreatePrintModal({ ...props }: ModalProps) {
     const [selectedFilament, setSelectedFilament] = useState<Filament[]>([]);

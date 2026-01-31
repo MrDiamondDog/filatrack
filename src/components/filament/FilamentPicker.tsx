@@ -1,4 +1,4 @@
-import { randomFilament } from "@/lib/random";
+import { randomFilament } from "@/lib/util/random";
 import { Filament } from "@/types/filament";
 import { SelectMultiple } from "../base/Select";
 import { useState } from "react";

@@ -1,6 +1,6 @@
 import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
 import Input from "../base/Input";
-import { useObjectState } from "@/lib/hooks";
+import { useObjectState } from "@/lib/util/hooks";
 import { Storage } from "@/types/storage";
 import Button from "../base/Button";
 import { useState } from "react";

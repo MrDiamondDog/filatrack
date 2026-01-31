@@ -2,7 +2,7 @@
 
 import MotionContainer from "@/components/base/MotionContainer";
 import FilamentList from "@/components/filament/FilamentList";
-import { randomFilament } from "@/lib/random";
+import { randomFilament } from "@/lib/util/random";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";

@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "../base/Button";
 import Input from "../base/Input";
 import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
-import { useObjectState } from "@/lib/hooks";
+import { useObjectState } from "@/lib/util/hooks";
 import { MaterialPreset } from "@/types/settings";
 
 export default function CreateMaterialPresetModal(props: ModalProps) {

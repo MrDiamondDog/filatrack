@@ -2,3 +2,6 @@ node_modules
 .next
 next-env.d.ts
 .env
+pocketbase.exe
+pb_data
+src/types/pb.ts

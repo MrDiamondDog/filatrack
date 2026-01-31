@@ -1,10 +1,10 @@
-import { randomFilament } from "@/lib/random";
+import { randomFilament } from "@/lib/util/random";
 import Drawer from "../base/Drawer";
 import Input from "../base/Input";
 import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
 import { useState } from "react";
 import { Filament } from "@/types/filament";
-import { useObjectState } from "@/lib/hooks";
+import { useObjectState } from "@/lib/util/hooks";
 import { Select } from "../base/Select";
 import FilamentColorPicker from "../filament/FilamentColorPicker";
 import FilamentMassPicker from "../filament/FilamentMassPicker";

@@ -1,4 +1,4 @@
-import { grams } from "@/lib/units";
+import { grams } from "@/lib/util/units";
 import Input from "../base/Input";
 
 type MassValues = { mass: number, initialMass: number };

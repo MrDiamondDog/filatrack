@@ -1,7 +1,7 @@
 import Divider from "@/components/base/Divider";
 import MotionContainer from "@/components/base/MotionContainer";
 import StorageList from "@/components/storage/StorageList";
-import { randomFilament } from "@/lib/random";
+import { randomFilament } from "@/lib/util/random";
 
 export default function StoragePage() {
     // TODO: backend

@@ -1,7 +1,7 @@
 "use client";
 
-import { toDateString, toTimeString } from "@/lib/date";
-import { grams } from "@/lib/units";
+import { toDateString, toTimeString } from "@/lib/util/date";
+import { grams } from "@/lib/util/units";
 import { Print } from "@/types/print";
 import Table from "../base/Table";
 

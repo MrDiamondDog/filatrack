@@ -4,7 +4,7 @@ import { Archive, Cog, Home, Printer, Spool } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 import Divider from "../base/Divider";
 import Link from "next/link";
-import { useDevice } from "@/lib/hooks";
+import { useDevice } from "@/lib/util/hooks";
 
 export function MobileSidebar() {
     return (<div className="z-1 bottom-0 left-0 right-0 h-15 bg-bg-light p-2 px-4 fixed flex items-center justify-around gap-2">

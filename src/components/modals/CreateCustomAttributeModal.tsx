@@ -1,4 +1,4 @@
-import { useObjectState } from "@/lib/hooks";
+import { useObjectState } from "@/lib/util/hooks";
 import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
 import Tablist from "../base/tabs/Tablist";
 import { CustomAttribute } from "@/types/settings";

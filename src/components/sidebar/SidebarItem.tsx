@@ -1,6 +1,6 @@
 "use client";
 
-import { useDevice } from "@/lib/hooks";
+import { useDevice } from "@/lib/util/hooks";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

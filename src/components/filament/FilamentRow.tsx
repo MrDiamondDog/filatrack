@@ -1,6 +1,6 @@
 import { Filament } from "@/types/filament";
 import FilamentIcon from "./FilamentIcon";
-import { grams } from "@/lib/units";
+import { grams } from "@/lib/util/units";
 
 export default function FilamentRow({ filament }: { filament: Filament }) {
     return <tr>

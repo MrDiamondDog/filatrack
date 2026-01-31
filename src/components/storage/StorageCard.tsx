@@ -1,7 +1,7 @@
 import { Storage } from "@/types/storage";
 import { Archive, Box, CirclePile, Weight } from "lucide-react";
 import CardDetail from "../util/CardDetail";
-import { grams } from "@/lib/units";
+import { grams } from "@/lib/util/units";
 import Link from "next/link";
 
 export default function StorageCard({ storage }: { storage: Storage }) {

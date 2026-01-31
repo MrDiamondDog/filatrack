@@ -1,5 +1,5 @@
 import { Filament } from "@/types/filament";
-import { grams } from "@/lib/units";
+import { grams } from "@/lib/util/units";
 import Subtext from "../base/Subtext";
 import FilamentIcon from "./FilamentIcon";
 

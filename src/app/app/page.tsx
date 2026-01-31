@@ -4,7 +4,7 @@ import CreateButton from "@/components/dashboard/CreateButton";
 import FilamentChart from "@/components/dashboard/FilamentChart";
 import FilamentList from "@/components/filament/FilamentList";
 import StorageList from "@/components/storage/StorageList";
-import { randomFilament } from "@/lib/random";
+import { randomFilament } from "@/lib/util/random";
 
 export default function DashboardPage() {
     return (<MotionContainer>

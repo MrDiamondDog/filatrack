@@ -4,7 +4,7 @@ import Subtext from "@/components/base/Subtext";
 import LandingBackground from "@/components/landing/LandingBackground";
 import RotatingFilament from "@/components/landing/RotatingFilament";
 import { endpoints } from "@/constants";
-import { bigNum } from "@/lib/number";
+import { bigNum } from "@/lib/util/number";
 import { ArrowRight, ChevronDown, CircleDollarSign, Code, GlobeLock, QrCode, ScrollText, Smartphone } from "lucide-react";
 import Link from "next/link";
 
