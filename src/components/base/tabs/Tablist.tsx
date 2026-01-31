@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 import TabButton from "./TabButton";
-import { motion } from "motion/react";
+import { LayoutGroup, motion } from "motion/react";
 
 interface Props {
     tabs: Record<string, React.ReactNode>;
@@ -36,16 +36,18 @@ export default function Tablist(props: Props) {
             className={`flex gap-1 overflow-x-auto bg-bg-light px-2 py-1 rounded-lg ${props.className} overflow-hidden`}
             layout
         >
-            {Object.entries(props.tabs).map(tab => (
-                <TabButton
-                    key={tab[0]}
-                    active={activeTab === tab[0]}
-                    onClick={() => {
-                        setActiveTab(tab[0]);
-                        props.onTabChange?.(tab[0]);
-                    }}
-                >{tab[1]}</TabButton>
-            ))}
+            <LayoutGroup id={Object.keys(props.tabs).join("-")}>
+                {Object.entries(props.tabs).map(tab => (
+                    <TabButton
+                        key={tab[0]}
+                        active={activeTab === tab[0]}
+                        onClick={() => {
+                            setActiveTab(tab[0]);
+                            props.onTabChange?.(tab[0]);
+                        }}
+                    >{tab[1]}</TabButton>
+                ))}
+            </LayoutGroup>
         </motion.div>
 
         {React.Children.map(props.children, child => {
