@@ -1,12 +1,14 @@
-import { Storage } from "@/types/storage";
 import { Archive, Box, CirclePile, Weight } from "lucide-react";
 import CardDetail from "../util/CardDetail";
 import { grams } from "@/lib/util/units";
 import Link from "next/link";
+import { FilamentRecord, StorageRecord } from "@/types/pb";
 
-export default function StorageCard({ storage }: { storage: Storage }) {
-    const totalMass = storage.filament.reduce((prev, curr) => prev + curr.mass, 0);
-    const totalInitialMass = storage.filament.reduce((prev, curr) => prev + curr.initialMass, 0);
+export default function StorageCard({ storage }: { storage: StorageRecord }) {
+    const filament: FilamentRecord[] = [];
+
+    const totalMass = filament.reduce((prev, curr) => prev + curr.mass, 0);
+    const totalInitialMass = filament.reduce((prev, curr) => prev + curr.initialMass, 0);
 
     return <Link
         className={`unstyled bg-bg-light p-2 rounded-lg min-w-50 border-2 border-transparent hover:border-primary 
@@ -22,11 +24,11 @@ export default function StorageCard({ storage }: { storage: Storage }) {
             <h3>{storage.name}</h3>
         </div>
         <CardDetail>
-            <CirclePile size={20} /> {storage.filament.length} filament roll{storage.filament.length === 1 ? "" : "s"}
+            <CirclePile size={20} /> {filament.length} filament roll{filament.length === 1 ? "" : "s"}
         </CardDetail>
         <CardDetail>
             <Box size={20} />
-            {[...new Set(storage.filament.map(f => f.material))].join(", ")}
+            {[...new Set(filament.map(f => f.material))].join(", ")}
         </CardDetail>
         <CardDetail>
             <Weight size={20} /> {grams(totalMass)}/
@@ -34,7 +36,7 @@ export default function StorageCard({ storage }: { storage: Storage }) {
         </CardDetail>
 
         <div className="w-full flex gap-1 flex-wrap mt-2">
-            {storage.filament.map(f => <div className="w-5 h-5 rounded-sm" style={{ backgroundColor: f.color }} key={f.id} />)}
+            {filament.map(f => <div className="w-5 h-5 rounded-sm" style={{ backgroundColor: f.color }} key={f.id} />)}
         </div>
     </Link>;
 }

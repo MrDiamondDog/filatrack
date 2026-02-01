@@ -5,14 +5,14 @@ import Divider from "@/components/base/Divider";
 import MotionContainer from "@/components/base/MotionContainer";
 import CreatePrintModal from "@/components/modals/CreatePrintModal";
 import PrintList from "@/components/prints/PrintList";
-import { Print } from "@/types/print";
+import { PrintsRecord } from "@/types/pb";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
 export default function PrintPage() {
     const [openModal, setOpenModal] = useState("");
 
-    const [prints, setPrints] = useState<Print[]>([
+    const [prints, setPrints] = useState<PrintsRecord[]>([
         // @ts-ignore temp
         { label: "a Test Print", totalFilamentUsed: 124, totalRollsUsed: 2, created: new Date() },
         // @ts-ignore temp

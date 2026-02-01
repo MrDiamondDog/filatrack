@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
 import FilamentPicker from "../filament/FilamentPicker";
-import { Filament } from "@/types/filament";
 import Drawer from "../base/Drawer";
 import Input from "../base/Input";
 import FilamentMiniRow from "../filament/FilamentMiniRow";
@@ -9,9 +8,10 @@ import Divider from "../base/Divider";
 import Button from "../base/Button";
 import Subtext from "../base/Subtext";
 import { grams } from "@/lib/util/units";
+import { FilamentRecord } from "@/types/pb";
 
 export default function CreatePrintModal({ ...props }: ModalProps) {
-    const [selectedFilament, setSelectedFilament] = useState<Filament[]>([]);
+    const [selectedFilament, setSelectedFilament] = useState<FilamentRecord[]>([]);
     const [drawer, setDrawer] = useState(0);
     const [filamentUsed, setFilamentUsed] = useState<Record<string, number>>({});
     const [name, setName] = useState("");

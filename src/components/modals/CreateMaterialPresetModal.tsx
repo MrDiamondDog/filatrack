@@ -3,11 +3,11 @@ import Button from "../base/Button";
 import Input from "../base/Input";
 import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
 import { useObjectState } from "@/lib/util/hooks";
-import { MaterialPreset } from "@/types/settings";
+import { MaterialPresetsRecord } from "@/types/pb";
+import { Create } from "@/types/general";
 
 export default function CreateMaterialPresetModal(props: ModalProps) {
-    const [materialPreset, setMaterialPreset] = useObjectState<MaterialPreset>({
-        user: "",
+    const [materialPreset, setMaterialPreset] = useObjectState<Create<MaterialPresetsRecord>>({
         material: "PLA",
     });
 

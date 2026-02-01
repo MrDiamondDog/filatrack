@@ -1,16 +1,15 @@
 import { useObjectState } from "@/lib/util/hooks";
 import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
 import Tablist from "../base/tabs/Tablist";
-import { CustomAttribute } from "@/types/settings";
 import Input from "../base/Input";
 import Button from "../base/Button";
+import { CustomAttributesRecord, CustomAttributesTypeOptions } from "@/types/pb";
+import { Create } from "@/types/general";
 
 export default function CreateCustomAttributeModal(props: ModalProps) {
-    const [customAttribute, setCustomAttribute] = useObjectState<CustomAttribute>({
-        user: "",
-
+    const [customAttribute, setCustomAttribute] = useObjectState<Create<CustomAttributesRecord>>({
         name: "",
-        type: "string",
+        type: CustomAttributesTypeOptions.string,
     });
 
     return (<Modal {...props} title="Create Custom Attribute">
@@ -19,7 +18,7 @@ export default function CreateCustomAttributeModal(props: ModalProps) {
         <Tablist
             tabs={{ string: "Text", number: "Number" }}
             activeTab={customAttribute.type}
-            onTabChange={t => setCustomAttribute({ type: t as "string" | "number" })}
+            onTabChange={t => setCustomAttribute({ type: t as CustomAttributesTypeOptions })}
             className="bg-bg! w-full! *:w-full mb-2"
         />
 

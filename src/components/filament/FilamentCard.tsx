@@ -1,6 +1,5 @@
 "use client";
 
-import { Filament } from "@/types/filament";
 import FilamentIcon from "./FilamentIcon";
 import Subtext from "../base/Subtext";
 import Button from "../base/Button";
@@ -11,9 +10,10 @@ import { useState } from "react";
 import PrintFilamentModal from "../modals/PrintFilamentModal";
 import { useRouter } from "next/navigation";
 import { useDevice } from "@/lib/util/hooks";
+import { FilamentRecord } from "@/types/pb";
 
 export default function FilamentCard({ filament, noninteractable, className }:
-    { filament: Filament, noninteractable?: boolean, className?: string }) {
+    { filament: FilamentRecord, noninteractable?: boolean, className?: string }) {
     const [openModal, setOpenModal] = useState("");
     const [isMobile, _] = useDevice();
 
@@ -49,10 +49,10 @@ export default function FilamentCard({ filament, noninteractable, className }:
         <div className="flex flex-col text-gray-400 text-sm mb-2 items-center">
             <CardDetail><Weight size={20} /> {grams(filament.mass)}/{grams(filament.initialMass)}</CardDetail>
             <CardDetail><Box size={20} /> {filament.material}</CardDetail>
-            {filament.nozzleTemperature &&
+            {!!filament.nozzleTemperature &&
                 <CardDetail><Thermometer size={20} /> {celcius(filament.nozzleTemperature)}</CardDetail>
             }
-            {filament.diameter &&
+            {!!filament.diameter &&
                 <CardDetail><Diameter size={20} /> {filament.diameter}mm</CardDetail>
             }
         </div>

@@ -1,8 +1,8 @@
-import { Filament } from "@/types/filament";
 import FilamentIcon from "./FilamentIcon";
 import { grams } from "@/lib/util/units";
+import { FilamentRecord } from "@/types/pb";
 
-export default function FilamentRow({ filament }: { filament: Filament }) {
+export default function FilamentRow({ filament }: { filament: FilamentRecord }) {
     return <tr>
         <td><FilamentIcon filament={filament} size={36} /></td>
         <td>{filament.name}</td>

@@ -1,6 +1,6 @@
-import { Filament } from "@/types/filament";
+import { FilamentRecord } from "@/types/pb";
 
-export default function FilamentIcon({ size, filament }: { size: number, filament?: Filament }) {
+export default function FilamentIcon({ size, filament }: { size: number, filament?: FilamentRecord }) {
     const stage = filament ?
         filament.mass <= 0 ? 5 : Math.min(5, Math.max(1, Math.ceil(filament.mass / filament.initialMass * 5))) :
         5;

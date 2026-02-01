@@ -1,9 +1,9 @@
-import { Filament } from "@/types/filament";
 import { grams } from "@/lib/util/units";
 import Subtext from "../base/Subtext";
 import FilamentIcon from "./FilamentIcon";
+import { FilamentRecord } from "@/types/pb";
 
-export default function FilamentMiniRow({ filament }: { filament: Filament }) {
+export default function FilamentMiniRow({ filament }: { filament: FilamentRecord }) {
     return <div className="flex gap-2 items-center w-full">
         <FilamentIcon filament={filament} size={32} />
         <div className="relative w-full">

@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "build-types": "pocketbase-typegen --json=pb_schema.json"
+    "build-types": "pocketbase-typegen --json=pb_schema.json -o src/types/pb.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

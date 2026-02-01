@@ -827,11 +827,11 @@
   },
   {
     "id": "pbc_1729099166",
-    "listRule": null,
-    "viewRule": null,
+    "listRule": "user.id = @request.auth.id",
+    "viewRule": "user.id = @request.auth.id",
     "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "updateRule": "user.id = @request.auth.id",
+    "deleteRule": "user.id = @request.auth.id",
     "name": "customAttributes",
     "type": "base",
     "fields": [
@@ -930,11 +930,11 @@
   },
   {
     "id": "pbc_3722732479",
-    "listRule": null,
-    "viewRule": null,
-    "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "listRule": "user.id = @request.auth.id",
+    "viewRule": "user.id = @request.auth.id",
+    "createRule": "",
+    "updateRule": "user.id = @request.auth.id",
+    "deleteRule": "user.id = @request.auth.id",
     "name": "filament",
     "type": "base",
     "fields": [
@@ -1223,11 +1223,11 @@
   },
   {
     "id": "pbc_436566489",
-    "listRule": null,
-    "viewRule": null,
+    "listRule": "user.id = @request.auth.id",
+    "viewRule": "user.id = @request.auth.id",
     "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "updateRule": "user.id = @request.auth.id",
+    "deleteRule": "user.id = @request.auth.id",
     "name": "materialPresets",
     "type": "base",
     "fields": [
@@ -1355,11 +1355,11 @@
   },
   {
     "id": "pbc_2295963732",
-    "listRule": null,
-    "viewRule": null,
+    "listRule": "user.id = @request.auth.id",
+    "viewRule": "user.id = @request.auth.id",
     "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "updateRule": "user.id = @request.auth.id",
+    "deleteRule": "user.id = @request.auth.id",
     "name": "prints",
     "type": "base",
     "fields": [
@@ -1421,7 +1421,7 @@
         "name": "totalFilamentUsed",
         "onlyInt": false,
         "presentable": false,
-        "required": false,
+        "required": true,
         "system": false,
         "type": "number"
       },
@@ -1436,6 +1436,20 @@
         "required": true,
         "system": false,
         "type": "number"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text245846248",
+        "max": 0,
+        "min": 0,
+        "name": "label",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": false,
+        "system": false,
+        "type": "text"
       },
       {
         "hidden": false,
@@ -1463,11 +1477,11 @@
   },
   {
     "id": "pbc_3307824350",
-    "listRule": null,
-    "viewRule": null,
+    "listRule": "user.id = @request.auth.id",
+    "viewRule": "user.id = @request.auth.id",
     "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "updateRule": "user.id = @request.auth.id",
+    "deleteRule": "user.id = @request.auth.id",
     "name": "storage",
     "type": "base",
     "fields": [
@@ -1565,11 +1579,11 @@
   },
   {
     "id": "pbc_1743682018",
-    "listRule": null,
-    "viewRule": null,
+    "listRule": "user.id = @request.auth.id",
+    "viewRule": "user.id = @request.auth.id",
     "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "updateRule": "user.id = @request.auth.id",
+    "deleteRule": "user.id = @request.auth.id",
     "name": "userSettings",
     "type": "base",
     "fields": [

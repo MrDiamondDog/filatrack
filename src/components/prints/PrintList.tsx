@@ -2,20 +2,20 @@
 
 import { toDateString, toTimeString } from "@/lib/util/date";
 import { grams } from "@/lib/util/units";
-import { Print } from "@/types/print";
 import Table from "../base/Table";
+import { PrintsRecord } from "@/types/pb";
 
-export default function PrintList({ prints }: { prints: Print[] }) {
+export default function PrintList({ prints }: { prints: PrintsRecord[] }) {
     return <>
         {/* TODO: Filament Previews */}
         <Table
             columns={[
-                { label: "Name", key: "name" },
-                { label: "Filament Used", key: "totalFilament", render: data => grams(data.totalFilamentUsed) },
-                { label: "Rolls Used", key: "totalRolls" },
+                { label: "Name", key: "label" },
+                { label: "Filament Used", key: "totalFilamentUsed", render: data => grams(data.totalFilamentUsed) },
+                { label: "Rolls Used", key: "totalRollsUsed" },
                 {
                     label: "Date", key: "created",
-                    render: data => `${toDateString(data.created)} ${toTimeString(data.created)}`,
+                    render: data => `${toDateString(new Date(data.created))} ${toTimeString(new Date(data.created))}`,
                     sort: (a, b) => (a as Date).getTime() - (b as Date).getTime(),
                 },
             ]}

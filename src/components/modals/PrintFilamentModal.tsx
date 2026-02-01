@@ -1,4 +1,3 @@
-import { Filament } from "@/types/filament";
 import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
 import Input from "../base/Input";
 import { useObjectState } from "@/lib/util/hooks";
@@ -6,12 +5,13 @@ import Button from "../base/Button";
 import { useState } from "react";
 import FilamentCard from "../filament/FilamentCard";
 import { grams } from "@/lib/util/units";
-import { Print } from "@/types/print";
 import Link from "next/link";
+import { FilamentRecord, PrintsRecord } from "@/types/pb";
+import { Create } from "@/types/general";
 
-export default function PrintFilamentModal({ filament, ...props }: { filament: Filament } & ModalProps) {
-    const [print, setPrint] = useObjectState<Omit<Print, "id" | "user" | "created" | "updated">>({
-        filamentRolls: [filament],
+export default function PrintFilamentModal({ filament, ...props }: { filament: FilamentRecord } & ModalProps) {
+    const [print, setPrint] = useObjectState<Create<PrintsRecord<Record<string, number>>>>({
+        filamentRolls: [filament.id],
         filamentUsage: { [filament.id]: 0 },
 
         label: "",
@@ -46,7 +46,7 @@ export default function PrintFilamentModal({ filament, ...props }: { filament: F
                     label="Filament Used (g)"
                     subtext="Include any waste."
                     type="number"
-                    value={print.filamentUsage[filament.id]}
+                    value={print.filamentUsage?.[filament.id] ?? ""}
                     onChange={e => setPrint({
                         filamentUsage: { [filament.id]: parseInt(e.target.value) },
                     })}
@@ -61,7 +61,7 @@ export default function PrintFilamentModal({ filament, ...props }: { filament: F
                     onChange={e => setPrint({ label: e.target.value })}
                 />
 
-                <p>You will have {grams(filament.mass - print.totalFilamentUsed)}/{grams(filament.initialMass)} remaining.</p>
+                <p>You will have {grams(filament.mass - (print.totalFilamentUsed ?? 0))}/{grams(filament.initialMass)} remaining.</p>
             </div>
         </div>
 

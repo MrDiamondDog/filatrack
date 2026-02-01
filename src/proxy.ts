@@ -1,19 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isTokenExpired } from "pocketbase";
+import { isAuthed } from "./lib/auth";
 
-export function proxy(request: NextRequest) {
-    if (request.nextUrl.pathname.startsWith("/app")) {
-        const authCookie = request.cookies.get("pb_auth");
-        const token = authCookie?.value ? JSON.parse(authCookie.value).token : null;
-
-        if (!token || isTokenExpired(token)) {
-            const url = request.nextUrl.clone();
-            url.pathname = "/login";
-            return NextResponse.redirect(url.toString());
-        }
+export async function proxy(request: NextRequest) {
+    if (!(await isAuthed(request.cookies))) {
+        const newUrl = request.nextUrl.clone();
+        newUrl.pathname = "/login";
+        return NextResponse.redirect(newUrl);
     }
 }
 
 export const config = {
-    matcher: "/app",
+    matcher: "/app/:path*",
 };

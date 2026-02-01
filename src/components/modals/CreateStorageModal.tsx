@@ -1,12 +1,13 @@
 import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
 import Input from "../base/Input";
 import { useObjectState } from "@/lib/util/hooks";
-import { Storage } from "@/types/storage";
 import Button from "../base/Button";
 import { useState } from "react";
+import { Create } from "@/types/general";
+import { StorageRecord } from "@/types/pb";
 
 export default function CreateStorageModal(props: ModalProps) {
-    const [storage, setStorage] = useObjectState<Omit<Storage, "id" | "user" | "created" | "updated">>({
+    const [storage, setStorage] = useObjectState<Create<StorageRecord>>({
         name: "",
         icon: "",
         filament: [],

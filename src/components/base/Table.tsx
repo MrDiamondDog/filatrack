@@ -88,6 +88,7 @@ export default function Table<T extends Record<string, any>>({ columns, data, so
                         key={col.key as string}
                     >
                         {col.render && col.render(item)}
+                        {(!col.render && !item[col.key]) && <div className="w-12 h-0.5 bg-bg-lightest" />}
                         {!col.render && item[col.key]}
                     </td>)}
                 </tr>)}

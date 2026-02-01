@@ -1,29 +1,37 @@
 "use client";
 
-import { Filament } from "@/types/filament";
 import FilamentCard from "./FilamentCard";
 import Divider from "../base/Divider";
 import Tablist from "../base/tabs/Tablist";
 import { useState } from "react";
-import { Images, TableIcon } from "lucide-react";
+import { Images, Plus, TableIcon } from "lucide-react";
 import Table from "../base/Table";
 import { sortFn as colorSort } from "color-sorter";
 import { grams } from "@/lib/util/units";
+import { FilamentRecord } from "@/types/pb";
+import Button from "../base/Button";
+import CreateFilamentModal from "../modals/CreateFilamentModal";
 
-export default function FilamentList({ filament, title, viewLock }:
-    { filament: Filament[], title?: string, viewLock?: "cards" | "table" }) {
+export default function FilamentList({ filament, title, viewLock, allowAdd }:
+    { filament: FilamentRecord[], title?: string, viewLock?: "cards" | "table", allowAdd?: boolean }) {
     const [view, setView] = useState<"cards" | "table">(viewLock ?? "cards");
+
+    const [openModal, setOpenModal] = useState("");
 
     return <>
         {title && <>
             <div className="flex justify-between items-center">
                 <h2>{title}</h2>
 
-                {!viewLock && <Tablist
-                    tabs={{ cards: <Images />, table: <TableIcon /> }}
-                    activeTab={view}
-                    onTabChange={v => setView(v as "cards" | "table")}
-                />}
+                <div className="flex gap-2 items-center">
+                    {!viewLock && <Tablist
+                        tabs={{ cards: <Images />, table: <TableIcon /> }}
+                        activeTab={view}
+                        onTabChange={v => setView(v as "cards" | "table")}
+                    />}
+
+                    {allowAdd && <Button onClick={() => setOpenModal("create")}><Plus /></Button>}
+                </div>
             </div>
             <Divider />
         </>}
@@ -45,11 +53,13 @@ export default function FilamentList({ filament, title, viewLock }:
                     { label: "Initial Mass", key: "initialMass", render: data => grams(data.initialMass) },
                     { label: "Material", key: "material" },
                     { label: "Brand", key: "brand" },
-                    { label: "Temp.", key: "temperature", render: data => `${data.nozzleTemperature}°C` },
+                    { label: "Temp.", key: "nozzleTemperature", render: data => `${data.nozzleTemperature}°C` },
                     { label: "Diameter", key: "diameter", render: data => `${data.diameter}mm` },
                 ]}
                 data={filament}
             />
         }
+
+        <CreateFilamentModal open={openModal === "create"} onClose={() => setOpenModal("")} />
     </>;
 }

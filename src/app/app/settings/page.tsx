@@ -14,8 +14,14 @@ import CreateCustomAttributeModal from "@/components/modals/CreateCustomAttribut
 import CreateMaterialPresetModal from "@/components/modals/CreateMaterialPresetModal";
 import { logout } from "@/lib/auth";
 import { useObjectState } from "@/lib/util/hooks";
-import { UsersRecord } from "@/types/pb";
-import { UserSettings } from "@/types/settings";
+import {
+    IsoAutoDateString,
+    UserSettingsLengthUnitOptions,
+    UserSettingsMassUnitOptions,
+    UserSettingsRecord,
+    UserSettingsTempUnitOptions,
+    UsersRecord,
+} from "@/types/pb";
 import { Plus } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useState } from "react";
@@ -26,16 +32,16 @@ export default function SettingsPage() {
     if (!user)
         return redirect("/login");
 
-    const [userSettings, setUserSettings] = useObjectState<UserSettings>({
+    const [userSettings, setUserSettings] = useObjectState<UserSettingsRecord>({
         id: "",
         user: "lalala",
-        tempUnit: "c",
-        massUnit: "g",
-        lengthUnit: "mm",
+        tempUnit: UserSettingsTempUnitOptions.c,
+        massUnit: UserSettingsMassUnitOptions.g,
+        lengthUnit: UserSettingsLengthUnitOptions.mm,
         materialPresets: [],
         customAttributes: [],
-        created: new Date(),
-        updated: new Date(),
+        created: new Date().toISOString() as IsoAutoDateString,
+        updated: new Date().toISOString() as IsoAutoDateString,
     });
 
     const [openModal, setOpenModal] = useState("");
@@ -68,14 +74,14 @@ export default function SettingsPage() {
                         <Select
                             options={{ c: "°C", f: "°F" }}
                             value={userSettings.tempUnit}
-                            onChange={v => setUserSettings({ tempUnit: v as "c" | "f" })}
+                            onChange={v => setUserSettings({ tempUnit: v as UserSettingsTempUnitOptions })}
                         />
 
                         <p>Mass</p>
                         <Select
                             options={{ g: "g", lb: "lb" }}
                             value={userSettings.massUnit}
-                            onChange={v => setUserSettings({ massUnit: v as "g" | "lb" })}
+                            onChange={v => setUserSettings({ massUnit: v as UserSettingsMassUnitOptions })}
                         />
                         {userSettings.massUnit === "lb" && <Subtext className="text-[12px]">
                             Why did I make this an option...
@@ -85,7 +91,7 @@ export default function SettingsPage() {
                         <Select
                             options={{ mm: "mm", in: "in" }}
                             value={userSettings.lengthUnit}
-                            onChange={v => setUserSettings({ lengthUnit: v as "mm" | "in" })}
+                            onChange={v => setUserSettings({ lengthUnit: v as UserSettingsLengthUnitOptions })}
                         />
                     </div>
                     <Divider />
@@ -99,7 +105,7 @@ export default function SettingsPage() {
                         <Divider />
 
                         <div className="flex flex-col gap-2">
-                            {userSettings.materialPresets.map(p => <MaterialPresetCard preset={p} editable />)}
+                            {userSettings.materialPresets?.map(p => <MaterialPresetCard preset={p} editable />)}
                         </div>
                     </div>
                     <Divider />
@@ -115,7 +121,7 @@ export default function SettingsPage() {
                         <Divider />
 
                         <div className="flex flex-col gap-2">
-                            {userSettings.customAttributes.map(a => <CustomAttributeCard attribute={a} />)}
+                            {userSettings.customAttributes?.map(a => <CustomAttributeCard attribute={a} />)}
                         </div>
                     </div>
                 </Tab>

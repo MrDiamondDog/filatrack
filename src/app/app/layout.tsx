@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     title: "Filatrack Dashboard",
 };
 
-export default function AppLayout({
+export default async function AppLayout({
     children,
 }: Readonly<{
 	children: React.ReactNode;

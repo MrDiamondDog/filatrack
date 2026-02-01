@@ -3,7 +3,6 @@ import Drawer from "../base/Drawer";
 import Input from "../base/Input";
 import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
 import { useState } from "react";
-import { Filament } from "@/types/filament";
 import { useObjectState } from "@/lib/util/hooks";
 import { Select } from "../base/Select";
 import FilamentColorPicker from "../filament/FilamentColorPicker";
@@ -11,8 +10,16 @@ import FilamentMassPicker from "../filament/FilamentMassPicker";
 import Button from "../base/Button";
 import Divider from "../base/Divider";
 import RequiredStar from "../base/RequiredStar";
+import { FilamentRecord, FilamentSpoolTypeOptions } from "@/types/pb";
+import { pb } from "@/api/pb";
+import { Create } from "@/types/general";
 
 export default function CreateFilamentModal(props: ModalProps) {
+    const user = pb.authStore.record;
+
+    if (!user)
+        return null;
+
     const [drawer, setDrawer] = useState(0);
 
     const [error, setError] = useState("");
@@ -20,17 +27,20 @@ export default function CreateFilamentModal(props: ModalProps) {
 
     const [randomFilamentValues, _] = useState(randomFilament());
 
-    const [filament, setFilament] = useObjectState<Omit<Filament, "id" | "user" | "created" | "updated">>({
+    const [filament, setFilament] = useObjectState<Create<FilamentRecord>>({
         name: "",
         material: "",
         color: "#fff",
         mass: 1000,
         initialMass: 1000,
-        spoolType: "plastic",
+        spoolType: FilamentSpoolTypeOptions.plastic,
     });
 
-    function createFilament() {
+    async function createFilament() {
         setError("");
+
+        if (!user)
+            return void setError("Not authenticated");
 
         if (!filament.name || !filament.material || !filament.color || !filament.mass || !filament.initialMass || !filament.spoolType)
             return void setError("Please fill out all required fields.");
@@ -40,7 +50,18 @@ export default function CreateFilamentModal(props: ModalProps) {
 
         setLoading(true);
 
-        // TODO: backend implementation
+        await pb.collection("filament").create({ ...filament, user: user.id });
+
+        setLoading(false);
+        setFilament({
+            name: "",
+            material: "",
+            color: "#fff",
+            mass: 1000,
+            initialMass: 1000,
+            spoolType: FilamentSpoolTypeOptions.plastic,
+        });
+        props.onClose();
     }
 
     return <Modal {...props} onClose={() => {
@@ -88,7 +109,7 @@ export default function CreateFilamentModal(props: ModalProps) {
                 <Select
                     options={{ plastic: "Plastic Spool", cardboard: "Cardboard Spool", refill: "Refill", nospool: "No Spool" }}
                     value={filament.spoolType ?? "full"}
-                    onChange={v => setFilament({ spoolType: v as keyof Filament["spoolType"] })}
+                    onChange={v => setFilament({ spoolType: v as keyof FilamentRecord["spoolType"] })}
                 />
 
                 <Input

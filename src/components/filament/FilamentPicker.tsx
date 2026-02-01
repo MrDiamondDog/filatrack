@@ -1,12 +1,12 @@
 import { randomFilament } from "@/lib/util/random";
-import { Filament } from "@/types/filament";
 import { SelectMultiple } from "../base/Select";
 import { useState } from "react";
 import FilamentMiniRow from "./FilamentMiniRow";
+import { FilamentRecord } from "@/types/pb";
 
 // TODO: make single picker work
 export default function FilamentPicker({ values, onChange, multiple }:
-    { values: Filament[], onChange: (f: Filament[]) => void, multiple?: boolean }) {
+    { values: FilamentRecord[], onChange: (f: FilamentRecord[]) => void, multiple?: boolean }) {
     // TODO: backend
     const [allFilament, setAllFilament] =
         useState([randomFilament(), randomFilament(), randomFilament(), randomFilament(), randomFilament(), randomFilament()]);

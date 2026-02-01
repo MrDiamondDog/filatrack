@@ -4,7 +4,6 @@ import { motion } from "motion/react";
 
 export default function MotionContainer({ children }: React.PropsWithChildren) {
     return <motion.main
-        layout
         initial={{ opacity: 0 }}
         exit={{ opacity: 0 }}
         animate={{ opacity: 1 }}
