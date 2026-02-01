@@ -8,8 +8,6 @@ import { Select } from "@/components/base/Select";
 import Subtext from "@/components/base/Subtext";
 import Tab from "@/components/base/tabs/Tab";
 import Tablist from "@/components/base/tabs/Tablist";
-import CustomAttributeCard from "@/components/filament/CustomAttributeCard";
-import MaterialPresetCard from "@/components/filament/MaterialPresetCard";
 import CreateCustomAttributeModal from "@/components/modals/CreateCustomAttributeModal";
 import CreateMaterialPresetModal from "@/components/modals/CreateMaterialPresetModal";
 import { logout } from "@/lib/auth";
@@ -105,7 +103,7 @@ export default function SettingsPage() {
                         <Divider />
 
                         <div className="flex flex-col gap-2">
-                            {userSettings.materialPresets?.map(p => <MaterialPresetCard preset={p} editable />)}
+                            {/* {userSettings.materialPresets?.map(p => <MaterialPresetCard preset={p} editable />)} */}
                         </div>
                     </div>
                     <Divider />
@@ -121,7 +119,7 @@ export default function SettingsPage() {
                         <Divider />
 
                         <div className="flex flex-col gap-2">
-                            {userSettings.customAttributes?.map(a => <CustomAttributeCard attribute={a} />)}
+                            {/* {userSettings.customAttributes?.map(a => <CustomAttributeCard attribute={a} />)} */}
                         </div>
                     </div>
                 </Tab>
