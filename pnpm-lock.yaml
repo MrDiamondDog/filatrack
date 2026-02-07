@@ -26,6 +26,9 @@ importers:
       color-sorter:
         specifier: ^7.0.0
         version: 7.0.0
+      holy-loader:
+        specifier: ^2.3.14
+        version: 2.3.14(react@19.2.3)
       lucide-react:
         specifier: ^0.562.0
         version: 0.562.0(react@19.2.3)
@@ -2012,6 +2015,11 @@ packages:
 
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
+
+  holy-loader@2.3.14:
+    resolution: {integrity: sha512-V7z6jXKy/CZfZY6EAVxMFGbLfE7/TLhYWgpMhODvZPpAL2JTkfjmZhYd0TiZIdZiychtCL5tA5sRN0MUwjRNjA==}
+    peerDependencies:
+      react: '>= 16.0.0'
 
   http-cache-semantics@4.2.0:
     resolution: {integrity: sha512-dTxcvPXqPvXBQpq5dUr6mEMJX4oIEFv6bwom3FDwKRDsuIjjJGANqhBuoAn9c1RQJIdAKav33ED65E2ys+87QQ==}
@@ -5260,6 +5268,10 @@ snapshots:
   hoist-non-react-statics@3.3.2:
     dependencies:
       react-is: 16.13.1
+
+  holy-loader@2.3.14(react@19.2.3):
+    dependencies:
+      react: 19.2.3
 
   http-cache-semantics@4.2.0:
     optional: true

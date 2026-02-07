@@ -1,15 +1,20 @@
-import { randomFilament } from "@/lib/util/random";
 import { SelectMultiple } from "../base/Select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FilamentMiniRow from "./FilamentMiniRow";
-import { FilamentRecord } from "@/types/pb";
+import { FilamentRecord, UsersRecord } from "@/types/pb";
+import { pb } from "@/api/pb";
 
 // TODO: make single picker work
 export default function FilamentPicker({ values, onChange, multiple }:
     { values: FilamentRecord[], onChange: (f: FilamentRecord[]) => void, multiple?: boolean }) {
-    // TODO: backend
-    const [allFilament, setAllFilament] =
-        useState([randomFilament(), randomFilament(), randomFilament(), randomFilament(), randomFilament(), randomFilament()]);
+    const user = pb.authStore.record as unknown as UsersRecord;
+
+    const [allFilament, setAllFilament] = useState<FilamentRecord[]>([]);
+
+    useEffect(() => {
+        pb.collection("filament").getFullList({ filter: `user.id = "${user.id}"` })
+            .then(setAllFilament);
+    }, []);
 
     return <SelectMultiple
         searchable

@@ -8,18 +8,21 @@ import Divider from "../base/Divider";
 import Button from "../base/Button";
 import Subtext from "../base/Subtext";
 import { grams } from "@/lib/util/units";
-import { FilamentRecord } from "@/types/pb";
+import { FilamentRecord, UsersRecord } from "@/types/pb";
+import { pb } from "@/api/pb";
 
 export default function CreatePrintModal({ ...props }: ModalProps) {
+    const user = pb.authStore.record as unknown as UsersRecord;
+
     const [selectedFilament, setSelectedFilament] = useState<FilamentRecord[]>([]);
     const [drawer, setDrawer] = useState(0);
     const [filamentUsed, setFilamentUsed] = useState<Record<string, number>>({});
-    const [name, setName] = useState("");
+    const [label, setLabel] = useState("");
 
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    function createPrint() {
+    async function createPrint() {
         setError("");
 
         if (selectedFilament.length === 0)
@@ -32,14 +35,33 @@ export default function CreatePrintModal({ ...props }: ModalProps) {
 
         setLoading(true);
 
-        // TODO: backend
+        await pb.collection("prints").create({
+            label,
+            user: user.id,
+            filamentRolls: selectedFilament.map(f => f.id),
+            filamentUsage: filamentUsed,
+            totalFilamentUsed: Object.values(filamentUsed).reduce((prev, curr) => prev + curr),
+            totalRollsUsed: selectedFilament.length,
+        })
+            .then(() => {
+                setLoading(false);
+                setLabel("");
+                setDrawer(0);
+                setSelectedFilament([]);
+                props.onClose();
+            })
+            .catch(e => {
+                console.error(e);
+                setLoading(false);
+                setError(e.message);
+            });
     }
 
     return (<Modal {...props} title="Create Print">
         <ModalHeader>Create a print to accurately keep track of how much filament you've used.</ModalHeader>
 
         <div className="flex flex-col gap-2">
-            <Input label="Name" placeholder="What did you print?" value={name} onChange={e => setName(e.target.value)} />
+            <Input label="Name" placeholder="What did you print?" value={label} onChange={e => setLabel(e.target.value)} />
 
             <Drawer label="Select Filament Used" open={drawer === 0} onChange={open => setDrawer(open ? 0 : -1)}>
                 <FilamentPicker values={selectedFilament} onChange={setSelectedFilament} />

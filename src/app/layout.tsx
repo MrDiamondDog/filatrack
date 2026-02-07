@@ -2,6 +2,7 @@ import { prodUrl } from "@/constants";
 import "./globals.css";
 import { Metadata } from "next";
 import { Lexend } from "next/font/google";
+import HolyLoader from "holy-loader";
 
 const lexend = Lexend({
     variable: "--font-lexend",
@@ -68,6 +69,10 @@ export default function RootLayout({
             <body
                 className={`${lexend.className} antialiased bg-bg`}
             >
+                <HolyLoader
+                    color="linear-gradient(to right, #3263ce, #3364ce)"
+                />
+
                 {children}
 
                 <div id="portal-root" />

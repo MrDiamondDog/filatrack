@@ -1,6 +1,7 @@
 import Sidebar from "@/components/sidebar/Sidebar";
 import { AnimatePresence } from "motion/react";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Filatrack Dashboard",
@@ -15,7 +16,9 @@ export default async function AppLayout({
         <Sidebar />
 
         <AnimatePresence>
-            {children}
+            <Suspense>
+                {children}
+            </Suspense>
         </AnimatePresence>
     </div>;
 }

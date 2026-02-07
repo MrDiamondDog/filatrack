@@ -50,18 +50,24 @@ export default function CreateFilamentModal(props: ModalProps) {
 
         setLoading(true);
 
-        await pb.collection("filament").create({ ...filament, user: user.id });
-
-        setLoading(false);
-        setFilament({
-            name: "",
-            material: "",
-            color: "#fff",
-            mass: 1000,
-            initialMass: 1000,
-            spoolType: FilamentSpoolTypeOptions.plastic,
-        });
-        props.onClose();
+        await pb.collection("filament").create({ ...filament, user: user.id })
+            .then(() => {
+                setLoading(false);
+                setFilament({
+                    name: "",
+                    material: "",
+                    color: "#fff",
+                    mass: 1000,
+                    initialMass: 1000,
+                    spoolType: FilamentSpoolTypeOptions.plastic,
+                });
+                props.onClose();
+            })
+            .catch(e => {
+                console.error(e);
+                setLoading(false);
+                setError(e.message);
+            });
     }
 
     return <Modal {...props} onClose={() => {

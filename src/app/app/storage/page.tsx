@@ -1,17 +1,29 @@
+"use client";
+
+import Button from "@/components/base/Button";
 import Divider from "@/components/base/Divider";
 import MotionContainer from "@/components/base/MotionContainer";
+import CreateStorageModal from "@/components/modals/CreateStorageModal";
 import StorageList from "@/components/storage/StorageList";
-import { randomFilament } from "@/lib/util/random";
+import { Plus } from "lucide-react";
+import { useState } from "react";
 
 export default function StoragePage() {
+    const [openModal, setOpenModal] = useState("");
+
     // TODO: backend
     return <MotionContainer>
-        <h2>Storage</h2>
+        <div className="flex items-center justify-between">
+            <h2>Storage</h2>
+            <Button className="h-full flex items-center justify-center gap-1" onClick={() => setOpenModal("storage")}>
+                <Plus size={32} /> New
+            </Button>
+        </div>
+
         <Divider />
-        {/* @ts-ignore temporary */}
-        <StorageList storage={[{ id: "0", name: "Storage 1", icon: "", filament: [randomFilament(), randomFilament()] },
-        // @ts-ignore temporary
-            { id: "1", name: "Storage 1", icon: "", filament: [randomFilament(), randomFilament()] },
-        ]} />
+
+        <StorageList />
+
+        <CreateStorageModal open={openModal === "storage"} onClose={() => setOpenModal("")} />
     </MotionContainer>;
 }

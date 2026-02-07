@@ -5,19 +5,11 @@ import Divider from "@/components/base/Divider";
 import MotionContainer from "@/components/base/MotionContainer";
 import CreatePrintModal from "@/components/modals/CreatePrintModal";
 import PrintList from "@/components/prints/PrintList";
-import { PrintsRecord } from "@/types/pb";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
 export default function PrintPage() {
     const [openModal, setOpenModal] = useState("");
-
-    const [prints, setPrints] = useState<PrintsRecord[]>([
-        // @ts-ignore temp
-        { label: "a Test Print", totalFilamentUsed: 124, totalRollsUsed: 2, created: new Date() },
-        // @ts-ignore temp
-        { label: "z Test Print 2", totalFilamentUsed: 2, totalRollsUsed: 1, created: new Date(Date.now() - 998 * 60 * 24) },
-    ]);
 
     return (<MotionContainer>
         <div className="flex items-center justify-between">
@@ -28,7 +20,7 @@ export default function PrintPage() {
         </div>
         <Divider />
 
-        <PrintList prints={prints} />
+        <PrintList />
 
         <CreatePrintModal open={openModal === "print"} onClose={() => setOpenModal("")} />
     </MotionContainer>);

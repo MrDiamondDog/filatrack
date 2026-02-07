@@ -11,6 +11,7 @@ import PrintFilamentModal from "../modals/PrintFilamentModal";
 import { useRouter } from "next/navigation";
 import { useDevice } from "@/lib/util/hooks";
 import { FilamentRecord } from "@/types/pb";
+import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../base/Dropdown";
 
 export default function FilamentCard({ filament, noninteractable, className }:
     { filament: FilamentRecord, noninteractable?: boolean, className?: string }) {
@@ -32,14 +33,19 @@ export default function FilamentCard({ filament, noninteractable, className }:
             />
         </div>
 
-        {!noninteractable && <button
-            className={"absolute top-2 right-1 rounded-lg hover:bg-bg-lightest transition-colors p-1 cursor-pointer text-gray-400"}
-            onClick={e => {
-                e.stopPropagation();
-            }}
-        >
-            <EllipsisVertical />
-        </button>}
+        {!noninteractable && <Dropdown>
+            <DropdownTrigger asChild>
+                <button
+                    className={`absolute top-2 right-1 rounded-lg hover:bg-bg-lightest transition-colors 
+                        p-1 cursor-pointer text-gray-400`}
+                ><EllipsisVertical /></button>
+            </DropdownTrigger>
+            <DropdownContent>
+                <DropdownItem>Edit</DropdownItem>
+                <DropdownItem>Move</DropdownItem>
+                <DropdownItem danger>Delete</DropdownItem>
+            </DropdownContent>
+        </Dropdown>}
 
         <FilamentIcon filament={filament} size={isMobile ? 48 : 72} />
 
@@ -57,7 +63,7 @@ export default function FilamentCard({ filament, noninteractable, className }:
             }
         </div>
 
-        {!noninteractable && <Button className="w-full" onClick={e => {
+        {!noninteractable && <Button className="w-full mt-auto" onClick={e => {
             e.stopPropagation();
             setOpenModal("log");
         }}>Print</Button>}

@@ -5,8 +5,14 @@ import Button from "../base/Button";
 import { useState } from "react";
 import { Create } from "@/types/general";
 import { StorageRecord } from "@/types/pb";
+import { pb } from "@/api/pb";
 
 export default function CreateStorageModal(props: ModalProps) {
+    const user = pb.authStore.record;
+
+    if (!user)
+        return;
+
     const [storage, setStorage] = useObjectState<Create<StorageRecord>>({
         name: "",
         icon: "",
@@ -16,15 +22,32 @@ export default function CreateStorageModal(props: ModalProps) {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    function createStorage() {
+    async function createStorage() {
         setError("");
+
+        if (!user)
+            return void setError("Not authenticated");
 
         if (!storage.name)
             return void setError("Please fill out all required fields.");
 
         setLoading(true);
 
-        // TODO: backend
+        await pb.collection("storage").create({ ...storage, user: user!.id })
+            .then(() => {
+                setLoading(false);
+                setStorage({
+                    name: "",
+                    icon: "",
+                    filament: [],
+                });
+                props.onClose();
+            })
+            .catch(e => {
+                console.error(e);
+                setLoading(false);
+                setError(e.message);
+            });
     }
 
     return (
