@@ -34,7 +34,7 @@ export default function Table<T extends Record<string, any>>({ columns, data, so
             newSortDir = setDir ?? "desc";
         }
 
-        const sortedData = [...tableData].sort((a, b) => {
+        const sortedData = [...data].sort((a, b) => {
             const valA = newSortDir === "asc" ? b[key] : a[key];
             const valB = newSortDir === "desc" ? b[key] : a[key];
 
@@ -55,7 +55,7 @@ export default function Table<T extends Record<string, any>>({ columns, data, so
 
     useEffect(() => {
         handleSort(sort ?? columns.filter(c => !c.notSortable)[0]?.key ?? "", sortType);
-    }, []);
+    }, [data]);
 
     return (
         <table className="w-full bg-bg-light rounded-lg overflow-x-scroll md:overflow-hidden">

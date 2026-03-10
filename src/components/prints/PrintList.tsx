@@ -5,20 +5,12 @@ import { grams } from "@/lib/util/units";
 import Table from "../base/Table";
 import { PrintsRecord, UsersRecord } from "@/types/pb";
 import { pb } from "@/api/pb";
-import { useState, useEffect } from "react";
 
-export default function PrintList() {
+export default function PrintList({ prints }: { prints: PrintsRecord[] }) {
     const user = pb.authStore.record as unknown as UsersRecord;
 
     if (!user)
         return null;
-
-    const [prints, setPrints] = useState<PrintsRecord[]>([]);
-
-    useEffect(() => {
-        pb.collection("prints").getFullList({ filter: `user.id = "${user.id}"` })
-            .then(setPrints);
-    }, []);
 
     return <>
         {/* TODO: Filament Previews */}
@@ -35,7 +27,7 @@ export default function PrintList() {
             ]}
             data={prints}
             sort="created"
-            sortType="asc"
+            sortType="desc"
         />
     </>;
 }

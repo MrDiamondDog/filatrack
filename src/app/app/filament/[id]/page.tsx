@@ -8,24 +8,24 @@ import Subtext from "@/components/base/Subtext";
 import FilamentIcon from "@/components/filament/FilamentIcon";
 import PrintList from "@/components/prints/PrintList";
 import { celcius, grams } from "@/lib/util/units";
-import { FilamentRecord, PrintsRecord } from "@/types/pb";
+import { FilamentRecord, PrintsRecord, UsersRecord } from "@/types/pb";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 
 export default function FilamentPage({ params }: { params: Promise<{ id: string }> }) {
-    const [filament, setFilament] = useState<FilamentRecord>();
+    const user = pb.authStore.record as unknown as UsersRecord;
 
-    const prints: PrintsRecord[] = [
-        // @ts-ignore temp
-        { label: "a Test Print", totalFilamentUsed: 124, totalRollsUsed: 2, created: new Date() },
-        // @ts-ignore temp
-        { label: "z Test Print 2", totalFilamentUsed: 2, totalRollsUsed: 1, created: new Date(Date.now() - 998 * 60 * 24) },
-    ];
+    if (!user)
+        return null;
+
+    const [filament, setFilament] = useState<FilamentRecord & { expand: { prints: PrintsRecord[] }}>();
 
     useEffect(() => {
-        params.then(p => pb.collection("filament").getOne(p.id)
-            .then(setFilament));
+        params.then(p => {
+            pb.collection("filament").getOne<FilamentRecord & { expand: { prints: PrintsRecord[] }}>(p.id, { expand: "prints" })
+                .then(setFilament);
+        });
     }, []);
 
     return <MotionContainer>
@@ -63,7 +63,7 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
                         <div className="text-center"><Subtext>Diameter</Subtext> {filament.diameter}mm</div>
                         <Divider vertical />
                     </>}
-                    <div className="text-center"><Subtext>Total Prints</Subtext> {prints.length}</div>
+                    <div className="text-center"><Subtext>Total Prints</Subtext> {filament.prints?.length}</div>
                     <Divider vertical />
                 </div>
                 <Divider />
@@ -71,7 +71,7 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
                 <h3>Prints With This Filament</h3>
                 <Divider />
 
-                <PrintList prints={prints} />
+                <PrintList prints={filament.expand.prints} />
             </>}
         </Suspense>
     </MotionContainer>;

@@ -6,10 +6,16 @@ import { useState } from "react";
 import FilamentCard from "../filament/FilamentCard";
 import { grams } from "@/lib/util/units";
 import Link from "next/link";
-import { FilamentRecord, PrintsRecord } from "@/types/pb";
+import { FilamentRecord, PrintsRecord, UsersRecord } from "@/types/pb";
 import { Create } from "@/types/general";
+import { pb } from "@/api/pb";
 
 export default function PrintFilamentModal({ filament, ...props }: { filament: FilamentRecord } & ModalProps) {
+    const user = pb.authStore.record as unknown as UsersRecord;
+
+    if (!user)
+        return null;
+
     const [print, setPrint] = useObjectState<Create<PrintsRecord<Record<string, number>>>>({
         filamentRolls: [filament.id],
         filamentUsage: { [filament.id]: 0 },
@@ -22,14 +28,40 @@ export default function PrintFilamentModal({ filament, ...props }: { filament: F
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    function printFilament() {
+    async function printFilament() {
         setError("");
 
         if (!print.filamentUsage)
             return void setError("Please fill out all required fields.");
 
         setLoading(true);
-        // TODO: backend
+
+        const newPrint = await pb.collection("prints").create({
+            user: user.id,
+            ...print,
+        });
+
+        await pb.collection("filament").update(filament.id, {
+            prints: [...filament.prints ?? [], newPrint.id],
+            mass: filament.mass - print.totalFilamentUsed,
+        })
+            .then(() => {
+                setLoading(false);
+                setPrint({
+                    filamentRolls: [filament.id],
+                    filamentUsage: { [filament.id]: 0 },
+
+                    label: "",
+                    totalFilamentUsed: 0,
+                    totalRollsUsed: 1,
+                });
+                props.onClose();
+            })
+            .catch(e => {
+                console.error(e);
+                setLoading(false);
+                setError(e.message);
+            });;
     }
 
     return <Modal {...props} title="Print Filament">
@@ -49,6 +81,7 @@ export default function PrintFilamentModal({ filament, ...props }: { filament: F
                     value={print.filamentUsage?.[filament.id] ?? ""}
                     onChange={e => setPrint({
                         filamentUsage: { [filament.id]: parseInt(e.target.value) },
+                        totalFilamentUsed: parseInt(e.target.value),
                     })}
                     required
                     autoFocus

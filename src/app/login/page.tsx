@@ -3,7 +3,6 @@ import Divider from "@/components/base/Divider";
 import LandingBackground from "@/components/landing/LandingBackground";
 import { FaGoogle, FaGithub } from "react-icons/fa6";
 
-// TODO: auth
 export default function LoginPage() {
     return (<>
         <LandingBackground />

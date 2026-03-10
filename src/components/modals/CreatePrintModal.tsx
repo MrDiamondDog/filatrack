@@ -35,14 +35,19 @@ export default function CreatePrintModal({ ...props }: ModalProps) {
 
         setLoading(true);
 
-        await pb.collection("prints").create({
+        const newPrint = await pb.collection("prints").create({
             label,
             user: user.id,
             filamentRolls: selectedFilament.map(f => f.id),
             filamentUsage: filamentUsed,
             totalFilamentUsed: Object.values(filamentUsed).reduce((prev, curr) => prev + curr),
             totalRollsUsed: selectedFilament.length,
-        })
+        });
+
+        await Promise.all(selectedFilament.map(f => pb.collection("filament").update(f.id, {
+            prints: [...f.prints ?? [], newPrint.id],
+            mass: f.mass - filamentUsed[f.id],
+        })))
             .then(() => {
                 setLoading(false);
                 setLabel("");
