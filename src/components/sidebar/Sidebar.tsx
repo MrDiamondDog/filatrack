@@ -6,6 +6,9 @@ import Divider from "../base/Divider";
 import Link from "next/link";
 import { useDevice } from "@/lib/util/hooks";
 import { AccountCard } from "../auth/AccountCard";
+import FilamentIcon from "../filament/FilamentIcon";
+import { randomFilamentNames, randomFrom } from "@/lib/util/random";
+import { useState } from "react";
 
 export function MobileSidebar() {
     return (<div className="z-1 bottom-0 left-0 right-0 h-15 bg-bg-light p-2 px-4 fixed flex items-center justify-around gap-2">
@@ -23,10 +26,12 @@ export default function Sidebar() {
     if (isMobile)
         return <MobileSidebar />;
 
+    const [iconColor, setIconColor] = useState(randomFrom(Object.keys(randomFilamentNames)));
+
     return (<div className="h-screen w-50 bg-bg-light p-2 px-4 fixed flex flex-col justify-between">
         <div>
             <Link className="unstyled flex flex-row gap-2 items-center px-2 pt-2 w-full justify-center" href="/">
-                <img src="/filament.svg" width="40" height="40" />
+                <FilamentIcon size={40} color={iconColor} />
                 <h1 className="text-2xl">Filatrack</h1>
             </Link>
 
