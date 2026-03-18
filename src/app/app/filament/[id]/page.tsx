@@ -71,7 +71,7 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
                 <h3>Prints With This Filament</h3>
                 <Divider />
 
-                <PrintList prints={filament.expand.prints} />
+                <PrintList prints={filament.expand.prints ?? []} />
             </>}
         </Suspense>
     </MotionContainer>;

@@ -14,7 +14,7 @@ import { FilamentRecord, FilamentSpoolTypeOptions } from "@/types/pb";
 import { pb } from "@/api/pb";
 import { Create } from "@/types/general";
 
-export default function CreateFilamentModal(props: ModalProps) {
+export default function CreateFilamentModal(props: ModalProps & { onCreate: (f: FilamentRecord) => void }) {
     const user = pb.authStore.record;
 
     if (!user)
@@ -51,7 +51,7 @@ export default function CreateFilamentModal(props: ModalProps) {
         setLoading(true);
 
         await pb.collection("filament").create({ ...filament, user: user.id })
-            .then(() => {
+            .then(res => {
                 setLoading(false);
                 setFilament({
                     name: "",
@@ -62,6 +62,7 @@ export default function CreateFilamentModal(props: ModalProps) {
                     spoolType: FilamentSpoolTypeOptions.plastic,
                 });
                 props.onClose();
+                props.onCreate(res);
             })
             .catch(e => {
                 console.error(e);

@@ -13,8 +13,8 @@ import { useDevice } from "@/lib/util/hooks";
 import { FilamentRecord } from "@/types/pb";
 import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../base/Dropdown";
 
-export default function FilamentCard({ filament, noninteractable, className }:
-    { filament: FilamentRecord, noninteractable?: boolean, className?: string }) {
+export default function FilamentCard({ filament, noninteractable, className, onModify }:
+    { filament: FilamentRecord, noninteractable?: boolean, className?: string, onModify?: (f: FilamentRecord) => void }) {
     const [openModal, setOpenModal] = useState("");
     const [isMobile, _] = useDevice();
 
@@ -70,6 +70,11 @@ export default function FilamentCard({ filament, noninteractable, className }:
 
     </div>
 
-    <PrintFilamentModal open={openModal === "log"} onClose={() => setOpenModal("")} filament={filament} />
+    <PrintFilamentModal
+        open={openModal === "log"}
+        onClose={() => setOpenModal("")}
+        filament={filament}
+        onPrintCreate={p => onModify?.({ ...filament, mass: filament.mass - p.totalFilamentUsed })}
+    />
     </>;
 }

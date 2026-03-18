@@ -12,8 +12,10 @@ import { FilamentRecord } from "@/types/pb";
 import Button from "../base/Button";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 
-export default function FilamentList({ filament, title, viewLock, allowAdd }:
-    { filament: FilamentRecord[], title?: string, viewLock?: "cards" | "table", allowAdd?: boolean }) {
+export default function FilamentList({ filament, title, viewLock, allowAdd, onListModified }:
+    { filament: FilamentRecord[], title?: string, viewLock?: "cards" | "table", allowAdd?: boolean,
+        onListModified?: (l: FilamentRecord[]) => void
+}) {
     const [view, setView] = useState<"cards" | "table">(viewLock ?? "cards");
 
     const [openModal, setOpenModal] = useState("");
@@ -60,6 +62,8 @@ export default function FilamentList({ filament, title, viewLock, allowAdd }:
             />
         }
 
-        <CreateFilamentModal open={openModal === "create"} onClose={() => setOpenModal("")} />
+        <CreateFilamentModal open={openModal === "create"} onClose={() => setOpenModal("")}
+            onCreate={f => onListModified?.([...filament, f])}
+        />
     </>;
 }

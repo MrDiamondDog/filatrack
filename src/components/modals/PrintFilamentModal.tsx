@@ -10,7 +10,8 @@ import { FilamentRecord, PrintsRecord, UsersRecord } from "@/types/pb";
 import { Create } from "@/types/general";
 import { pb } from "@/api/pb";
 
-export default function PrintFilamentModal({ filament, ...props }: { filament: FilamentRecord } & ModalProps) {
+export default function PrintFilamentModal({ filament, onPrintCreate, ...props }:
+    { filament: FilamentRecord, onPrintCreate: (p: PrintsRecord) => void } & ModalProps) {
     const user = pb.authStore.record as unknown as UsersRecord;
 
     if (!user)
@@ -56,6 +57,7 @@ export default function PrintFilamentModal({ filament, ...props }: { filament: F
                     totalRollsUsed: 1,
                 });
                 props.onClose();
+                onPrintCreate(newPrint);
             })
             .catch(e => {
                 console.error(e);

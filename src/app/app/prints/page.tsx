@@ -35,6 +35,6 @@ export default function PrintPage() {
 
         <PrintList prints={prints} />
 
-        <CreatePrintModal open={openModal === "print"} onClose={() => setOpenModal("")} />
+        <CreatePrintModal open={openModal === "print"} onClose={() => setOpenModal("")} onCreate={p => setPrints([...prints, p])} />
     </MotionContainer>);
 }
