@@ -27,12 +27,10 @@ export default function Table<T extends Record<string, any>>({ columns, data, so
 
         let newSortDir = sortDir;
 
-        if (sortKey === key) {
-            newSortDir = sortDir === "asc" ? "desc" : "asc";
-        } else {
-            setSortKey(key);
-            newSortDir = setDir ?? "desc";
-        }
+        if (setDir)
+            newSortDir = setDir;
+
+        setSortKey(key);
 
         const sortedData = [...data].sort((a, b) => {
             const valA = newSortDir === "asc" ? b[key] : a[key];
@@ -67,7 +65,7 @@ export default function Table<T extends Record<string, any>>({ columns, data, so
                     >
                         <div
                             className={`flex justify-between items-center ${!c.notSortable && "cursor-pointer"}`}
-                            onClick={() => handleSort(c.key)}
+                            onClick={() => handleSort(c.key, sortKey === c.key ? (sortDir === "asc" ? "desc" : "asc") : undefined)}
                         >
                             {c.label}
                             <ChevronDown

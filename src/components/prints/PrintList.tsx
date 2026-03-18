@@ -27,7 +27,7 @@ export default function PrintList({ prints }: { prints: PrintsRecord[] }) {
             ]}
             data={prints}
             sort="created"
-            sortType="desc"
+            sortType="asc"
         />
     </>;
 }
