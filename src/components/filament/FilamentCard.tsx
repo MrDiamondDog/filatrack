@@ -12,9 +12,15 @@ import { useRouter } from "next/navigation";
 import { useDevice } from "@/lib/util/hooks";
 import { FilamentRecord } from "@/types/pb";
 import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../base/Dropdown";
+import { DeleteModal } from "../modals/DeleteModal";
+import FilamentMiniRow from "./FilamentMiniRow";
+import { deleteFilament } from "@/lib/filament";
+import { toast } from "sonner";
 
-export default function FilamentCard({ filament, noninteractable, className, onModify }:
-    { filament: FilamentRecord, noninteractable?: boolean, className?: string, onModify?: (f: FilamentRecord) => void }) {
+export default function FilamentCard({ filament, noninteractable, className, onModify, onDelete }:
+    { filament: FilamentRecord, noninteractable?: boolean, className?: string, onModify?: (f: FilamentRecord) => void,
+    onDelete?: () => void
+}) {
     const [openModal, setOpenModal] = useState("");
     const [isMobile, _] = useDevice();
 
@@ -41,9 +47,9 @@ export default function FilamentCard({ filament, noninteractable, className, onM
                 ><EllipsisVertical /></button>
             </DropdownTrigger>
             <DropdownContent>
-                <DropdownItem>Edit</DropdownItem>
-                <DropdownItem>Move</DropdownItem>
-                <DropdownItem danger>Delete</DropdownItem>
+                <DropdownItem onClick={() => setOpenModal("edit")}>Edit</DropdownItem>
+                <DropdownItem onClick={() => setOpenModal("move")}>Move</DropdownItem>
+                <DropdownItem onClick={() => setOpenModal("delete")} danger>Delete</DropdownItem>
             </DropdownContent>
         </Dropdown>}
 
@@ -75,6 +81,18 @@ export default function FilamentCard({ filament, noninteractable, className, onM
         onClose={() => setOpenModal("")}
         filament={filament}
         onPrintCreate={p => onModify?.({ ...filament, mass: filament.mass - p.totalFilamentUsed })}
+    />
+
+    <DeleteModal
+        open={openModal === "delete"}
+        onClose={() => setOpenModal("")}
+        object="Filament"
+        preview={<div className="bg-bg-lighter rounded-lg p-2"><FilamentMiniRow filament={filament} /></div>}
+        onDelete={() => {
+            deleteFilament(filament).catch(e => toast.error("Failed to delete filament", { description: e.message }));
+            onDelete?.();
+            setOpenModal("");
+        }}
     />
     </>;
 }

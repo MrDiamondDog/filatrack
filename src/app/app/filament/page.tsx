@@ -29,7 +29,6 @@ export default function FilamentPage({
             .then(setFilament);
     }, []);
 
-    // TODO: backend
     return <MotionContainer>
         <FilamentList title="Your Filament" filament={filament} allowAdd onListModified={setFilament} />
     </MotionContainer>;

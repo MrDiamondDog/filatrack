@@ -39,7 +39,11 @@ export default function FilamentList({ filament, title, viewLock, allowAdd, onLi
         </>}
 
         {view === "cards" && <div className="grid grid-cols-2 md:flex flex-row flex-wrap w-full gap-2 mb-2">
-            {filament.map(f => <FilamentCard filament={f} key={f.id} />)}
+            {filament.map(f => <FilamentCard
+                filament={f}
+                key={f.id}
+                onDelete={() => onListModified?.([...filament.filter(fil => fil.id !== f.id)])}
+            />)}
         </div>}
 
         {view === "table" &&
