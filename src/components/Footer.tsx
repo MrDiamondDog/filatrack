@@ -21,7 +21,7 @@ export default function Footer() {
             <Dot />
             <a href={endpoints.github} className="style">GitHub</a>
             <Dot />
-            <a href="https://mrdiamond.is-a.dev/support" className="style">Support</a>
+            <a href="https://buymeacoffee.com/zoy33nftqp" className="style">Support</a>
             <Dot />
             <a href={endpoints.discord} className="style">Discord</a>
             <Dot />
