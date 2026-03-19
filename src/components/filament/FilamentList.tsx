@@ -8,14 +8,20 @@ import { Images, Plus, TableIcon } from "lucide-react";
 import Table from "../base/Table";
 import { sortFn as colorSort } from "color-sorter";
 import { grams } from "@/lib/util/units";
-import { FilamentRecord } from "@/types/pb";
+import { FilamentRecord, StorageRecord } from "@/types/pb";
 import Button from "../base/Button";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
+import { pb } from "@/api/pb";
 
-export default function FilamentList({ filament, title, viewLock, allowAdd, onListModified }:
-    { filament: FilamentRecord[], title?: string, viewLock?: "cards" | "table", allowAdd?: boolean,
-        onListModified?: (l: FilamentRecord[]) => void
+export default function FilamentList({ filament, storagesList, title, viewLock, allowAdd, onListModified }:
+    { filament: FilamentRecord[], storagesList: StorageRecord[], title?: string, viewLock?: "cards" | "table",
+        allowAdd?: boolean, onListModified?: (l: FilamentRecord[]) => void
 }) {
+    const user = pb.authStore.record;
+
+    if (!user)
+        return null;
+
     const [view, setView] = useState<"cards" | "table">(viewLock ?? "cards");
 
     const [openModal, setOpenModal] = useState("");
@@ -42,6 +48,12 @@ export default function FilamentList({ filament, title, viewLock, allowAdd, onLi
             {filament.map(f => <FilamentCard
                 filament={f}
                 key={f.id}
+                storagesList={storagesList}
+                onModify={f => onListModified?.([
+                    ...filament.slice(0, filament.findIndex(lf => lf.id === f.id)),
+                    f,
+                    ...filament.slice(filament.findIndex(lf => lf.id === f.id) + 1),
+                ])}
                 onDelete={() => onListModified?.([...filament.filter(fil => fil.id !== f.id)])}
             />)}
         </div>}

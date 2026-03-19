@@ -2,10 +2,10 @@ import { Archive, Box, CirclePile, Weight } from "lucide-react";
 import CardDetail from "../util/CardDetail";
 import { grams } from "@/lib/util/units";
 import Link from "next/link";
-import { FilamentRecord, StorageRecord } from "@/types/pb";
+import { FilamentRecord, StorageResponse } from "@/types/pb";
 
-export default function StorageCard({ storage }: { storage: StorageRecord }) {
-    const filament: FilamentRecord[] = [];
+export default function StorageCard({ storage }: { storage: StorageResponse<{ filament: FilamentRecord[] }> }) {
+    const filament: FilamentRecord[] = storage.expand.filament ?? [];
 
     const totalMass = filament.reduce((prev, curr) => prev + curr.mass, 0);
     const totalInitialMass = filament.reduce((prev, curr) => prev + curr.initialMass, 0);
@@ -37,6 +37,7 @@ export default function StorageCard({ storage }: { storage: StorageRecord }) {
 
         <div className="w-full flex gap-1 flex-wrap mt-2">
             {filament.map(f => <div className="w-5 h-5 rounded-sm" style={{ backgroundColor: f.color }} key={f.id} />)}
+            {/* {filament.map(f => <FilamentIcon filament={f} size={32} />)} */}
         </div>
     </Link>;
 }

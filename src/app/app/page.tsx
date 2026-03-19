@@ -28,10 +28,11 @@ export default function DashboardPage() {
             <Divider vertical />
 
             <div className="w-full">
-                <FilamentList title="Recently Used Filament" filament={[randomFilament(), randomFilament()]} viewLock="cards" />
+                <FilamentList title="Recently Used Filament" filament={[randomFilament(), randomFilament()]}
+                    viewLock="cards" storagesList={[]} />
             </div>
         </div>
 
-        <FilamentList title="All Filament" filament={[randomFilament(), randomFilament(), randomFilament()]} />
+        <FilamentList title="All Filament" filament={[randomFilament(), randomFilament(), randomFilament()]} storagesList={[]} />
     </MotionContainer>);
 }

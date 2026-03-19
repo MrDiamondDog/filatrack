@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import StorageCard from "./StorageCard";
-import { StorageRecord, UsersResponse } from "@/types/pb";
+import { FilamentRecord, StorageResponse, UsersResponse } from "@/types/pb";
 import { pb } from "@/api/pb";
 
 export default function StorageList() {
@@ -11,11 +11,12 @@ export default function StorageList() {
     if (!user)
         return null;
 
-    const [storage, setStorage] = useState<StorageRecord[]>([]);
+    const [storage, setStorage] = useState<StorageResponse<{ filament: FilamentRecord[] }>[]>([]);
 
     useEffect(() => {
-        pb.collection("storage").getFullList({
+        pb.collection("storage").getFullList<StorageResponse<{ filament: FilamentRecord[] }>>({
             filter: `user.id = "${user.id}"`,
+            expand: "filament",
         })
             .then(setStorage);
     }, []);

@@ -3,9 +3,10 @@
 import { pb } from "@/api/pb";
 import MotionContainer from "@/components/base/MotionContainer";
 import FilamentList from "@/components/filament/FilamentList";
-import { FilamentRecord, UsersResponse } from "@/types/pb";
+import { FilamentRecord, StorageRecord, UsersResponse } from "@/types/pb";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function FilamentPage({
     searchParams,
@@ -21,15 +22,23 @@ export default function FilamentPage({
         return null;
 
     const [filament, setFilament] = useState<FilamentRecord[]>([]);
+    const [storages, setStorages] = useState<StorageRecord[]>([]);
 
     useEffect(() => {
         pb.collection("filament").getFullList({
             filter: `user.id = "${user.id}"`,
         })
-            .then(setFilament);
+            .then(setFilament)
+            .catch(e => toast.error("Could not fetch filament", { description: e.message }));
+
+        pb.collection("storage").getFullList({
+            filter: `user.id = "${user.id}"`,
+        })
+            .then(setStorages)
+            .catch(e => toast.error("Could not fetch storages", { description: e.message }));
     }, []);
 
     return <MotionContainer>
-        <FilamentList title="Your Filament" filament={filament} allowAdd onListModified={setFilament} />
+        <FilamentList title="Your Filament" filament={filament} storagesList={storages} allowAdd onListModified={setFilament} />
     </MotionContainer>;
 }
