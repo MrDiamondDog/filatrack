@@ -35,7 +35,7 @@ export function AnimateSize({ children, className, lockWidth, lockHeight }: Anim
             className={`overflow-hidden ${className ?? ""}`}
             initial={{ width: lockWidth ? undefined : width, height: lockHeight ? undefined : height }}
             animate={{ width: lockWidth ? undefined : width, height: lockHeight ? undefined : height }}
-            transition={{ type: "spring", duration: 0.1 }}
+            transition={{ type: "tween", ease: "easeOut", duration: 0.1 }}
         >
             <div
                 ref={containerRef}
