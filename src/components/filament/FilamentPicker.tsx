@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import FilamentMiniRow from "./FilamentMiniRow";
 import { FilamentRecord, UsersRecord } from "@/types/pb";
 import { pb } from "@/api/pb";
+import { toastError } from "@/lib/util/error";
 
 // TODO: make single picker work
 export default function FilamentPicker({ values, onChange, multiple }:
@@ -13,7 +14,8 @@ export default function FilamentPicker({ values, onChange, multiple }:
 
     useEffect(() => {
         pb.collection("filament").getFullList({ filter: `user.id = "${user.id}"` })
-            .then(setAllFilament);
+            .then(setAllFilament)
+            .catch(e => toastError("Could not fetch filament", e));
     }, []);
 
     return <SelectMultiple

@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { pb } from "@/api/pb";
 import Spinner from "../base/Spinner";
+import { toastError } from "@/lib/util/error";
 
 export default function FilamentCard({ filament, storagesList, noninteractable, className, onModify, onDelete }:
     { filament: FilamentRecord, storagesList: StorageRecord[], noninteractable?: boolean, className?: string,
@@ -44,7 +45,7 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                 }),
             ])
                 .then(([storage, filament]) => onModify?.(filament))
-                .catch(e => toast.error("Could not move filament", { description: e.message }));
+                .catch(e => toastError("Could not move filament", e));
             return;
         }
 
@@ -60,7 +61,7 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
             })),
         ])
             .then(([storage, filament]) => onModify?.(filament))
-            .catch(e => toast.error("Could not move filament", { description: e.message }));
+            .catch(e => toastError("Could not move filament", e));
     }
 
     return <>

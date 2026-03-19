@@ -7,6 +7,7 @@ import Spinner from "@/components/base/Spinner";
 import Subtext from "@/components/base/Subtext";
 import FilamentIcon from "@/components/filament/FilamentIcon";
 import PrintList from "@/components/prints/PrintList";
+import { toastError } from "@/lib/util/error";
 import { celcius, grams } from "@/lib/util/units";
 import { FilamentRecord, PrintsRecord, UsersRecord } from "@/types/pb";
 import { ArrowLeft } from "lucide-react";
@@ -24,7 +25,8 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
     useEffect(() => {
         params.then(p => {
             pb.collection("filament").getOne<FilamentRecord & { expand: { prints: PrintsRecord[] }}>(p.id, { expand: "prints" })
-                .then(setFilament);
+                .then(setFilament)
+                .catch(e => toastError("Could not fetch filament", e));
         });
     }, []);
 

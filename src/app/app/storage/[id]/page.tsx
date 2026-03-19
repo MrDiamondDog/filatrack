@@ -3,6 +3,7 @@
 import { pb } from "@/api/pb";
 import MotionContainer from "@/components/base/MotionContainer";
 import FilamentList from "@/components/filament/FilamentList";
+import { toastError } from "@/lib/util/error";
 import { FilamentRecord, StorageResponse } from "@/types/pb";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -21,7 +22,8 @@ export default function StoragePage({ params }: { params: Promise<{ id: string }
             id,
             { expand: "filament" }
         )
-            .then(setStorage));
+            .then(setStorage)
+            .catch(e => toastError("Could not fetch storage", e)));
     }, []);
 
     return <MotionContainer>

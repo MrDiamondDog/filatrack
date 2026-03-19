@@ -19,6 +19,7 @@ function PieCenterLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function FilamentChart() {
+    // TODO: backend
     const [allFilament, setAllFilament] = useState([
         { color: "#fff", currentMass: 1000, startingMass: 2000, brand: "Elegoo", material: "PLA" },
     ]);

@@ -6,6 +6,7 @@ import Divider from "@/components/base/Divider";
 import MotionContainer from "@/components/base/MotionContainer";
 import CreatePrintModal from "@/components/modals/CreatePrintModal";
 import PrintList from "@/components/prints/PrintList";
+import { toastError } from "@/lib/util/error";
 import { UsersRecord, PrintsRecord } from "@/types/pb";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -21,7 +22,8 @@ export default function PrintPage() {
 
     useEffect(() => {
         pb.collection("prints").getFullList({ filter: `user.id = "${user.id}"` })
-            .then(setPrints);
+            .then(setPrints)
+            .catch(e => toastError("Could not fetch prints", e));
     }, []);
 
     return (<MotionContainer>

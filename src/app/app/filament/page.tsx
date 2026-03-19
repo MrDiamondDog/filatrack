@@ -3,10 +3,10 @@
 import { pb } from "@/api/pb";
 import MotionContainer from "@/components/base/MotionContainer";
 import FilamentList from "@/components/filament/FilamentList";
+import { toastError } from "@/lib/util/error";
 import { FilamentRecord, StorageRecord, UsersResponse } from "@/types/pb";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 export default function FilamentPage({
     searchParams,
@@ -29,13 +29,13 @@ export default function FilamentPage({
             filter: `user.id = "${user.id}"`,
         })
             .then(setFilament)
-            .catch(e => toast.error("Could not fetch filament", { description: e.message }));
+            .catch(e => toastError("Could not fetch filament", e));
 
         pb.collection("storage").getFullList({
             filter: `user.id = "${user.id}"`,
         })
             .then(setStorages)
-            .catch(e => toast.error("Could not fetch storages", { description: e.message }));
+            .catch(e => toastError("Could not fetch storages", e));
     }, []);
 
     return <MotionContainer>

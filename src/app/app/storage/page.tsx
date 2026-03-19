@@ -11,7 +11,6 @@ import { useState } from "react";
 export default function StoragePage() {
     const [openModal, setOpenModal] = useState("");
 
-    // TODO: backend
     return <MotionContainer>
         <div className="flex items-center justify-between">
             <h2>Storage</h2>

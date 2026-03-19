@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import StorageCard from "./StorageCard";
 import { FilamentRecord, StorageResponse, UsersResponse } from "@/types/pb";
 import { pb } from "@/api/pb";
+import { toastError } from "@/lib/util/error";
 
 export default function StorageList() {
     const user = pb.authStore.record as unknown as UsersResponse;
@@ -18,7 +19,8 @@ export default function StorageList() {
             filter: `user.id = "${user.id}"`,
             expand: "filament",
         })
-            .then(setStorage);
+            .then(setStorage)
+            .catch(e => toastError("Could not fetch storage", e));
     }, []);
 
     return <div className="grid grid-cols-1 md:flex flex-row flex-wrap w-full h-fit gap-2">
