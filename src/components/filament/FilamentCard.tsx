@@ -135,10 +135,12 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
             </Dropdown>}
 
             <Link href={`/app/filament/${filament.id}`} className={`unstyled flex flex-col gap-1 items-center h-full
-                overflow-hidden `}>
+                overflow-hidden w-full`}>
                 <FilamentIcon filament={filament} size={isMobile ? 48 : 72} />
 
-                <p className="line-clamp-1 text-md md:text-lg text-nowrap overflow-hidden font-bold text-center">{filament.name}</p>
+                <p className="text-md md:text-lg text-nowrap overflow-hidden font-bold text-center text-ellipsis w-full">
+                    {filament.name}
+                </p>
                 <Subtext>{filament.brand}</Subtext>
 
                 <div className="flex flex-col mb-2 items-center w-full *:justify-center">
