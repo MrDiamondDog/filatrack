@@ -4,10 +4,11 @@ import { useObjectState } from "@/lib/util/hooks";
 import Button from "../base/Button";
 import { useState } from "react";
 import { Create } from "@/types/general";
-import { StorageRecord, StorageResponse } from "@/types/pb";
+import { StorageRecord } from "@/types/pb";
 import { pb } from "@/api/pb";
+import { StorageWithFilament } from "@/types/storage";
 
-export default function CreateStorageModal(props: { onCreate: (s: StorageResponse) => void } & ModalProps) {
+export default function CreateStorageModal(props: { onCreate?: (s: StorageWithFilament) => void } & ModalProps) {
     const user = pb.authStore.record;
 
     if (!user)
@@ -33,7 +34,7 @@ export default function CreateStorageModal(props: { onCreate: (s: StorageRespons
 
         setLoading(true);
 
-        await pb.collection("storage").create({ ...storage, user: user!.id })
+        await pb.collection("storage").create<StorageWithFilament>({ ...storage, user: user!.id }, { expand: "filament" })
             .then(res => {
                 setLoading(false);
                 setStorage({
@@ -42,7 +43,7 @@ export default function CreateStorageModal(props: { onCreate: (s: StorageRespons
                     filament: [],
                 });
                 props.onClose();
-                props.onCreate(res);
+                props.onCreate?.(res);
             })
             .catch(e => {
                 console.error(e);
@@ -68,10 +69,9 @@ export default function CreateStorageModal(props: { onCreate: (s: StorageRespons
                 label="Capacity"
                 subtext="The maximum number of filament that can fit in this storage. Leave empty or 0 for unlimited."
                 placeholder="0"
-                value={storage.capacity}
+                value={storage.capacity ?? 0}
                 onChange={e => setStorage({ capacity: parseInt(e.target.value) })}
                 type="number"
-                required
             />
 
             <ModalFooter error={error}>

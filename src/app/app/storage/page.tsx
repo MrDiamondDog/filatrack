@@ -7,7 +7,7 @@ import MotionContainer from "@/components/base/MotionContainer";
 import CreateStorageModal from "@/components/modals/CreateStorageModal";
 import StorageList from "@/components/storage/StorageList";
 import { toastError } from "@/lib/util/error";
-import { FilamentRecord, StorageResponse } from "@/types/pb";
+import { StorageWithFilament } from "@/types/storage";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -18,11 +18,12 @@ export default function StoragePage() {
         return null;
 
     const [openModal, setOpenModal] = useState("");
-    const [storages, setStorages] = useState<StorageResponse<{ filament: FilamentRecord[]; }>[]>([]);
+    const [storages, setStorages] = useState<StorageWithFilament[]>([]);
 
     useEffect(() => {
-        pb.collection("storage").getFullList<StorageResponse<{ filament: FilamentRecord[]; }>>({
+        pb.collection("storage").getFullList<StorageWithFilament>({
             filter: `user.id = "${user.id}"`,
+            expand: "filament",
         })
             .then(setStorages)
             .catch(e => toastError("Could not fetch storages", e));
@@ -38,10 +39,9 @@ export default function StoragePage() {
 
         <Divider />
 
-        <StorageList storages={storages} />
+        <StorageList storages={storages} onListUpdate={setStorages} />
 
         <CreateStorageModal open={openModal === "storage"} onClose={() => setOpenModal("")}
-        // @ts-ignore They are compatible, I swear
             onCreate={s => setStorages([...storages, s])} />
     </MotionContainer>;
 }

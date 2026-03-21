@@ -8,7 +8,7 @@ import CardDetail from "../util/CardDetail";
 import { useState } from "react";
 import PrintFilamentModal from "../modals/PrintFilamentModal";
 import { useDevice } from "@/lib/util/hooks";
-import { FilamentRecord, StorageResponse } from "@/types/pb";
+import { FilamentRecord } from "@/types/pb";
 import { Dropdown, DropdownContent, DropdownItem, DropdownSub, DropdownSubContent, DropdownSubTrigger, DropdownTrigger }
     from "../base/Dropdown";
 import { DeleteModal } from "../modals/DeleteModal";
@@ -20,10 +20,11 @@ import { pb } from "@/api/pb";
 import Spinner from "../base/Spinner";
 import { toastError } from "@/lib/util/error";
 import Button from "../base/Button";
+import { StorageWithFilament } from "@/types/storage";
 
 export default function FilamentCard({ filament, storagesList, noninteractable, className, onModify, onStoragesModify, onDelete }:
-    { filament: FilamentRecord, storagesList: StorageResponse[], noninteractable?: boolean, className?: string,
-        onModify?: (f: FilamentRecord) => void, onStoragesModify?: (s: StorageResponse[]) => void, onDelete?: () => void
+    { filament: FilamentRecord, storagesList: StorageWithFilament[], noninteractable?: boolean, className?: string,
+        onModify?: (f: FilamentRecord) => void, onStoragesModify?: (s: StorageWithFilament[]) => void, onDelete?: () => void
 }) {
     const user = pb.authStore.record;
 
@@ -33,11 +34,11 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
     const [openModal, setOpenModal] = useState("");
     const [isMobile, _] = useDevice();
 
-    async function move(destination: StorageResponse) {
+    async function move(destination: StorageWithFilament) {
         if (destination.id === filament.storage) {
             // remove it from storage
             await Promise.all([
-                pb.collection("storage").update(destination.id, {
+                pb.collection("storage").update<StorageWithFilament>(destination.id, {
                     "filament-": filament.id,
                 }),
                 pb.collection("filament").update(filament.id, {
@@ -54,13 +55,13 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
         }
 
         await Promise.all([
-            pb.collection("storage").update(destination.id, {
+            pb.collection("storage").update<StorageWithFilament>(destination.id, {
                 "filament+": filament.id,
             }),
             pb.collection("filament").update(filament.id, {
                 storage: destination.id,
             }),
-            (filament.storage && pb.collection("storage").update(filament.storage, {
+            (filament.storage && pb.collection("storage").update<StorageWithFilament>(filament.storage, {
                 "filament-": filament.id,
             })),
         ])

@@ -8,14 +8,15 @@ import { Images, Plus, TableIcon } from "lucide-react";
 import Table, { EmptyCell } from "../base/Table";
 import { sortFn as colorSort } from "color-sorter";
 import { grams } from "@/lib/util/units";
-import { FilamentRecord, StorageResponse } from "@/types/pb";
+import { FilamentRecord } from "@/types/pb";
 import Button from "../base/Button";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 import { pb } from "@/api/pb";
+import { StorageWithFilament } from "@/types/storage";
 
 export default function FilamentList({ filament, storagesList, title, viewLock, allowAdd, onListModified, onStoragesModified }:
-    { filament: FilamentRecord[], storagesList: StorageResponse[], title?: string, viewLock?: "cards" | "table",
-        allowAdd?: boolean, onListModified?: (l: FilamentRecord[]) => void, onStoragesModified?: (s: StorageResponse[]) => void
+    { filament: FilamentRecord[], storagesList: StorageWithFilament[], title?: string, viewLock?: "cards" | "table",
+        allowAdd?: boolean, onListModified?: (l: FilamentRecord[]) => void, onStoragesModified?: (s: StorageWithFilament[]) => void
 }) {
     const user = pb.authStore.record;
 

@@ -8,7 +8,8 @@ import FilamentChart from "@/components/dashboard/FilamentChart";
 import FilamentList from "@/components/filament/FilamentList";
 import StorageList from "@/components/storage/StorageList";
 import { toastError } from "@/lib/util/error";
-import { FilamentRecord, StorageResponse } from "@/types/pb";
+import { FilamentRecord } from "@/types/pb";
+import { StorageWithFilament } from "@/types/storage";
 import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
@@ -18,7 +19,7 @@ export default function DashboardPage() {
         return null;
 
     const [filament, setFilament] = useState<FilamentRecord[]>([]);
-    const [storages, setStorages] = useState<StorageResponse<{ filament: FilamentRecord[]; }>[]>([]);
+    const [storages, setStorages] = useState<StorageWithFilament[]>([]);
 
     useEffect(() => {
         pb.collection("filament").getFullList({
@@ -27,7 +28,7 @@ export default function DashboardPage() {
             .then(setFilament)
             .catch(e => toastError("Could not fetch filament", e));
 
-        pb.collection("storage").getFullList<StorageResponse<{ filament: FilamentRecord[]; }>>({
+        pb.collection("storage").getFullList<StorageWithFilament>({
             filter: `user.id = "${user.id}"`,
             expand: "filament",
         })
@@ -50,7 +51,7 @@ export default function DashboardPage() {
             <div className="w-full">
                 <h2>Storage</h2>
                 <Divider />
-                <StorageList storages={storages} />
+                <StorageList storages={storages} onListUpdate={setStorages} />
             </div>
 
             <Divider vertical />
@@ -64,7 +65,6 @@ export default function DashboardPage() {
                     viewLock="cards"
                     storagesList={storages}
                     onListModified={setFilament}
-                    // @ts-ignore I hate doing this but these types are compatible
                     onStoragesModified={setStorages}
                 />
             </div>
@@ -75,7 +75,6 @@ export default function DashboardPage() {
             filament={filament}
             storagesList={storages}
             onListModified={setFilament}
-            // @ts-ignore I hate doing this but these types are compatible
             onStoragesModified={setStorages}
         />
     </MotionContainer>);
