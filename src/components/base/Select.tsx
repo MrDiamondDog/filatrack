@@ -3,6 +3,7 @@ import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "./Drop
 import { ChevronDown } from "lucide-react";
 import Subtext from "./Subtext";
 import Input from "./Input";
+import { modifyArrayItem } from "@/lib/util/array";
 
 export function Select({ options, value, onChange, placeholder, ...props }:
     { options: Record<string, React.ReactNode>, value: string, onChange: (val: string) => void, placeholder?: string } &
@@ -66,7 +67,7 @@ Omit<React.SelectHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "chil
                     .map(k => <DropdownItem
                         onClick={() => {
                             if (values.includes(k))
-                                onChange([...values.slice(0, values.indexOf(k)), ...values.slice(values.indexOf(k) + 1)]);
+                                onChange(modifyArrayItem(values, k));
                             else
                                 onChange([...values, k]);
                         }}

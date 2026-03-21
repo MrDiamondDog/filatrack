@@ -21,6 +21,7 @@ import Spinner from "../base/Spinner";
 import { toastError } from "@/lib/util/error";
 import Button from "../base/Button";
 import { StorageWithFilament } from "@/types/storage";
+import { modifyArrayItem } from "@/lib/util/array";
 
 export default function FilamentCard({ filament, storagesList, noninteractable, className, onModify, onStoragesModify, onDelete }:
     { filament: FilamentRecord, storagesList: StorageWithFilament[], noninteractable?: boolean, className?: string,
@@ -46,8 +47,7 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                 }),
             ])
                 .then(([storage, filament]) => {
-                    const storageIndex = storagesList.findIndex(s => s.id === storage.id);
-                    onStoragesModify?.([...storagesList.slice(0, storageIndex), storage, ...storagesList.slice(storageIndex + 1)]);
+                    onStoragesModify?.(modifyArrayItem(storagesList, storage, "id"));
                     onModify?.(filament);
                 })
                 .catch(e => toastError("Could not move filament", e));
@@ -68,14 +68,10 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
             .then(([storage, filament, prevStorage]) => {
                 console.log(storagesList.map(s => [s.name, s.filament?.length]));
 
-                const storageIndex = storagesList.findIndex(s => s.id === storage.id);
-
-                let newStorages = [...storagesList.slice(0, storageIndex), storage, ...storagesList.slice(storageIndex + 1)];
+                let newStorages = modifyArrayItem(storagesList, storage, "id");
 
                 if (prevStorage) {
-                    const prevStorageIndex = newStorages.findIndex(s => s.id === prevStorage.id);
-                    newStorages =
-                        [...newStorages.slice(0, prevStorageIndex), prevStorage, ...newStorages.slice(prevStorageIndex + 1)];
+                    newStorages = modifyArrayItem(newStorages, prevStorage, "id");
                 }
 
                 onStoragesModify?.(newStorages);

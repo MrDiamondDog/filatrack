@@ -13,6 +13,7 @@ import Button from "../base/Button";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 import { pb } from "@/api/pb";
 import { StorageWithFilament } from "@/types/storage";
+import { modifyArrayItem } from "@/lib/util/array";
 
 export default function FilamentList({ filament, storagesList, title, viewLock, allowAdd, onListModified, onStoragesModified }:
     { filament: FilamentRecord[], storagesList: StorageWithFilament[], title?: string, viewLock?: "cards" | "table",
@@ -50,11 +51,7 @@ export default function FilamentList({ filament, storagesList, title, viewLock, 
                 filament={f}
                 key={f.id}
                 storagesList={storagesList}
-                onModify={f => onListModified?.([
-                    ...filament.slice(0, filament.findIndex(lf => lf.id === f.id)),
-                    f,
-                    ...filament.slice(filament.findIndex(lf => lf.id === f.id) + 1),
-                ])}
+                onModify={f => onListModified?.(modifyArrayItem(filament, f, "id"))}
                 onStoragesModify={onStoragesModified}
                 onDelete={() => onListModified?.([...filament.filter(fil => fil.id !== f.id)])}
             />)}
