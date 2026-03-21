@@ -39,6 +39,7 @@ export default function FilamentPage({
     }, []);
 
     return <MotionContainer>
-        <FilamentList title="Your Filament" filament={filament} storagesList={storages} allowAdd onListModified={setFilament} />
+        <FilamentList title="Your Filament" filament={filament} storagesList={storages} allowAdd
+            onListModified={setFilament} onStoragesModified={setStorages} />
     </MotionContainer>;
 }

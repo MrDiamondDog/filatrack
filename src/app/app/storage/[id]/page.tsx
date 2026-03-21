@@ -2,6 +2,7 @@
 
 import { pb } from "@/api/pb";
 import MotionContainer from "@/components/base/MotionContainer";
+import Subtext from "@/components/base/Subtext";
 import FilamentList from "@/components/filament/FilamentList";
 import { toastError } from "@/lib/util/error";
 import { FilamentRecord, StorageResponse } from "@/types/pb";
@@ -29,5 +30,6 @@ export default function StoragePage({ params }: { params: Promise<{ id: string }
     return <MotionContainer>
         <Link href="/app" className="flex gap-1 items-center"><ArrowLeft /> Back</Link>
         {storage && <FilamentList filament={storage.expand.filament ?? []} title={storage.name} storagesList={[]} />}
+        {!!storage?.capacity && <Subtext>Max. {storage.capacity} rolls</Subtext>}
     </MotionContainer>;
 }

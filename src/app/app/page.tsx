@@ -7,6 +7,7 @@ import StorageList from "@/components/storage/StorageList";
 import { randomFilament } from "@/lib/util/random";
 
 export default function DashboardPage() {
+    // TODO: storage list
     return (<MotionContainer>
         <div className="flex justify-between items-center">
             <h1>Dashboard</h1>

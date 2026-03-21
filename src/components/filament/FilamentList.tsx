@@ -13,9 +13,9 @@ import Button from "../base/Button";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 import { pb } from "@/api/pb";
 
-export default function FilamentList({ filament, storagesList, title, viewLock, allowAdd, onListModified }:
+export default function FilamentList({ filament, storagesList, title, viewLock, allowAdd, onListModified, onStoragesModified }:
     { filament: FilamentRecord[], storagesList: StorageRecord[], title?: string, viewLock?: "cards" | "table",
-        allowAdd?: boolean, onListModified?: (l: FilamentRecord[]) => void
+        allowAdd?: boolean, onListModified?: (l: FilamentRecord[]) => void, onStoragesModified?: (s: StorageRecord[]) => void
 }) {
     const user = pb.authStore.record;
 
@@ -54,6 +54,7 @@ export default function FilamentList({ filament, storagesList, title, viewLock, 
                     f,
                     ...filament.slice(filament.findIndex(lf => lf.id === f.id) + 1),
                 ])}
+                onStoragesModify={onStoragesModified}
                 onDelete={() => onListModified?.([...filament.filter(fil => fil.id !== f.id)])}
             />)}
         </div>}

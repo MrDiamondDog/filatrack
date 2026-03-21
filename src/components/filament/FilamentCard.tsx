@@ -21,9 +21,9 @@ import Spinner from "../base/Spinner";
 import { toastError } from "@/lib/util/error";
 import Button from "../base/Button";
 
-export default function FilamentCard({ filament, storagesList, noninteractable, className, onModify, onDelete }:
+export default function FilamentCard({ filament, storagesList, noninteractable, className, onModify, onStoragesModify, onDelete }:
     { filament: FilamentRecord, storagesList: StorageRecord[], noninteractable?: boolean, className?: string,
-        onModify?: (f: FilamentRecord) => void, onDelete?: () => void
+        onModify?: (f: FilamentRecord) => void, onStoragesModify?: (s: StorageRecord[]) => void, onDelete?: () => void
 }) {
     const user = pb.authStore.record;
 
@@ -44,7 +44,11 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                     storage: null,
                 }),
             ])
-                .then(([storage, filament]) => onModify?.(filament))
+                .then(([storage, filament]) => {
+                    const storageIndex = storagesList.findIndex(s => s.id === storage.id);
+                    onStoragesModify?.([...storagesList.slice(0, storageIndex), storage, ...storagesList.slice(storageIndex + 1)]);
+                    onModify?.(filament);
+                })
                 .catch(e => toastError("Could not move filament", e));
             return;
         }
@@ -60,7 +64,22 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                 "filament-": filament.id,
             })),
         ])
-            .then(([storage, filament]) => onModify?.(filament))
+            .then(([storage, filament, prevStorage]) => {
+                console.log(storagesList.map(s => [s.name, s.filament?.length]));
+
+                const storageIndex = storagesList.findIndex(s => s.id === storage.id);
+
+                let newStorages = [...storagesList.slice(0, storageIndex), storage, ...storagesList.slice(storageIndex + 1)];
+
+                if (prevStorage) {
+                    const prevStorageIndex = newStorages.findIndex(s => s.id === prevStorage.id);
+                    newStorages =
+                        [...newStorages.slice(0, prevStorageIndex), prevStorage, ...newStorages.slice(prevStorageIndex + 1)];
+                }
+
+                onStoragesModify?.(newStorages);
+                onModify?.(filament);
+            })
             .catch(e => toastError("Could not move filament", e));
     }
 
@@ -101,9 +120,12 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                                     e.preventDefault();
                                     move(s);
                                 }}
+                                className="flex items-center gap-1"
                                 selected={filament.storage === s.id}
+                                disabled={!!s.capacity && ((s.filament?.length ?? 0) >= s.capacity) && filament.storage !== s.id}
                             >
                                 {s.name}
+                                {!!s.capacity && <Subtext>{s.filament?.length ?? 0}/{s.capacity}</Subtext>}
                             </DropdownItem>)}
                             {!storagesList && <Spinner />}
                         </DropdownSubContent>
@@ -119,18 +141,17 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                 <p className="line-clamp-1 text-md md:text-lg text-nowrap overflow-hidden font-bold text-center">{filament.name}</p>
                 <Subtext>{filament.brand}</Subtext>
 
-                <div className="flex flex-col text-gray-400 text-sm mb-2 items-center">
-                    <CardDetail><Weight size={20} /> {grams(filament.mass)}/{grams(filament.initialMass)}</CardDetail>
-                    <CardDetail><Box size={20} /> {filament.material}</CardDetail>
+                <div className="flex flex-col mb-2 items-center w-full">
+                    <CardDetail icon={<Weight size={20} />}>{grams(filament.mass)}/{grams(filament.initialMass)}</CardDetail>
+                    <CardDetail icon={<Box size={20} />}>{filament.material}</CardDetail>
                     {(filament.storage && storagesList && !!storagesList.length) &&
-                        <CardDetail><Archive size={20} /> {storagesList.find(s => s.id === filament.storage)?.name}</CardDetail>
-                    }
+                        <CardDetail icon={<Archive size={20} />}>
+                            {storagesList.find(s => s.id === filament.storage)?.name!}
+                        </CardDetail>}
                     {!!filament.nozzleTemperature &&
-                        <CardDetail><Thermometer size={20} /> {celcius(filament.nozzleTemperature)}</CardDetail>
-                    }
+                        <CardDetail icon={<Thermometer size={20} />}>{celcius(filament.nozzleTemperature)}</CardDetail>}
                     {!!filament.diameter &&
-                        <CardDetail><Diameter size={20} /> {filament.diameter}mm</CardDetail>
-                    }
+                        <CardDetail icon={<Diameter size={20} /> }>{filament.diameter}mm</CardDetail>}
                 </div>
             </Link>
 

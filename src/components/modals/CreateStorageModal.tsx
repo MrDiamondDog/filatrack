@@ -56,10 +56,20 @@ export default function CreateStorageModal(props: ModalProps) {
 
             <Input
                 label="Name"
-                placeholder="Rack"
+                placeholder="Drawer"
                 value={storage.name}
                 onChange={e => setStorage({ name: e.target.value })}
                 maxLength={50}
+                required
+            />
+
+            <Input
+                label="Capacity"
+                subtext="The maximum number of filament that can fit in this storage. Leave empty or 0 for unlimited."
+                placeholder="0"
+                value={storage.capacity}
+                onChange={e => setStorage({ capacity: parseInt(e.target.value) })}
+                type="number"
                 required
             />
 

@@ -286,58 +286,6 @@
         "type": "file"
       },
       {
-        "cascadeDelete": false,
-        "collectionId": "pbc_3722732479",
-        "hidden": false,
-        "id": "relation2645179302",
-        "maxSelect": 999,
-        "minSelect": 0,
-        "name": "filament",
-        "presentable": false,
-        "required": false,
-        "system": false,
-        "type": "relation"
-      },
-      {
-        "cascadeDelete": false,
-        "collectionId": "pbc_3307824350",
-        "hidden": false,
-        "id": "relation1417288500",
-        "maxSelect": 999,
-        "minSelect": 0,
-        "name": "storage",
-        "presentable": false,
-        "required": false,
-        "system": false,
-        "type": "relation"
-      },
-      {
-        "cascadeDelete": false,
-        "collectionId": "pbc_2295963732",
-        "hidden": false,
-        "id": "relation3217743130",
-        "maxSelect": 999,
-        "minSelect": 0,
-        "name": "prints",
-        "presentable": false,
-        "required": false,
-        "system": false,
-        "type": "relation"
-      },
-      {
-        "cascadeDelete": false,
-        "collectionId": "pbc_1743682018",
-        "hidden": false,
-        "id": "relation3846545605",
-        "maxSelect": 1,
-        "minSelect": 0,
-        "name": "settings",
-        "presentable": false,
-        "required": false,
-        "system": false,
-        "type": "relation"
-      },
-      {
         "hidden": false,
         "id": "autodate2990389176",
         "name": "created",
@@ -1391,7 +1339,7 @@
         "type": "relation"
       },
       {
-        "cascadeDelete": false,
+        "cascadeDelete": true,
         "collectionId": "pbc_3722732479",
         "hidden": false,
         "id": "relation1852867581",
@@ -1552,6 +1500,18 @@
         "required": false,
         "system": false,
         "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "number3051925876",
+        "max": null,
+        "min": null,
+        "name": "capacity",
+        "onlyInt": false,
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "number"
       },
       {
         "hidden": false,

@@ -43,13 +43,15 @@ export function DropdownItem({ children, danger, onClick, ...props }: {
     return (
         <DropdownMenuItem
             {...props}
-            className={`${danger && "text-danger"} px-2 py-1 rounded-lg 
-                cursor-pointer outline-none transition-all hover:bg-bg-lightest ${props.className}
+            className={`${danger && "text-danger"} px-2 py-1 rounded-lg data-disabled:text-gray-400!
+                not-data-disabled:cursor-pointer outline-none transition-all not-data-disabled:hover:bg-bg-lightest 
+                ${props.className}
                 ${props.selected && "flex items-center gap-1"}`
             }
-            style={props.style}
             onClick={e => {
                 e.stopPropagation();
+                if (props.disabled)
+                    return;
                 onClick?.(e);
             }}
         >
