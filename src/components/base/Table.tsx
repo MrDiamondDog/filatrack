@@ -9,6 +9,10 @@ export type TableColumn<T> = {
     sort?(a: T[keyof T], b: T[keyof T]): number,
 };
 
+export function EmptyCell() {
+    return <div className="w-12 h-0.5 bg-bg-lightest" />;
+}
+
 export default function Table<T extends Record<string, any>>({ columns, data, sort, sortType }:
     { columns: TableColumn<T>[], data: T[], sort?: keyof T, sortType?: "asc" | "desc" }) {
     const [tableData, setTableData] = useState([...data]);
@@ -86,7 +90,7 @@ export default function Table<T extends Record<string, any>>({ columns, data, so
                         key={col.key as string}
                     >
                         {col.render && col.render(item)}
-                        {(!col.render && !item[col.key]) && <div className="w-12 h-0.5 bg-bg-lightest" />}
+                        {(!col.render && !item[col.key]) && <EmptyCell />}
                         {!col.render && item[col.key]}
                     </td>)}
                 </tr>)}

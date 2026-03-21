@@ -5,17 +5,17 @@ import Divider from "../base/Divider";
 import Tablist from "../base/tabs/Tablist";
 import { useState } from "react";
 import { Images, Plus, TableIcon } from "lucide-react";
-import Table from "../base/Table";
+import Table, { EmptyCell } from "../base/Table";
 import { sortFn as colorSort } from "color-sorter";
 import { grams } from "@/lib/util/units";
-import { FilamentRecord, StorageRecord } from "@/types/pb";
+import { FilamentRecord, StorageResponse } from "@/types/pb";
 import Button from "../base/Button";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 import { pb } from "@/api/pb";
 
 export default function FilamentList({ filament, storagesList, title, viewLock, allowAdd, onListModified, onStoragesModified }:
-    { filament: FilamentRecord[], storagesList: StorageRecord[], title?: string, viewLock?: "cards" | "table",
-        allowAdd?: boolean, onListModified?: (l: FilamentRecord[]) => void, onStoragesModified?: (s: StorageRecord[]) => void
+    { filament: FilamentRecord[], storagesList: StorageResponse[], title?: string, viewLock?: "cards" | "table",
+        allowAdd?: boolean, onListModified?: (l: FilamentRecord[]) => void, onStoragesModified?: (s: StorageResponse[]) => void
 }) {
     const user = pb.authStore.record;
 
@@ -72,8 +72,14 @@ export default function FilamentList({ filament, storagesList, title, viewLock, 
                     { label: "Initial Mass", key: "initialMass", render: data => grams(data.initialMass) },
                     { label: "Material", key: "material" },
                     { label: "Brand", key: "brand" },
-                    { label: "Temp.", key: "nozzleTemperature", render: data => `${data.nozzleTemperature}°C` },
-                    { label: "Diameter", key: "diameter", render: data => `${data.diameter}mm` },
+                    {
+                        label: "Nozzle", key: "nozzleTemperature",
+                        render: data => (data.nozzleTemperature ? `${data.nozzleTemperature}°C` : <EmptyCell />),
+                    },
+                    {
+                        label: "Diameter", key: "diameter",
+                        render: data => (data.diameter ? `${data.diameter}mm` : <EmptyCell />),
+                    },
                 ]}
                 data={filament}
             />

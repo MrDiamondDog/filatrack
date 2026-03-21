@@ -8,7 +8,7 @@ import CardDetail from "../util/CardDetail";
 import { useState } from "react";
 import PrintFilamentModal from "../modals/PrintFilamentModal";
 import { useDevice } from "@/lib/util/hooks";
-import { FilamentRecord, StorageRecord } from "@/types/pb";
+import { FilamentRecord, StorageResponse } from "@/types/pb";
 import { Dropdown, DropdownContent, DropdownItem, DropdownSub, DropdownSubContent, DropdownSubTrigger, DropdownTrigger }
     from "../base/Dropdown";
 import { DeleteModal } from "../modals/DeleteModal";
@@ -22,8 +22,8 @@ import { toastError } from "@/lib/util/error";
 import Button from "../base/Button";
 
 export default function FilamentCard({ filament, storagesList, noninteractable, className, onModify, onStoragesModify, onDelete }:
-    { filament: FilamentRecord, storagesList: StorageRecord[], noninteractable?: boolean, className?: string,
-        onModify?: (f: FilamentRecord) => void, onStoragesModify?: (s: StorageRecord[]) => void, onDelete?: () => void
+    { filament: FilamentRecord, storagesList: StorageResponse[], noninteractable?: boolean, className?: string,
+        onModify?: (f: FilamentRecord) => void, onStoragesModify?: (s: StorageResponse[]) => void, onDelete?: () => void
 }) {
     const user = pb.authStore.record;
 
@@ -33,7 +33,7 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
     const [openModal, setOpenModal] = useState("");
     const [isMobile, _] = useDevice();
 
-    async function move(destination: StorageRecord) {
+    async function move(destination: StorageResponse) {
         if (destination.id === filament.storage) {
             // remove it from storage
             await Promise.all([
@@ -86,7 +86,7 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
     return <>
         <div
             className={`bg-bg-light rounded-lg pt-4 p-2 border-2 border-transparent relative flex flex-col justify-between
-                ${!noninteractable && "hover:border-primary cursor-pointer"} md:w-40 transition-colors
+                ${!noninteractable && "hover:border-primary cursor-pointer"} md:w-40 transition-colors overflow-hidden
             ${className}`}
         >
             <div className="absolute top-0 left-0 right-0 w-full h-1 bg-bg-lighter">

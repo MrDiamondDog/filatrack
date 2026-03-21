@@ -4,10 +4,10 @@ import { useObjectState } from "@/lib/util/hooks";
 import Button from "../base/Button";
 import { useState } from "react";
 import { Create } from "@/types/general";
-import { StorageRecord } from "@/types/pb";
+import { StorageRecord, StorageResponse } from "@/types/pb";
 import { pb } from "@/api/pb";
 
-export default function CreateStorageModal(props: ModalProps) {
+export default function CreateStorageModal(props: { onCreate: (s: StorageResponse) => void } & ModalProps) {
     const user = pb.authStore.record;
 
     if (!user)
@@ -34,7 +34,7 @@ export default function CreateStorageModal(props: ModalProps) {
         setLoading(true);
 
         await pb.collection("storage").create({ ...storage, user: user!.id })
-            .then(() => {
+            .then(res => {
                 setLoading(false);
                 setStorage({
                     name: "",
@@ -42,6 +42,7 @@ export default function CreateStorageModal(props: ModalProps) {
                     filament: [],
                 });
                 props.onClose();
+                props.onCreate(res);
             })
             .catch(e => {
                 console.error(e);

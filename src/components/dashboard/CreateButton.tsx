@@ -6,10 +6,10 @@ import Button from "../base/Button";
 import { useState } from "react";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 import CreateStorageModal from "../modals/CreateStorageModal";
-import { FilamentRecord, StorageRecord } from "@/types/pb";
+import { FilamentRecord, StorageResponse } from "@/types/pb";
 
 export default function CreateButton({ onFilamentCreate, onStorageCreate }:
-    { onFilamentCreate?: (f: FilamentRecord) => void, onStorageCreate?: (s: StorageRecord) => void
+    { onFilamentCreate?: (f: FilamentRecord) => void, onStorageCreate?: (s: StorageResponse) => void
 }) {
     const [openModal, setOpenModal] = useState("");
 
@@ -29,6 +29,6 @@ export default function CreateButton({ onFilamentCreate, onStorageCreate }:
         </Dropdown>
 
         <CreateFilamentModal open={openModal === "filament"} onClose={() => setOpenModal("")} onCreate={f => onFilamentCreate?.(f)} />
-        <CreateStorageModal open={openModal === "storage"} onClose={() => setOpenModal("")} />
+        <CreateStorageModal open={openModal === "storage"} onClose={() => setOpenModal("")} onCreate={s => onStorageCreate?.(s)}  />
     </>;
 }

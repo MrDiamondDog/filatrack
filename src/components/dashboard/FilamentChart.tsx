@@ -4,6 +4,7 @@ import { PieChart, PieValueType, useDrawingArea } from "@mui/x-charts";
 import Tablist from "../base/tabs/Tablist";
 import { grams } from "@/lib/util/units";
 import { useEffect, useState } from "react";
+import { FilamentRecord } from "@/types/pb";
 
 function PieCenterLabel({ children }: { children: React.ReactNode }) {
     const { width, height, left, top } = useDrawingArea();
@@ -18,24 +19,18 @@ function PieCenterLabel({ children }: { children: React.ReactNode }) {
     </text>;
 }
 
-export default function FilamentChart() {
-    // TODO: backend
-    const [allFilament, setAllFilament] = useState([
-        { color: "#fff", currentMass: 1000, startingMass: 2000, brand: "Elegoo", material: "PLA" },
-    ]);
+export default function FilamentChart({ filament }: { filament: FilamentRecord[] }) {
     const [chartMode, setChartMode] = useState("color");
     const [chartData, setChartData] = useState<PieValueType[]>([]);
 
     useEffect(() => {
-        if (!allFilament)
+        if (!filament)
             return;
 
         if (chartMode === "color") {
             const colors: Record<string, number> = {};
 
-            allFilament.forEach(f => colors[f.color] = colors[f.color] ?
-                colors[f.color] + f.currentMass :
-                f.currentMass);
+            filament.forEach(f => (colors[f.color] ? colors[f.color] += f.mass : colors[f.color] = f.mass));
 
             setChartData(Object.keys(colors).map(k => ({
                 value: colors[k],
@@ -45,9 +40,7 @@ export default function FilamentChart() {
         } else if (chartMode === "brand") {
             const brands: Record<string, number> = {};
 
-            allFilament.forEach(f => brands[f.brand] = brands[f.brand] ?
-                brands[f.brand] + f.currentMass :
-                f.currentMass);
+            filament.forEach(f => (brands[f.brand ?? "N/A"] ? brands[f.brand ?? "N/A"] += f.mass : brands[f.brand ?? "N/A"] = f.mass));
 
             setChartData(Object.keys(brands).map(k => ({
                 value: brands[k],
@@ -56,16 +49,14 @@ export default function FilamentChart() {
         } else if (chartMode === "material") {
             const materials: Record<string, number> = {};
 
-            allFilament.forEach(f => materials[f.material] = materials[f.material] ?
-                materials[f.material] + f.currentMass :
-                f.currentMass);
+            filament.forEach(f => (materials[f.material] ? materials[f.material] += f.mass : materials[f.material] = f.mass));
 
             setChartData(Object.keys(materials).map(k => ({
                 value: materials[k],
                 label: k || "[unset]",
             })));
         }
-    }, [chartMode, allFilament]);
+    }, [chartMode, filament]);
 
     return <div>
         <div className="w-full flex justify-center mb-2">
@@ -83,7 +74,7 @@ export default function FilamentChart() {
                 outerRadius: 100,
                 paddingAngle: 0,
                 cornerRadius: 2,
-                arcLabel: chartMode !== "Color" ? "label" : undefined,
+                arcLabel: chartMode !== "color" ? "label" : undefined,
                 highlightScope: { fade: "global", highlight: "item" },
                 valueFormatter: v => grams(v.value),
                 data: chartData,
@@ -93,8 +84,8 @@ export default function FilamentChart() {
             className="[&_path]:stroke-bg-light! [&_text]:fill-white! [&_text]:text-shadow-md [&_text]:text-shadow-black"
         >
             <PieCenterLabel>
-                {grams(allFilament.map(f => f.currentMass).reduce((prev, curr) => prev + curr))}{"\n"}/
-                {grams(allFilament.map(f => f.startingMass).reduce((prev, curr) => prev + curr))}
+                {grams(filament.map(f => f.mass).reduce((prev, curr) => prev + curr, 0))}{"\n"}
+                / {grams(filament.map(f => f.initialMass).reduce((prev, curr) => prev + curr, 0))}
             </PieCenterLabel>
         </PieChart>
     </div>;
