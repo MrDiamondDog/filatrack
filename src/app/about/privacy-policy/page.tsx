@@ -1,25 +1,25 @@
 import Divider from "@/components/base/Divider";
 import Link from "next/link";
 
-export const privacyPolicyLastUpdate = "1/31/2026";
+export const privacyPolicyLastUpdate = "3/21/26";
 
 export default function PrivacyPolicyPage() {
     return (
-        <div className="mx-auto w-1/2 bg-bg-light p-10">
+        <div className="mx-auto w-1/2 bg-bg-light p-10 *:[h2]:mt-2">
             <h1>Privacy Policy</h1>
             <p>Last Updated: {privacyPolicyLastUpdate}</p>
 
             <h2>Data We Collect</h2>
             <Divider />
 
-            <p>Some data is collected and stored in a database to keep track of everything you create.</p>
+            <p>Accounts, filament, prints, boxes, etc. you create are all stored in a database. This data includes:</p>
 
             <ul>
                 <li>Account data, such as your name, email, and profile picture, collected from the login method you choose.</li>
                 <li>All your filament, storage, prints, or settings you create/modify and all of their relevent data.</li>
             </ul>
 
-            <p>None of this data will ever be shared with any third parties, unless requested by law or authorities.</p>
+            <p>None of this data will ever be shared with any third parties, unless requested by law enforcement or authorities.</p>
             <p>This data is retained for as long as you hold an account on Filatrack.</p>
 
             <p>Additionally, the privacy policies and terms of service of the following login methods also apply, if used to login:</p>
@@ -54,19 +54,19 @@ export default function PrivacyPolicyPage() {
 
             <p>Data collected includes:</p>
             <ul>
-                <li>Browser</li>
-                <li>Device Information, such as type of device (mobile/pc), OS, and screen dimensions</li>
+                <li>Browser (Chrome, Firefox, etc.)</li>
+                <li>Device Information, such as type of device (mobile/PC), OS, and screen dimensions</li>
                 <li>Pages viewed</li>
                 <li>Links clicked</li>
                 <li>Referrer (the page that directed you to Filatrack)</li>
                 <li>Country/Region</li>
-                <li>Actions in Filatrack (creating filament/prints, etc.)</li>
+                <li>Actions in Filatrack (creating filament/prints/boxes, etc.)</li>
                 <li>Sessions</li>
             </ul>
 
             <p>
                 None of this data will ever be shared or linked back to you.
-                We encourage users who want complete privacy to turn off analytics.
+                We encourage users who want complete privacy to turn off analytics in the settings page.
             </p>
 
             <h2>Changes to this Privacy Policy</h2>
@@ -75,7 +75,7 @@ export default function PrivacyPolicyPage() {
             <p>
                 Should anything be changed in this privacy policy, the date at the top of this document will be updated and
                 you will be notified through a toast on Filatrack the next time you visit it. Any changes made to the privacy
-                policy are effective immediately on/after the Last Updated date in Mountain Standard Time.
+                policy are effective immediately on/after the Last Updated date at 12:00am in Mountain Standard Time.
             </p>
 
             <h2>Children's Privacy</h2>
