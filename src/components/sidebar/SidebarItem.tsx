@@ -18,7 +18,7 @@ export function MobileSidebarItem({ children, href }: { href: string } & React.P
     </Link>);
 }
 
-export default function SidebarItem({ children, href }: { href: string } & React.PropsWithChildren) {
+export default function SidebarItem({ children, href, className }: { href: string, className?: string } & React.PropsWithChildren) {
     const [isMobile, _] = useDevice();
 
     if (isMobile)
@@ -27,7 +27,7 @@ export default function SidebarItem({ children, href }: { href: string } & React
     const active = usePathname() === href;
 
     return (<Link href={href} className={`unstyled flex flex-row items-center gap-2 rounded-lg p-2 mb-1
-       transition-colors relative`}>
+       transition-colors relative ${className}`}>
         {children}
 
         {active && <motion.div

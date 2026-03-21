@@ -1,6 +1,6 @@
 "use client";
 
-import { Archive, Cog, Home, Printer, Spool } from "lucide-react";
+import { Archive, Cog, Heart, Home, Printer, Spool } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 import Divider from "../base/Divider";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import { AccountCard } from "../auth/AccountCard";
 import FilamentIcon from "../filament/FilamentIcon";
 import { randomFilamentNames, randomFrom } from "@/lib/util/random";
 import { useState } from "react";
+import { FaGithub } from "react-icons/fa6";
 
 export function MobileSidebar() {
     return (<div className="z-1 bottom-0 left-0 right-0 h-15 bg-bg-light p-2 px-4 fixed flex items-center justify-around gap-2">
@@ -47,6 +48,12 @@ export default function Sidebar() {
         </div>
 
         <div>
+            <SidebarItem href="https://github.com/mrdiamonddog/filatrack"><FaGithub size={24} /> GitHub</SidebarItem>
+            <SidebarItem href="/about/support"
+                className="mb-2 bg-[rgba(228,29,95,0.15)] text-[rgb(255,178,203)]"
+            >
+                <Heart /> Support
+            </SidebarItem>
             <AccountCard />
         </div>
     </div>);
