@@ -41,6 +41,9 @@ export default function PrintPage() {
         <Divider />
 
         <PrintList prints={prints} filament={filament} />
+        {!prints.length && <p className="w-full text-center">
+            You haven't logged any prints yet. Press the + in the top right to get started!
+        </p>}
 
         <CreatePrintModal open={openModal === "print"} onClose={() => setOpenModal("")} onCreate={p => setPrints([...prints, p])} />
     </MotionContainer>);

@@ -45,37 +45,42 @@ export default function DashboardPage() {
 
         <Divider />
 
-        <FilamentChart filament={filament} />
+        {!!filament.length && <FilamentChart filament={filament} />}
+        {!filament.length && <p className="w-full text-center">
+            You don't have any filament yet. Press the + button in the top right to get started!
+        </p>}
 
-        <div className="w-full flex flex-col md:flex-row mt-5">
-            <div className="w-full">
-                <h2>Storage</h2>
-                <Divider />
-                <StorageList storages={storages} onListUpdate={setStorages} />
+        {!!filament.length && <>
+            <div className="w-full flex flex-col md:flex-row mt-5">
+                <div className="w-full">
+                    <h2>Storage</h2>
+                    <Divider />
+                    <StorageList storages={storages} onListUpdate={setStorages} />
+                </div>
+
+                <Divider vertical />
+
+                <div className="w-full">
+                    <FilamentList
+                        title="Recent Filament"
+                        filament={(filament)
+                            .sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime())
+                            .slice(0, 3)}
+                        viewLock="cards"
+                        storagesList={storages}
+                        onListModified={setFilament}
+                        onStoragesModified={setStorages}
+                    />
+                </div>
             </div>
 
-            <Divider vertical />
-
-            <div className="w-full">
-                <FilamentList
-                    title="Recent Filament"
-                    filament={(filament)
-                        .sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime())
-                        .slice(0, 3)}
-                    viewLock="cards"
-                    storagesList={storages}
-                    onListModified={setFilament}
-                    onStoragesModified={setStorages}
-                />
-            </div>
-        </div>
-
-        <FilamentList
-            title="All Filament"
-            filament={filament}
-            storagesList={storages}
-            onListModified={setFilament}
-            onStoragesModified={setStorages}
-        />
+            <FilamentList
+                title="All Filament"
+                filament={filament}
+                storagesList={storages}
+                onListModified={setFilament}
+                onStoragesModified={setStorages}
+            />
+        </>}
     </MotionContainer>);
 }

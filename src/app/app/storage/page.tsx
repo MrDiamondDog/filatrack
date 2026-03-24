@@ -41,6 +41,10 @@ export default function StoragePage() {
 
         <StorageList storages={storages} onListUpdate={setStorages} />
 
+        {!storages.length && <p className="w-full text-center">
+            You don't have any storages yet. Press the + button in the top right to get started!
+        </p>}
+
         <CreateStorageModal open={openModal === "storage"} onClose={() => setOpenModal("")}
             onCreate={s => setStorages([...storages, s])} />
     </MotionContainer>;
