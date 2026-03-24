@@ -96,6 +96,7 @@ export default function PrivacyPolicyPage() {
             <p>You can reach us via the following:</p>
             <ul>
                 <li>Fill out this form: <Link href="/about/contact">https://filatrack.app/about/contact</Link></li>
+                <li>Send an email to: <Link href="mailto:contact@filatrack.app">contact@filatrack.app</Link></li>
                 <li>Visit our Discord server: <Link href="/discord">https://filatrack.app/discord</Link></li>
             </ul>
         </div>
