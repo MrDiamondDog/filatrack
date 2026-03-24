@@ -14,9 +14,8 @@ export default function CreateStorageModal(props: { onCreate?: (s: StorageWithFi
     if (!user)
         return;
 
-    const [storage, setStorage] = useObjectState<Create<StorageRecord>>({
+    const [storage, setStorage, reset] = useObjectState<Create<StorageRecord>>({
         name: "",
-        icon: "",
         filament: [],
     });
 
@@ -37,11 +36,7 @@ export default function CreateStorageModal(props: { onCreate?: (s: StorageWithFi
         await pb.collection("storage").create<StorageWithFilament>({ ...storage, user: user!.id }, { expand: "filament" })
             .then(res => {
                 setLoading(false);
-                setStorage({
-                    name: "",
-                    icon: "",
-                    filament: [],
-                });
+                reset();
                 props.onClose();
                 props.onCreate?.(res);
             })

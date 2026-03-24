@@ -27,7 +27,7 @@ export default function CreateFilamentModal(props: ModalProps & { onCreate: (f: 
 
     const [randomFilamentValues, _] = useState(randomFilament());
 
-    const [filament, setFilament] = useObjectState<Create<FilamentRecord>>({
+    const [filament, setFilament, reset] = useObjectState<Create<FilamentRecord>>({
         name: "",
         material: "",
         color: "#fff",
@@ -53,14 +53,7 @@ export default function CreateFilamentModal(props: ModalProps & { onCreate: (f: 
         await pb.collection("filament").create({ ...filament, user: user.id })
             .then(res => {
                 setLoading(false);
-                setFilament({
-                    name: "",
-                    material: "",
-                    color: "#fff",
-                    mass: 1000,
-                    initialMass: 1000,
-                    spoolType: FilamentSpoolTypeOptions.plastic,
-                });
+                reset();
                 props.onClose();
                 props.onCreate(res);
             })
@@ -116,7 +109,7 @@ export default function CreateFilamentModal(props: ModalProps & { onCreate: (f: 
                 <Select
                     options={{ plastic: "Plastic Spool", cardboard: "Cardboard Spool", refill: "Refill", nospool: "No Spool" }}
                     value={filament.spoolType ?? "full"}
-                    onChange={v => setFilament({ spoolType: v as keyof FilamentRecord["spoolType"] })}
+                    onChange={v => setFilament({ spoolType: v as FilamentSpoolTypeOptions })}
                 />
 
                 <Input
@@ -145,19 +138,32 @@ export default function CreateFilamentModal(props: ModalProps & { onCreate: (f: 
 
             <Drawer label="Filament Details" open={drawer === 2} onChange={open => setDrawer(open ? 2 : -1)}>
                 <Input
-                    label="Temperature (°C)"
-                    placeholder="200"
-                    type="number"
+                    label="Nozzle Temperature (°C)"
                     value={filament.nozzleTemperature}
                     onChange={e => setFilament({ nozzleTemperature: parseInt(e.target.value) })}
-                />
-
-                <Input
-                    label="Diameter (mm)"
-                    placeholder="1.75"
                     type="number"
-                    value={filament.diameter}
-                    onChange={e => setFilament({ diameter: parseInt(e.target.value) })}
+                />
+                <Input
+                    label="Bed Temperature (°C)"
+                    value={filament.bedTemperature}
+                    onChange={e => setFilament({ bedTemperature: parseInt(e.target.value) })}
+                    type="number"
+                />
+                <Input
+                    label="Transmission Distance (TD)"
+                    value={filament.transmissionDistance}
+                    subtext="A measure of how much light filament lets through."
+                    onChange={e => setFilament({ transmissionDistance: parseFloat(e.target.value) })}
+                    type="number"
+                />
+                <Input
+                    label="Flow Ratio"
+                    value={filament.flowRatio}
+                    subtext={`Determines how much more or less the extruder has to extrude to get the best quality. 
+                Varies from printer to printer.`}
+                    placeholder="1.00"
+                    onChange={e => setFilament({ flowRatio: parseFloat(e.target.value) })}
+                    type="number"
                 />
             </Drawer>
         </div>

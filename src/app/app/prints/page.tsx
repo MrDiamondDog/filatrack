@@ -7,7 +7,7 @@ import MotionContainer from "@/components/base/MotionContainer";
 import CreatePrintModal from "@/components/modals/CreatePrintModal";
 import PrintList from "@/components/prints/PrintList";
 import { toastError } from "@/lib/util/error";
-import { UsersRecord, PrintsRecord } from "@/types/pb";
+import { UsersRecord, PrintsRecord, FilamentRecord } from "@/types/pb";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -19,11 +19,16 @@ export default function PrintPage() {
 
     const [openModal, setOpenModal] = useState("");
     const [prints, setPrints] = useState<PrintsRecord[]>([]);
+    const [filament, setFilament] = useState<FilamentRecord[]>([]);
 
     useEffect(() => {
         pb.collection("prints").getFullList({ filter: `user.id = "${user.id}"` })
             .then(setPrints)
             .catch(e => toastError("Could not fetch prints", e));
+
+        pb.collection("filament").getFullList({ filter: `user.id = "${user.id}"` })
+            .then(setFilament)
+            .catch(e => toastError("Could not fetch filament", e));
     }, []);
 
     return (<MotionContainer>
@@ -35,7 +40,7 @@ export default function PrintPage() {
         </div>
         <Divider />
 
-        <PrintList prints={prints} />
+        <PrintList prints={prints} filament={filament} />
 
         <CreatePrintModal open={openModal === "print"} onClose={() => setOpenModal("")} onCreate={p => setPrints([...prints, p])} />
     </MotionContainer>);

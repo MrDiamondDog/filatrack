@@ -4,7 +4,8 @@ import { pb } from "@/api/pb";
 import MotionContainer from "@/components/base/MotionContainer";
 import FilamentList from "@/components/filament/FilamentList";
 import { toastError } from "@/lib/util/error";
-import { FilamentRecord, StorageRecord, UsersResponse } from "@/types/pb";
+import { FilamentRecord, UsersResponse } from "@/types/pb";
+import { StorageWithFilament } from "@/types/storage";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -22,7 +23,7 @@ export default function FilamentPage({
         return null;
 
     const [filament, setFilament] = useState<FilamentRecord[]>([]);
-    const [storages, setStorages] = useState<StorageRecord[]>([]);
+    const [storages, setStorages] = useState<StorageWithFilament[]>([]);
 
     useEffect(() => {
         pb.collection("filament").getFullList({
@@ -31,8 +32,9 @@ export default function FilamentPage({
             .then(setFilament)
             .catch(e => toastError("Could not fetch filament", e));
 
-        pb.collection("storage").getFullList({
+        pb.collection("storage").getFullList<StorageWithFilament>({
             filter: `user.id = "${user.id}"`,
+            expand: "filament",
         })
             .then(setStorages)
             .catch(e => toastError("Could not fetch storages", e));

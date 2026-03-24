@@ -3,22 +3,34 @@
 import { toDateString, toTimeString } from "@/lib/util/date";
 import { grams } from "@/lib/util/units";
 import Table from "../base/Table";
-import { PrintsRecord, UsersRecord } from "@/types/pb";
+import { FilamentRecord, PrintsRecord, UsersRecord } from "@/types/pb";
 import { pb } from "@/api/pb";
+import FilamentTinyCard from "../filament/FilamentTinyCard";
+import Subtext from "../base/Subtext";
+import { PrintFilamentUsage } from "@/types/prints";
 
-export default function PrintList({ prints }: { prints: PrintsRecord[] }) {
+export default function PrintList({ prints, filament }: { prints: PrintsRecord[], filament: FilamentRecord[] }) {
     const user = pb.authStore.record as unknown as UsersRecord;
 
     if (!user)
         return null;
 
     return <>
-        {/* TODO: Filament Previews */}
         <Table
             columns={[
                 { label: "Name", key: "label" },
                 { label: "Filament Used", key: "totalFilamentUsed", render: data => grams(data.totalFilamentUsed) },
-                { label: "Rolls Used", key: "totalRollsUsed" },
+                {
+                    label: "Rolls Used", key: "filamentRolls",
+                    render: data => <div className="flex gap-1">
+                        {data.filamentRolls
+                            .map(f => <div className="text-center" key={f}>
+                                <FilamentTinyCard filament={filament.find(l => l.id === f)!} />
+                                <Subtext className="text-xs">{grams((data.filamentUsage as PrintFilamentUsage)[f])}</Subtext>
+                            </div>)
+                        }
+                    </div>,
+                },
                 {
                     label: "Date", key: "created",
                     render: data => `${toDateString(new Date(data.created))} ${toTimeString(new Date(data.created))}`,

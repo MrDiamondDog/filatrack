@@ -9,7 +9,11 @@ export function useObjectState<T extends object>(initial: T) {
         setState(prev => ({ ...prev, ...patch }));
     }, []);
 
-    return [state, update] as const;
+    const reset = useCallback(() => {
+        setState(initial);
+    }, []);
+
+    return [state, update, reset] as const;
 }
 
 export function useDevice() {

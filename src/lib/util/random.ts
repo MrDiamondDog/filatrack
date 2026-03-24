@@ -20,7 +20,6 @@ export const randomFilamentNames = {
     Gray: "#808080",
     "Carbon Fiber": "#333333",
     Transparent: "#FFFFFF",
-    "Glow in the Dark": "#00FF00",
 };
 
 export const randomFilamentBrands = [
@@ -42,11 +41,6 @@ export const randomFilamentMaterials = [
     "ABS",
     "PETG",
     "TPU",
-    "ASA",
-    "HIPS",
-    "PC",
-    "PVA",
-    "Nylon",
 ];
 
 export const randomFilamentMaxMass = [2000, 1000, 500, 250, 200];

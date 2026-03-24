@@ -80,6 +80,7 @@ export default function FilamentList({ filament, storagesList, title, viewLock, 
                     },
                 ]}
                 data={filament}
+                rowClassName="cursor-pointer hover:bg-bg-lighter transition-colors"
             />
         }
 

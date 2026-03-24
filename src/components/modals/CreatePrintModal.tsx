@@ -8,14 +8,18 @@ import Divider from "../base/Divider";
 import Button from "../base/Button";
 import Subtext from "../base/Subtext";
 import { grams } from "@/lib/util/units";
-import { FilamentRecord, PrintsRecord, UsersRecord } from "@/types/pb";
+import { FilamentRecord, PrintsRecord } from "@/types/pb";
 import { pb } from "@/api/pb";
 
 export default function CreatePrintModal({ onCreate, ...props }: { onCreate: (p: PrintsRecord) => void } & ModalProps) {
-    const user = pb.authStore.record as unknown as UsersRecord;
+    const user = pb.authStore.record;
+
+    if (!user)
+        return null;
+
+    const [drawer, setDrawer] = useState(0);
 
     const [selectedFilament, setSelectedFilament] = useState<FilamentRecord[]>([]);
-    const [drawer, setDrawer] = useState(0);
     const [filamentUsed, setFilamentUsed] = useState<Record<string, number>>({});
     const [label, setLabel] = useState("");
 
@@ -37,7 +41,7 @@ export default function CreatePrintModal({ onCreate, ...props }: { onCreate: (p:
 
         const newPrint = await pb.collection("prints").create({
             label,
-            user: user.id,
+            user: user!.id,
             filamentRolls: selectedFilament.map(f => f.id),
             filamentUsage: filamentUsed,
             totalFilamentUsed: Object.values(filamentUsed).reduce((prev, curr) => prev + curr),

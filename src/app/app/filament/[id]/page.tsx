@@ -20,12 +20,19 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
     if (!user)
         return null;
 
-    const [filament, setFilament] = useState<FilamentRecord & { expand: { prints: PrintsRecord[] }}>();
+    const [filamentList, setFilamentList] = useState<(FilamentRecord & { expand: { prints: PrintsRecord[] }})[]>([]);
+    const [filament, setFilament] = useState<(FilamentRecord & { expand: { prints: PrintsRecord[] }})>();
 
     useEffect(() => {
         params.then(p => {
-            pb.collection("filament").getOne<FilamentRecord & { expand: { prints: PrintsRecord[] }}>(p.id, { expand: "prints" })
-                .then(setFilament)
+            pb.collection("filament").getFullList<FilamentRecord & { expand: { prints: PrintsRecord[] }}>({
+                filter: `user.id = "${user.id}"`,
+                expand: "prints",
+            })
+                .then(res => {
+                    setFilamentList(res);
+                    setFilament(res.find(f => f.id === p.id));
+                })
                 .catch(e => toastError("Could not fetch filament", e));
         });
     }, []);
@@ -58,7 +65,11 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
                     </div>
                     <Divider vertical />
                     {!!filament.nozzleTemperature && <>
-                        <div className="text-center"><Subtext>Print Temperature</Subtext> {celcius(filament.nozzleTemperature)}</div>
+                        <div className="text-center"><Subtext>Nozzle Temp.</Subtext> {celcius(filament.nozzleTemperature)}</div>
+                        <Divider vertical />
+                    </>}
+                    {!!filament.bedTemperature && <>
+                        <div className="text-center"><Subtext>Bed Temp.</Subtext> {celcius(filament.bedTemperature)}</div>
                         <Divider vertical />
                     </>}
                     {!!filament.diameter && <>
@@ -71,9 +82,8 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
                 <Divider />
 
                 <h3>Prints With This Filament</h3>
-                <Divider />
 
-                <PrintList prints={filament.expand.prints ?? []} />
+                <PrintList prints={filament.expand.prints ?? []} filament={filamentList} />
             </>}
         </Suspense>
     </MotionContainer>;
