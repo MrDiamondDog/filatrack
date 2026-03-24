@@ -3,7 +3,7 @@
 import FilamentIcon from "./FilamentIcon";
 import Subtext from "../base/Subtext";
 import { celcius, grams } from "@/lib/util/units";
-import { Archive, Box, ChevronRight, Diameter, EllipsisVertical, Thermometer, Weight } from "lucide-react";
+import { Archive, BedSingle, Box, ChevronRight, Diameter, EllipsisVertical, Thermometer, Weight } from "lucide-react";
 import CardDetail from "../util/CardDetail";
 import { useState } from "react";
 import PrintFilamentModal from "../modals/PrintFilamentModal";
@@ -22,7 +22,7 @@ import { toastError } from "@/lib/util/error";
 import Button from "../base/Button";
 import { StorageWithFilament } from "@/types/storage";
 import { modifyArrayItem } from "@/lib/util/array";
-import EditFilamentModal from "../modals/EditFilamentModal";
+import CreateFilamentModal from "../modals/CreateFilamentModal";
 
 export default function FilamentCard({ filament, storagesList, noninteractable, className, onModify, onStoragesModify, onDelete }:
     { filament: FilamentRecord, storagesList: StorageWithFilament[], noninteractable?: boolean, className?: string,
@@ -150,6 +150,8 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                         </CardDetail>}
                     {!!filament.nozzleTemperature &&
                         <CardDetail icon={<Thermometer size={20} />}>{celcius(filament.nozzleTemperature)}</CardDetail>}
+                    {!!filament.bedTemperature &&
+                        <CardDetail icon={<BedSingle size={20} />}>{celcius(filament.bedTemperature)}</CardDetail>}
                     {!!filament.diameter &&
                         <CardDetail icon={<Diameter size={20} /> }>{filament.diameter}mm</CardDetail>}
                 </div>
@@ -180,11 +182,11 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
             }}
         />
 
-        <EditFilamentModal
+        <CreateFilamentModal
             open={openModal === "edit"}
             onClose={() => setOpenModal("")}
-            onModify={f => onModify?.(f)}
-            filament={filament}
+            onCreate={f => onModify?.(f)}
+            initial={filament}
         />
     </>;
 }

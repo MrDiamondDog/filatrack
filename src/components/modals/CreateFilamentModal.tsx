@@ -14,7 +14,7 @@ import { FilamentRecord, FilamentSpoolTypeOptions } from "@/types/pb";
 import { pb } from "@/api/pb";
 import { Create } from "@/types/general";
 
-export default function CreateFilamentModal(props: ModalProps & { onCreate: (f: FilamentRecord) => void }) {
+export default function CreateFilamentModal(props: ModalProps & { initial?: FilamentRecord, onCreate: (f: FilamentRecord) => void }) {
     const user = pb.authStore.record;
 
     if (!user)
@@ -27,7 +27,7 @@ export default function CreateFilamentModal(props: ModalProps & { onCreate: (f: 
 
     const [randomFilamentValues, _] = useState(randomFilament());
 
-    const [filament, setFilament, reset] = useObjectState<Create<FilamentRecord>>({
+    const [filament, setFilament, reset] = useObjectState<Create<FilamentRecord>>(props.initial ?? {
         name: "",
         material: "",
         color: "#fff",
@@ -50,25 +50,38 @@ export default function CreateFilamentModal(props: ModalProps & { onCreate: (f: 
 
         setLoading(true);
 
-        await pb.collection("filament").create({ ...filament, user: user.id })
-            .then(res => {
-                setLoading(false);
-                reset();
-                props.onClose();
-                props.onCreate(res);
-            })
-            .catch(e => {
-                console.error(e);
-                setLoading(false);
-                setError(e.message);
-            });
+        if (!props.initial)
+            await pb.collection("filament").create({ ...filament, user: user.id })
+                .then(res => {
+                    setLoading(false);
+                    reset();
+                    props.onClose();
+                    props.onCreate(res);
+                })
+                .catch(e => {
+                    console.error(e);
+                    setLoading(false);
+                    setError(e.message);
+                });
+        else
+            await pb.collection("filament").update(props.initial.id, { ...filament, user: user.id })
+                .then(res => {
+                    setLoading(false);
+                    props.onClose();
+                    props.onCreate(res);
+                })
+                .catch(e => {
+                    console.error(e);
+                    setLoading(false);
+                    setError(e.message);
+                });
     }
 
     return <Modal {...props} onClose={() => {
         setDrawer(0);
         props.onClose();
-    }} title="Create Filament">
-        <ModalHeader>Add a new filament roll to your collection.</ModalHeader>
+    }} title={props.initial ? "Edit Filament" : "Create Filament"}>
+        <ModalHeader>{props.initial ? "Edit an existing filament roll" : "Add a new filament roll to your collection."}</ModalHeader>
 
         <div className="flex flex-col gap-2">
             <Drawer label="Basic Details" open={drawer === 0} onChange={open => setDrawer(open ? 0 : -1)}>
@@ -169,7 +182,7 @@ export default function CreateFilamentModal(props: ModalProps & { onCreate: (f: 
         </div>
 
         <ModalFooter error={error}>
-            <Button onClick={createFilament} loading={loading}>Create</Button>
+            <Button onClick={createFilament} loading={loading}>{props.initial ? "Save" : "Create"}</Button>
         </ModalFooter>
     </Modal>;
 }
