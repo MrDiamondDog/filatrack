@@ -14,6 +14,8 @@ import CreateFilamentModal from "../modals/CreateFilamentModal";
 import { pb } from "@/api/pb";
 import { StorageWithFilament } from "@/types/storage";
 import { modifyArrayItem } from "@/lib/util/array";
+import { startHolyLoader } from "holy-loader";
+import { useRouter } from "next/navigation";
 
 export default function FilamentList({ filament, storagesList, title, viewLock, allowAdd, onListModified, onStoragesModified }:
     { filament: FilamentRecord[], storagesList: StorageWithFilament[], title?: string, viewLock?: "cards" | "table",
@@ -27,6 +29,8 @@ export default function FilamentList({ filament, storagesList, title, viewLock, 
     const [view, setView] = useState<"cards" | "table">(viewLock ?? "cards");
 
     const [openModal, setOpenModal] = useState("");
+
+    const router = useRouter();
 
     return <>
         {title && <>
@@ -71,7 +75,7 @@ export default function FilamentList({ filament, storagesList, title, viewLock, 
                     { label: "Material", key: "material" },
                     { label: "Brand", key: "brand" },
                     {
-                        label: "Nozzle", key: "nozzleTemperature",
+                        label: "Nozzle Temp.", key: "nozzleTemperature",
                         render: data => (data.nozzleTemperature ? `${data.nozzleTemperature}°C` : <EmptyCell />),
                     },
                     {
@@ -81,6 +85,10 @@ export default function FilamentList({ filament, storagesList, title, viewLock, 
                 ]}
                 data={filament}
                 rowClassName="cursor-pointer hover:bg-bg-lighter transition-colors"
+                onRowClick={row => {
+                    startHolyLoader();
+                    router.push(`/app/filament/${row.id}`);
+                }}
             />
         }
 

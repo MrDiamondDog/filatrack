@@ -22,6 +22,7 @@ import { toastError } from "@/lib/util/error";
 import Button from "../base/Button";
 import { StorageWithFilament } from "@/types/storage";
 import { modifyArrayItem } from "@/lib/util/array";
+import EditFilamentModal from "../modals/EditFilamentModal";
 
 export default function FilamentCard({ filament, storagesList, noninteractable, className, onModify, onStoragesModify, onDelete }:
     { filament: FilamentRecord, storagesList: StorageWithFilament[], noninteractable?: boolean, className?: string,
@@ -177,6 +178,13 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                 onDelete?.();
                 setOpenModal("");
             }}
+        />
+
+        <EditFilamentModal
+            open={openModal === "edit"}
+            onClose={() => setOpenModal("")}
+            onModify={f => onModify?.(f)}
+            filament={filament}
         />
     </>;
 }

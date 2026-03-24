@@ -13,8 +13,10 @@ export function EmptyCell() {
     return <div className="w-12 h-0.5 bg-bg-lightest" />;
 }
 
-export default function Table<T extends Record<string, any>>({ columns, data, sort, sortType, rowClassName }:
-    { columns: TableColumn<T>[], data: T[], sort?: keyof T, sortType?: "asc" | "desc", rowClassName?: string }) {
+export default function Table<T extends Record<string, any>>({ columns, data, sort, sortType, rowClassName, onRowClick }:
+    { columns: TableColumn<T>[], data: T[], sort?: keyof T, sortType?: "asc" | "desc", rowClassName?: string,
+        onRowClick?: (row: T) => void
+     }) {
     const [tableData, setTableData] = useState([...data]);
 
     const [sortKey, setSortKey] = useState<keyof T>("");
@@ -84,6 +86,7 @@ export default function Table<T extends Record<string, any>>({ columns, data, so
                 {tableData.map((item, i) => <tr
                     className={`border-t-2 border-bg-lighter ${rowClassName}`}
                     key={i}
+                    onClick={() => onRowClick?.(item)}
                 >
                     {columns.map(col => <td
                         className="px-4 py-2"
