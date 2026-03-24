@@ -10,7 +10,14 @@ export default function SSOButton({ provider, icon, children }:
     { provider: string, icon: React.ReactNode } & React.PropsWithChildren) {
     return <Button
         className="flex gap-1 items-center justify-center"
-        onClick={() => pb.collection("users").authWithOAuth2({ provider })
+        onClick={() => pb.collection("users").authWithOAuth2({
+            provider,
+            createData: {
+                tempUnit: "c",
+                massUnit: "g",
+                lengthUnit: "mm",
+            },
+        })
             .then(login)
             .catch(e => e.message !== "NEXT_REDIRECT" &&
                 toast.error(`${e.message} Please try again later or report this to the Discord server.`))

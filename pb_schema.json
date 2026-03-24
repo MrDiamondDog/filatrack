@@ -287,6 +287,48 @@
       },
       {
         "hidden": false,
+        "id": "select2227413883",
+        "maxSelect": 1,
+        "name": "tempUnit",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "select",
+        "values": [
+          "c",
+          "f"
+        ]
+      },
+      {
+        "hidden": false,
+        "id": "select1829024851",
+        "maxSelect": 1,
+        "name": "massUnit",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "select",
+        "values": [
+          "g",
+          "lb"
+        ]
+      },
+      {
+        "hidden": false,
+        "id": "select3521742763",
+        "maxSelect": 1,
+        "name": "lengthUnit",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "select",
+        "values": [
+          "mm",
+          "in"
+        ]
+      },
+      {
+        "hidden": false,
         "id": "autodate2990389176",
         "name": "created",
         "onCreate": true,
@@ -1170,13 +1212,13 @@
     "system": false
   },
   {
-    "id": "pbc_436566489",
+    "id": "pbc_1300216341",
     "listRule": "user.id = @request.auth.id",
     "viewRule": "user.id = @request.auth.id",
     "createRule": "user.id = @request.auth.id",
     "updateRule": "user.id = @request.auth.id",
     "deleteRule": "user.id = @request.auth.id",
-    "name": "materialPresets",
+    "name": "filamentPresets",
     "type": "base",
     "fields": [
       {
@@ -1202,21 +1244,103 @@
         "minSelect": 0,
         "name": "user",
         "presentable": false,
-        "required": true,
+        "required": false,
         "system": false,
         "type": "relation"
       },
       {
         "autogeneratePattern": "",
         "hidden": false,
+        "id": "text1579384326",
+        "max": 50,
+        "min": 0,
+        "name": "name",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
         "id": "text2092856725",
-        "max": 0,
+        "max": 25,
         "min": 0,
         "name": "material",
         "pattern": "",
         "presentable": false,
         "primaryKey": false,
-        "required": true,
+        "required": false,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text1716930793",
+        "max": 0,
+        "min": 0,
+        "name": "color",
+        "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+        "presentable": false,
+        "primaryKey": false,
+        "required": false,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text475199832",
+        "max": 50,
+        "min": 0,
+        "name": "brand",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": false,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "number1004265926",
+        "max": null,
+        "min": null,
+        "name": "initialMass",
+        "onlyInt": false,
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3485334036",
+        "max": 200,
+        "min": 0,
+        "name": "note",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": false,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text46777136",
+        "max": 0,
+        "min": 0,
+        "name": "purchaseLink",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": false,
         "system": false,
         "type": "text"
       },
@@ -1238,6 +1362,30 @@
         "max": null,
         "min": null,
         "name": "bedTemperature",
+        "onlyInt": false,
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "hidden": false,
+        "id": "number1948671826",
+        "max": null,
+        "min": null,
+        "name": "diameter",
+        "onlyInt": false,
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "hidden": false,
+        "id": "number405181692",
+        "max": null,
+        "min": null,
+        "name": "cost",
         "onlyInt": false,
         "presentable": false,
         "required": false,
@@ -1270,12 +1418,29 @@
       },
       {
         "hidden": false,
-        "id": "bool1001664029",
-        "name": "public",
+        "id": "select1447118570",
+        "maxSelect": 1,
+        "name": "spoolType",
         "presentable": false,
         "required": false,
         "system": false,
-        "type": "bool"
+        "type": "select",
+        "values": [
+          "refill",
+          "nospool",
+          "cardboard",
+          "plastic"
+        ]
+      },
+      {
+        "hidden": false,
+        "id": "json2036353819",
+        "maxSize": 0,
+        "name": "customAttributes",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
       },
       {
         "hidden": false,
@@ -1512,135 +1677,6 @@
         "required": false,
         "system": false,
         "type": "number"
-      },
-      {
-        "hidden": false,
-        "id": "autodate2990389176",
-        "name": "created",
-        "onCreate": true,
-        "onUpdate": false,
-        "presentable": false,
-        "system": false,
-        "type": "autodate"
-      },
-      {
-        "hidden": false,
-        "id": "autodate3332085495",
-        "name": "updated",
-        "onCreate": true,
-        "onUpdate": true,
-        "presentable": false,
-        "system": false,
-        "type": "autodate"
-      }
-    ],
-    "indexes": [],
-    "system": false
-  },
-  {
-    "id": "pbc_1743682018",
-    "listRule": "user.id = @request.auth.id",
-    "viewRule": "user.id = @request.auth.id",
-    "createRule": "",
-    "updateRule": "user.id = @request.auth.id",
-    "deleteRule": "user.id = @request.auth.id",
-    "name": "userSettings",
-    "type": "base",
-    "fields": [
-      {
-        "autogeneratePattern": "[a-z0-9]{15}",
-        "hidden": false,
-        "id": "text3208210256",
-        "max": 15,
-        "min": 15,
-        "name": "id",
-        "pattern": "^[a-z0-9]+$",
-        "presentable": false,
-        "primaryKey": true,
-        "required": true,
-        "system": true,
-        "type": "text"
-      },
-      {
-        "cascadeDelete": true,
-        "collectionId": "_pb_users_auth_",
-        "hidden": false,
-        "id": "relation2375276105",
-        "maxSelect": 1,
-        "minSelect": 0,
-        "name": "user",
-        "presentable": false,
-        "required": true,
-        "system": false,
-        "type": "relation"
-      },
-      {
-        "hidden": false,
-        "id": "select2227413883",
-        "maxSelect": 1,
-        "name": "tempUnit",
-        "presentable": false,
-        "required": true,
-        "system": false,
-        "type": "select",
-        "values": [
-          "c",
-          "f"
-        ]
-      },
-      {
-        "hidden": false,
-        "id": "select1829024851",
-        "maxSelect": 1,
-        "name": "massUnit",
-        "presentable": false,
-        "required": true,
-        "system": false,
-        "type": "select",
-        "values": [
-          "g",
-          "lb"
-        ]
-      },
-      {
-        "hidden": false,
-        "id": "select3521742763",
-        "maxSelect": 1,
-        "name": "lengthUnit",
-        "presentable": false,
-        "required": true,
-        "system": false,
-        "type": "select",
-        "values": [
-          "mm",
-          "in"
-        ]
-      },
-      {
-        "cascadeDelete": false,
-        "collectionId": "pbc_436566489",
-        "hidden": false,
-        "id": "relation1950979147",
-        "maxSelect": 999,
-        "minSelect": 0,
-        "name": "materialPresets",
-        "presentable": false,
-        "required": false,
-        "system": false,
-        "type": "relation"
-      },
-      {
-        "cascadeDelete": false,
-        "collectionId": "pbc_1729099166",
-        "hidden": false,
-        "id": "relation2036353819",
-        "maxSelect": 999,
-        "minSelect": 0,
-        "name": "customAttributes",
-        "presentable": false,
-        "required": false,
-        "system": false,
-        "type": "relation"
       },
       {
         "hidden": false,
