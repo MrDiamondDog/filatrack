@@ -13,7 +13,7 @@ import Button from "../base/Button";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 import { pb } from "@/api/pb";
 import { StorageWithFilament } from "@/types/storage";
-import { modifyArrayItem } from "@/lib/util/array";
+import { deleteFromArray, modifyArrayItem } from "@/lib/util/array";
 import { startHolyLoader } from "holy-loader";
 import { useRouter } from "next/navigation";
 
@@ -57,7 +57,7 @@ export default function FilamentList({ filament, storagesList, title, viewLock, 
                 storagesList={storagesList}
                 onModify={f => onListModified?.(modifyArrayItem(filament, f, "id"))}
                 onStoragesModify={onStoragesModified}
-                onDelete={() => onListModified?.([...filament.filter(fil => fil.id !== f.id)])}
+                onDelete={() => onListModified?.(deleteFromArray(filament, f, "id"))}
             />)}
         </div>}
 

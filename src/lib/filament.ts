@@ -20,7 +20,7 @@ export async function moveFilament(filament: FilamentRecord, destinationId: stri
         return await Promise.all([
             pb.collection("storage").update<StorageWithFilament>(destinationId, {
                 "filament-": filament.id,
-            }),
+            }, { expand: "filament" }),
             pb.collection("filament").update(filament.id, {
                 storage: null,
             }),
@@ -32,13 +32,13 @@ export async function moveFilament(filament: FilamentRecord, destinationId: stri
     return await Promise.all([
         pb.collection("storage").update<StorageWithFilament>(destinationId, {
             "filament+": filament.id,
-        }),
+        }, { expand: "filament" }),
         pb.collection("filament").update(filament.id, {
             storage: destinationId,
         }),
         (filament.storage && pb.collection("storage").update<StorageWithFilament>(filament.storage, {
             "filament-": filament.id,
-        })),
+        }, { expand: "filament" })),
     ])
         .then(([storage, newFilament, prevStorage]) => {
             let newStorages = modifyArrayItem(storages, storage, "id");

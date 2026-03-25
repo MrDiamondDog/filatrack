@@ -2,23 +2,28 @@ import { Archive, Box, CirclePile, EllipsisVertical, Weight } from "lucide-react
 import CardDetail from "../util/CardDetail";
 import { grams } from "@/lib/util/units";
 import Link from "next/link";
-import { FilamentRecord } from "@/types/pb";
 import { Dropdown, DropdownTrigger, DropdownContent, DropdownItem } from "../base/Dropdown";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DeleteModal } from "../modals/DeleteModal";
 import { pb } from "@/api/pb";
 import { toastError } from "@/lib/util/error";
 import { StorageWithFilament } from "@/types/storage";
+import CreateStorageModal from "../modals/CreateStorageModal";
 
-export default function StorageCard({ storage, noninteractable, onDelete }:
+export default function StorageCard({ storage, noninteractable, onDelete, onModify }:
     { storage: StorageWithFilament, noninteractable?: boolean,
-    onDelete?: () => void }) {
-    const filament: FilamentRecord[] = storage.expand.filament ?? [];
+    onDelete?: () => void, onModify?: (s: StorageWithFilament) => void
+}) {
+    const [filament, setFilament] = useState(storage.expand?.filament ?? []);
 
     const totalMass = filament.reduce((prev, curr) => prev + curr.mass, 0);
     const totalInitialMass = filament.reduce((prev, curr) => prev + curr.initialMass, 0);
 
     const [openModal, setOpenModal] = useState("");
+
+    useEffect(() => {
+        setFilament(storage.expand?.filament ?? []);
+    }, [storage]);
 
     async function deleteStorage() {
         await pb.collection("storage").delete(storage.id)
@@ -76,6 +81,13 @@ export default function StorageCard({ storage, noninteractable, onDelete }:
                 {/* {filament.map(f => <FilamentIcon filament={f} size={32} />)} */}
             </div>
         </Link>
+
+        <CreateStorageModal
+            open={openModal === "edit"}
+            onClose={() => setOpenModal("")}
+            initial={storage}
+            onModify={onModify}
+        />
 
         <DeleteModal open={openModal === "delete"} onClose={() => setOpenModal("")}
             preview={<StorageCard storage={storage} noninteractable />} object="storage" onDelete={deleteStorage}

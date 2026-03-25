@@ -2,25 +2,33 @@ import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
 import Input from "../base/Input";
 import { useObjectState } from "@/lib/util/hooks";
 import Button from "../base/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Create } from "@/types/general";
 import { StorageRecord } from "@/types/pb";
 import { pb } from "@/api/pb";
 import { StorageWithFilament } from "@/types/storage";
 
-export default function CreateStorageModal(props: { onCreate?: (s: StorageWithFilament) => void } & ModalProps) {
+export default function CreateStorageModal(props: { initial?: StorageRecord, onCreate?: (s: StorageWithFilament) => void,
+    onModify?: (s: StorageWithFilament) => void
+} & ModalProps) {
     const user = pb.authStore.record;
 
     if (!user)
         return;
 
-    const [storage, setStorage, reset] = useObjectState<Create<StorageRecord>>({
+    const [storage, setStorage, reset] = useObjectState<Create<StorageRecord>>(props.initial ?? {
         name: "",
         filament: [],
     });
 
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!props.initial)
+            return;
+        setStorage(props.initial);
+    }, [props.initial]);
 
     async function createStorage() {
         setError("");
@@ -33,23 +41,42 @@ export default function CreateStorageModal(props: { onCreate?: (s: StorageWithFi
 
         setLoading(true);
 
-        await pb.collection("storage").create<StorageWithFilament>({ ...storage, user: user!.id }, { expand: "filament" })
-            .then(res => {
-                setLoading(false);
-                reset();
-                props.onClose();
-                props.onCreate?.(res);
-            })
-            .catch(e => {
-                console.error(e);
-                setLoading(false);
-                setError(e.message);
-            });
+        if (!props.initial)
+            await pb.collection("storage").create<StorageWithFilament>({ ...storage, user: user!.id }, { expand: "filament" })
+                .then(res => {
+                    setLoading(false);
+                    reset();
+                    props.onClose();
+                    props.onCreate?.(res);
+                })
+                .catch(e => {
+                    console.error(e);
+                    setLoading(false);
+                    setError(e.message);
+                });
+        else
+            await pb.collection("storage").update<StorageWithFilament>(
+                props.initial.id, { ...storage, user: user!.id },
+                { expand: "filament" }
+            )
+                .then(res => {
+                    setLoading(false);
+                    props.onClose();
+                    props.onModify?.(res);
+                })
+                .catch(e => {
+                    console.error(e);
+                    setLoading(false);
+                    setError(e.message);
+                });
     }
 
     return (
-        <Modal {...props} title="Create Storage">
-            <ModalHeader>Create a storage object to represent locations of your filament.</ModalHeader>
+        <Modal {...props} title={props.initial ? "Edit Storage" : "Create Storage"}>
+            <ModalHeader>
+                {props.initial ? "Edit an existing storage object." :
+                    "Create a storage object to represent locations of your filament."}
+            </ModalHeader>
 
             <Input
                 label="Name"

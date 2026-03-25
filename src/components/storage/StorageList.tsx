@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import StorageCard from "./StorageCard";
 import { UsersResponse } from "@/types/pb";
 import { pb } from "@/api/pb";
-import { deleteFromArray } from "@/lib/util/array";
+import { deleteFromArray, modifyArrayItem } from "@/lib/util/array";
 import { StorageWithFilament } from "@/types/storage";
 
 export default function StorageList({ storages, onListUpdate }:
@@ -21,6 +21,7 @@ export default function StorageList({ storages, onListUpdate }:
                 storage={s}
                 key={s.id}
                 onDelete={() => onListUpdate(deleteFromArray(storages, s, "id"))}
+                onModify={s => onListUpdate(modifyArrayItem(storages, s, "id"))}
             />)}
         </Suspense>
     </div>;

@@ -2,7 +2,7 @@ import { randomFilament } from "@/lib/util/random";
 import Drawer from "../base/Drawer";
 import Input from "../base/Input";
 import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useObjectState } from "@/lib/util/hooks";
 import { Select } from "../base/Select";
 import FilamentColorPicker from "../filament/FilamentColorPicker";
@@ -39,6 +39,12 @@ export default function CreateFilamentModal(props: ModalProps & { initial?: Fila
         initialMass: 1000,
         spoolType: FilamentSpoolTypeOptions.plastic,
     });
+
+    useEffect(() => {
+        if (!props.initial)
+            return;
+        setFilament(props.initial);
+    }, [props.initial]);
 
     async function createFilament() {
         setError("");
