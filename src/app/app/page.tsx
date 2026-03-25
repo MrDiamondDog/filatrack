@@ -40,7 +40,7 @@ export default function DashboardPage() {
         <div className="flex justify-between items-center">
             <h1>Dashboard</h1>
 
-            <CreateButton onFilamentCreate={f => setFilament([...filament, f])} />
+            <CreateButton onFilamentCreate={f => setFilament([...filament, f])} storages={storages} />
         </div>
 
         <Divider />

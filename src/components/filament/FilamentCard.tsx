@@ -13,15 +13,13 @@ import { Dropdown, DropdownContent, DropdownItem, DropdownSub, DropdownSubConten
     from "../base/Dropdown";
 import { DeleteModal } from "../modals/DeleteModal";
 import FilamentMiniRow from "./FilamentMiniRow";
-import { deleteFilament } from "@/lib/filament";
+import { deleteFilament, moveFilament } from "@/lib/filament";
 import { toast } from "sonner";
 import Link from "next/link";
 import { pb } from "@/api/pb";
 import Spinner from "../base/Spinner";
-import { toastError } from "@/lib/util/error";
 import Button from "../base/Button";
 import { StorageWithFilament } from "@/types/storage";
-import { modifyArrayItem } from "@/lib/util/array";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 
 export default function FilamentCard({ filament, storagesList, noninteractable, className, onModify, onStoragesModify, onDelete }:
@@ -35,51 +33,6 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
 
     const [openModal, setOpenModal] = useState("");
     const [isMobile, _] = useDevice();
-
-    async function move(destination: StorageWithFilament) {
-        if (destination.id === filament.storage) {
-            // remove it from storage
-            await Promise.all([
-                pb.collection("storage").update<StorageWithFilament>(destination.id, {
-                    "filament-": filament.id,
-                }),
-                pb.collection("filament").update(filament.id, {
-                    storage: null,
-                }),
-            ])
-                .then(([storage, filament]) => {
-                    onStoragesModify?.(modifyArrayItem(storagesList, storage, "id"));
-                    onModify?.(filament);
-                })
-                .catch(e => toastError("Could not move filament", e));
-            return;
-        }
-
-        await Promise.all([
-            pb.collection("storage").update<StorageWithFilament>(destination.id, {
-                "filament+": filament.id,
-            }),
-            pb.collection("filament").update(filament.id, {
-                storage: destination.id,
-            }),
-            (filament.storage && pb.collection("storage").update<StorageWithFilament>(filament.storage, {
-                "filament-": filament.id,
-            })),
-        ])
-            .then(([storage, filament, prevStorage]) => {
-                console.log(storagesList.map(s => [s.name, s.filament?.length]));
-
-                let newStorages = modifyArrayItem(storagesList, storage, "id");
-
-                if (prevStorage) {
-                    newStorages = modifyArrayItem(newStorages, prevStorage, "id");
-                }
-
-                onStoragesModify?.(newStorages);
-                onModify?.(filament);
-            })
-            .catch(e => toastError("Could not move filament", e));
-    }
 
     return <>
         <div
@@ -114,9 +67,13 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                         <DropdownSubContent>
                             {storagesList && storagesList.map(s => <DropdownItem
                                 key={s.id}
-                                onClick={e => {
+                                onClick={async e => {
                                     e.preventDefault();
-                                    move(s);
+                                    const res = await moveFilament(filament, s.id, storagesList);
+                                    if (!res)
+                                        return;
+                                    onStoragesModify?.(res.newStorages);
+                                    onModify?.(res.newFilament);
                                 }}
                                 className="flex items-center gap-1"
                                 selected={filament.storage === s.id}
@@ -187,6 +144,7 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
             onClose={() => setOpenModal("")}
             onCreate={f => onModify?.(f)}
             initial={filament}
+            storages={storagesList}
         />
     </>;
 }

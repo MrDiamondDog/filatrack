@@ -13,8 +13,12 @@ import RequiredStar from "../base/RequiredStar";
 import { FilamentRecord, FilamentSpoolTypeOptions } from "@/types/pb";
 import { pb } from "@/api/pb";
 import { Create } from "@/types/general";
+import { StorageWithFilament } from "@/types/storage";
+import StoragePicker from "../storage/StoragePicker";
 
-export default function CreateFilamentModal(props: ModalProps & { initial?: FilamentRecord, onCreate: (f: FilamentRecord) => void }) {
+export default function CreateFilamentModal(props: ModalProps & { initial?: FilamentRecord, onCreate: (f: FilamentRecord) => void,
+    storages: StorageWithFilament[]
+ }) {
     const user = pb.authStore.record;
 
     if (!user)
@@ -50,10 +54,19 @@ export default function CreateFilamentModal(props: ModalProps & { initial?: Fila
 
         setLoading(true);
 
+        async function addToStorage(newFilament: FilamentRecord) {
+            if (!filament.storage)
+                return;
+            return await pb.collection("storage").update(filament.storage, {
+                "filament+": newFilament.id,
+            });
+        }
+
         if (!props.initial)
             await pb.collection("filament").create({ ...filament, user: user.id })
                 .then(res => {
                     setLoading(false);
+                    addToStorage(res);
                     reset();
                     props.onClose();
                     props.onCreate(res);
@@ -67,6 +80,7 @@ export default function CreateFilamentModal(props: ModalProps & { initial?: Fila
             await pb.collection("filament").update(props.initial.id, { ...filament, user: user.id })
                 .then(res => {
                     setLoading(false);
+                    addToStorage(res);
                     props.onClose();
                     props.onCreate(res);
                 })
@@ -111,6 +125,13 @@ export default function CreateFilamentModal(props: ModalProps & { initial?: Fila
 
                 <p>Color<RequiredStar /></p>
                 <FilamentColorPicker value={filament.color} onChange={color => setFilament({ color })}/>
+
+                <p>Storage</p>
+                <StoragePicker
+                    value={filament.storage ?? ""}
+                    storages={props.storages}
+                    onChange={s => setFilament({ storage: s.id })}
+                />
             </Drawer>
 
             <Drawer label="Spool Details" open={drawer === 1} onChange={open => setDrawer(open ? 1 : -1)}>

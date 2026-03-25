@@ -7,9 +7,10 @@ import { useState } from "react";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 import CreateStorageModal from "../modals/CreateStorageModal";
 import { FilamentRecord, StorageResponse } from "@/types/pb";
+import { StorageWithFilament } from "@/types/storage";
 
-export default function CreateButton({ onFilamentCreate, onStorageCreate }:
-    { onFilamentCreate?: (f: FilamentRecord) => void, onStorageCreate?: (s: StorageResponse) => void
+export default function CreateButton({ onFilamentCreate, onStorageCreate, storages }:
+    { onFilamentCreate?: (f: FilamentRecord) => void, onStorageCreate?: (s: StorageResponse) => void, storages: StorageWithFilament[]
 }) {
     const [openModal, setOpenModal] = useState("");
 
@@ -28,7 +29,8 @@ export default function CreateButton({ onFilamentCreate, onStorageCreate }:
             </DropdownContent>
         </Dropdown>
 
-        <CreateFilamentModal open={openModal === "filament"} onClose={() => setOpenModal("")} onCreate={f => onFilamentCreate?.(f)} />
+        <CreateFilamentModal open={openModal === "filament"} onClose={() => setOpenModal("")} onCreate={f => onFilamentCreate?.(f)}
+            storages={storages} />
         <CreateStorageModal open={openModal === "storage"} onClose={() => setOpenModal("")} onCreate={s => onStorageCreate?.(s)}  />
     </>;
 }

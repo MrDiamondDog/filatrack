@@ -93,7 +93,7 @@ export default function FilamentList({ filament, storagesList, title, viewLock, 
         }
 
         <CreateFilamentModal open={openModal === "create"} onClose={() => setOpenModal("")}
-            onCreate={f => onListModified?.([...filament, f])}
+            onCreate={f => onListModified?.([...filament, f])} storages={storagesList}
         />
     </>;
 }
