@@ -7,8 +7,12 @@ export enum ButtonStyles {
     danger = "bg-danger hover:bg-danger disabled:bg-danger-secondary text-white",
 }
 
-export default function Button({ look, loading, ...props }:
-    React.ButtonHTMLAttributes<HTMLButtonElement> & { look?: ButtonStyles, loading?: boolean }) {
+type Props = {
+    look?: ButtonStyles;
+    loading?: boolean;
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
+
+export default function Button({ look, loading, ...props }: Props) {
     return (
         <button
             {...props}

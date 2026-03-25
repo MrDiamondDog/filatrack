@@ -12,8 +12,13 @@ export type ModalProps = {
     onClose: () => void
 }
 
-export default function Modal({ children, title, open, onClose, danger }:
-{ title: string, open: boolean, onClose: () => void, level?: number, danger?: boolean } & React.PropsWithChildren) {
+type Props = {
+    title: string;
+    level?: number;
+    danger?: boolean;
+} & ModalProps & React.PropsWithChildren;
+
+export default function Modal({ children, title, open, onClose, danger }: Props) {
     return (<Portal>
         <AnimatePresence mode="popLayout">
             {open && <motion.div

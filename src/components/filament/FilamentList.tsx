@@ -17,10 +17,18 @@ import { deleteFromArray, modifyArrayItem } from "@/lib/util/array";
 import { startHolyLoader } from "holy-loader";
 import { useRouter } from "next/navigation";
 
-export default function FilamentList({ filament, storagesList, title, viewLock, allowAdd, onListModified, onStoragesModified }:
-    { filament: FilamentRecord[], storagesList: StorageWithFilament[], title?: string, viewLock?: "cards" | "table",
-        allowAdd?: boolean, onListModified?: (l: FilamentRecord[]) => void, onStoragesModified?: (s: StorageWithFilament[]) => void
-}) {
+type Props = {
+    filament: FilamentRecord[];
+    storagesList: StorageWithFilament[];
+    title?: string;
+    viewLock?: "cards" | "table";
+    allowAdd?: boolean;
+    onListModified?: (l: FilamentRecord[]) => void;
+    onStoragesModified?: (s: StorageWithFilament[]) => void;
+};
+
+export default function FilamentList({ filament, storagesList, title, viewLock, allowAdd, onListModified, onStoragesModified }
+: Props) {
     const user = pb.authStore.record;
 
     if (!user)

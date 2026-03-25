@@ -5,9 +5,14 @@ import { FilamentRecord, UsersRecord } from "@/types/pb";
 import { pb } from "@/api/pb";
 import { toastError } from "@/lib/util/error";
 
+type Props = {
+    values: FilamentRecord[];
+    onChange: (f: FilamentRecord[]) => void;
+    multiple?: boolean;
+};
+
 // TODO: make single picker work
-export default function FilamentPicker({ values, onChange, multiple }:
-    { values: FilamentRecord[], onChange: (f: FilamentRecord[]) => void, multiple?: boolean }) {
+export default function FilamentPicker({ values, onChange, multiple }: Props) {
     const user = pb.authStore.record as unknown as UsersRecord;
 
     const [allFilament, setAllFilament] = useState<FilamentRecord[]>([]);

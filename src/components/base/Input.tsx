@@ -1,8 +1,13 @@
 import RequiredStar from "./RequiredStar";
 import Subtext from "./Subtext";
 
-export default function Input(props: React.InputHTMLAttributes<HTMLInputElement>
-    & { label?: string, subtext?: string, containerClassName?: string }) {
+type Props = {
+    label?: string;
+    subtext?: string;
+    containerClassName?: string;
+} & React.InputHTMLAttributes<HTMLInputElement>;
+
+export default function Input(props: Props) {
     return (<div className={`flex flex-col gap-1 ${props.containerClassName}`}>
         {props.label && <label htmlFor={props.label.replaceAll(" ", "-")}>{props.label}{props.required && <RequiredStar />}</label>}
 

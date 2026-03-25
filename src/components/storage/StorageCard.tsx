@@ -10,10 +10,14 @@ import { toastError } from "@/lib/util/error";
 import { StorageWithFilament } from "@/types/storage";
 import CreateStorageModal from "../modals/CreateStorageModal";
 
-export default function StorageCard({ storage, noninteractable, onDelete, onModify }:
-    { storage: StorageWithFilament, noninteractable?: boolean,
-    onDelete?: () => void, onModify?: (s: StorageWithFilament) => void
-}) {
+type Props = {
+    storage: StorageWithFilament;
+    noninteractable?: boolean;
+    onDelete?: () => void;
+    onModify?: (s: StorageWithFilament) => void;
+};
+
+export default function StorageCard({ storage, noninteractable, onDelete, onModify }: Props) {
     const [filament, setFilament] = useState(storage.expand?.filament ?? []);
 
     const totalMass = filament.reduce((prev, curr) => prev + curr.mass, 0);

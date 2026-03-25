@@ -3,8 +3,14 @@ import React from "react";
 import Divider from "./Divider";
 import { AnimatePresence, motion } from "motion/react";
 
-export default function Drawer({ label, open, onChange, ...props }:
-    { label: string, open: boolean, onChange: (open: boolean) => void, startOpen?: boolean } & React.PropsWithChildren) {
+type Props =  {
+    label: string;
+    open: boolean;
+    onChange: (open: boolean) => void;
+    startOpen?: boolean;
+} & React.PropsWithChildren;
+
+export default function Drawer({ label, open, onChange, ...props }: Props) {
     return (<div className="bg-bg p-2 rounded-lg">
         <div className="flex flex-row gap-1 items-center cursor-pointer" onClick={() => onChange(!open)}>
             {open ? <ChevronUp /> : <ChevronDown />} {label}

@@ -34,12 +34,13 @@ export function DropdownContent({ children }: React.PropsWithChildren) {
     );
 }
 
-export function DropdownItem({ children, danger, onClick, ...props }: {
-    danger?: boolean,
-    onClick?: (e: MouseEvent) => void,
-    selected?: boolean
-}
-& DropdownMenuItemProps) {
+type DropdownItemProps = {
+    danger?: boolean;
+    onClick?: (e: MouseEvent) => void;
+    selected?: boolean;
+} & DropdownMenuItemProps;
+
+export function DropdownItem({ children, danger, onClick, ...props }: DropdownItemProps) {
     return (
         <DropdownMenuItem
             {...props}

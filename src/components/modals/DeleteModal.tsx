@@ -1,8 +1,13 @@
 import Button, { ButtonStyles } from "../base/Button";
 import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
 
-export function DeleteModal({ preview, object, onDelete, ...props }:
-    { preview: React.ReactNode, object: string, onDelete: () => void } & ModalProps) {
+type Props = {
+    preview: React.ReactNode;
+    object: string;
+    onDelete: () => void;
+} & ModalProps;
+
+export function DeleteModal({ preview, object, onDelete, ...props }: Props) {
     return <Modal title={`Delete ${object}`} {...props} danger>
         <ModalHeader>Permanently delete {object}.</ModalHeader>
 

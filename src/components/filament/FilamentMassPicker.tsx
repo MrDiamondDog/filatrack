@@ -12,8 +12,7 @@ function MassPreset({ value, onClick }: { value: number, onClick: (v: number) =>
 
 const massPresets = [100, 250, 500, 1000, 2000, 5000];
 
-export default function FilamentMassPicker({ values, onChange }:
-    { values: MassValues, onChange: (v: MassValues) => void }) {
+export default function FilamentMassPicker({ values, onChange }: { values: MassValues, onChange: (v: MassValues) => void }) {
     return <>
         <div className="flex md:flex-row flex-col gap-2">
             <Input

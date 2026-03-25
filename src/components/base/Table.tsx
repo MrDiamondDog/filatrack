@@ -13,10 +13,16 @@ export function EmptyCell() {
     return <div className="w-12 h-0.5 bg-bg-lightest" />;
 }
 
-export default function Table<T extends Record<string, any>>({ columns, data, sort, sortType, rowClassName, onRowClick }:
-    { columns: TableColumn<T>[], data: T[], sort?: keyof T, sortType?: "asc" | "desc", rowClassName?: string,
-        onRowClick?: (row: T) => void
-     }) {
+type Props<T> = {
+    columns: TableColumn<T>[];
+    data: T[];
+    sort?: keyof T;
+    sortType?: "asc" | "desc";
+    rowClassName?: string;
+    onRowClick?: (row: T) => void;
+};
+
+export default function Table<T extends Record<string, any>>({ columns, data, sort, sortType, rowClassName, onRowClick }: Props<T>) {
     const [tableData, setTableData] = useState([...data]);
 
     const [sortKey, setSortKey] = useState<keyof T>("");

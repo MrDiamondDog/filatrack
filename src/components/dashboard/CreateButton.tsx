@@ -9,9 +9,13 @@ import CreateStorageModal from "../modals/CreateStorageModal";
 import { FilamentRecord, StorageResponse } from "@/types/pb";
 import { StorageWithFilament } from "@/types/storage";
 
-export default function CreateButton({ onFilamentCreate, onStorageCreate, storages }:
-    { onFilamentCreate?: (f: FilamentRecord) => void, onStorageCreate?: (s: StorageResponse) => void, storages: StorageWithFilament[]
-}) {
+type Props = {
+    onFilamentCreate?: (f: FilamentRecord) => void;
+    onStorageCreate?: (s: StorageResponse) => void;
+    storages: StorageWithFilament[];
+};
+
+export default function CreateButton({ onFilamentCreate, onStorageCreate, storages }: Props) {
     const [openModal, setOpenModal] = useState("");
 
     return <>

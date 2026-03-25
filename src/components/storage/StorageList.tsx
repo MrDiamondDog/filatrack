@@ -7,9 +7,12 @@ import { pb } from "@/api/pb";
 import { deleteFromArray, modifyArrayItem } from "@/lib/util/array";
 import { StorageWithFilament } from "@/types/storage";
 
-export default function StorageList({ storages, onListUpdate }:
-    { storages: StorageWithFilament[],
-    onListUpdate: (s: StorageWithFilament[]) => void }) {
+type Props = {
+    storages: StorageWithFilament[];
+    onListUpdate: (s: StorageWithFilament[]) => void;
+};
+
+export default function StorageList({ storages, onListUpdate }: Props) {
     const user = pb.authStore.record as unknown as UsersResponse;
 
     if (!user)

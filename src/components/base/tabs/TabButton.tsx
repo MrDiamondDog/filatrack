@@ -1,8 +1,12 @@
 import { motion } from "motion/react";
+import React from "react";
 
-export default function TabButton({
-    children, active, onClick,
-}: Readonly<{ children: React.ReactNode, active?: boolean, onClick: () => void }>) {
+type Props = {
+    active?: boolean,
+    onClick: () => void
+} & React.PropsWithChildren;
+
+export default function TabButton({ children, active, onClick }: Props) {
     return (
         <motion.button
             className={"cursor-pointer px-2 py-1 rounded-lg hover:bg-bg-lighter relative"}

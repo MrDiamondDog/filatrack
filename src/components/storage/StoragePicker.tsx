@@ -2,8 +2,13 @@ import { StorageWithFilament } from "@/types/storage";
 import { Select } from "../base/Select";
 import StorageMiniCard from "./StorageMiniCard";
 
-export default function StoragePicker({ storages, value, onChange }:
-    { storages: StorageWithFilament[], value: string, onChange: (v: StorageWithFilament) => void }) {
+type Props = {
+    storages: StorageWithFilament[];
+    value: string;
+    onChange: (v: StorageWithFilament) => void;
+};
+
+export default function StoragePicker({ storages, value, onChange }: Props) {
     return (
         <Select
             options={storages.filter(s => s.filament.length < s.capacity)

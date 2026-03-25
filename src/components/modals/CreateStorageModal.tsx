@@ -8,9 +8,13 @@ import { StorageRecord } from "@/types/pb";
 import { pb } from "@/api/pb";
 import { StorageWithFilament } from "@/types/storage";
 
-export default function CreateStorageModal(props: { initial?: StorageRecord, onCreate?: (s: StorageWithFilament) => void,
-    onModify?: (s: StorageWithFilament) => void
-} & ModalProps) {
+type Props = {
+    initial?: StorageRecord;
+    onCreate?: (s: StorageWithFilament) => void;
+    onModify?: (s: StorageWithFilament) => void;
+} & ModalProps;
+
+export default function CreateStorageModal(props: Props) {
     const user = pb.authStore.record;
 
     if (!user)

@@ -22,10 +22,18 @@ import Button from "../base/Button";
 import { StorageWithFilament } from "@/types/storage";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 
-export default function FilamentCard({ filament, storagesList, noninteractable, className, onModify, onStoragesModify, onDelete }:
-    { filament: FilamentRecord, storagesList: StorageWithFilament[], noninteractable?: boolean, className?: string,
-        onModify?: (f: FilamentRecord) => void, onStoragesModify?: (s: StorageWithFilament[]) => void, onDelete?: () => void
-}) {
+type Props = {
+    filament: FilamentRecord;
+    storagesList: StorageWithFilament[];
+    noninteractable?: boolean;
+    className?: string;
+    onModify?: (f: FilamentRecord) => void;
+    onStoragesModify?: (s: StorageWithFilament[]) => void;
+    onDelete?: () => void;
+};
+
+export default function FilamentCard({ filament, storagesList, noninteractable, className, onModify, onStoragesModify, onDelete }
+: Props) {
     const user = pb.authStore.record;
 
     if (!user)

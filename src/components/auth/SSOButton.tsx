@@ -6,8 +6,12 @@ import { pb } from "@/api/pb";
 import { login } from "@/lib/auth";
 import { toast } from "sonner";
 
-export default function SSOButton({ provider, icon, children }:
-    { provider: string, icon: React.ReactNode } & React.PropsWithChildren) {
+type Props = {
+    provider: string;
+    icon: React.ReactNode;
+} & React.PropsWithChildren;
+
+export default function SSOButton({ provider, icon, children }: Props) {
     return <Button
         className="flex gap-1 items-center justify-center"
         onClick={() => pb.collection("users").authWithOAuth2({

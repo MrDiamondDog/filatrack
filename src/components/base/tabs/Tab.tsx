@@ -1,4 +1,4 @@
-export default function Tab(props: Readonly<{ children: React.ReactNode, name: string, className?: string }>) {
+export default function Tab(props: { name: string, className?: string } & React.PropsWithChildren) {
     return (
         <div data-tab={props.name} className={props.className}>
             {props.children}

@@ -16,9 +16,13 @@ import { Create } from "@/types/general";
 import { StorageWithFilament } from "@/types/storage";
 import StoragePicker from "../storage/StoragePicker";
 
-export default function CreateFilamentModal(props: ModalProps & { initial?: FilamentRecord, onCreate: (f: FilamentRecord) => void,
-    storages: StorageWithFilament[]
- }) {
+type Props = {
+    initial?: FilamentRecord;
+    onCreate: (f: FilamentRecord) => void;
+    storages: StorageWithFilament[];
+} & ModalProps;
+
+export default function CreateFilamentModal(props: Props) {
     const user = pb.authStore.record;
 
     if (!user)

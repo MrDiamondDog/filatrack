@@ -1,14 +1,14 @@
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
-interface AnimateSizeProps {
+type Props = {
   children: React.ReactNode;
   className?: string;
   lockWidth?: boolean;
   lockHeight?: boolean;
 }
 
-export function AnimateSize({ children, className, lockWidth, lockHeight }: AnimateSizeProps) {
+export function AnimateSize({ children, className, lockWidth, lockHeight }: Props) {
     const [width, setWidth] = useState<number | "auto">("auto");
     const [height, setHeight] = useState<number | "auto">("auto");
 

@@ -5,9 +5,14 @@ import Subtext from "./Subtext";
 import Input from "./Input";
 import { modifyArrayItem } from "@/lib/util/array";
 
-export function Select({ options, value, onChange, placeholder, ...props }:
-    { options: Record<string, React.ReactNode>, value: string, onChange: (val: string) => void, placeholder?: string } &
-Omit<React.SelectHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "children">) {
+type SelectProps = {
+    options: Record<string, React.ReactNode>;
+    value: string;
+    onChange: (val: string) => void;
+    placeholder?: string;
+} & Omit<React.SelectHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "children">
+
+export function Select({ options, value, onChange, placeholder, ...props }: SelectProps) {
     return (
         <Dropdown>
             <DropdownTrigger asChild>
@@ -33,10 +38,15 @@ Omit<React.SelectHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "chil
     );
 }
 
-export function SelectMultiple({ options, values, onChange, placeholder, searchable, ...props }:
-    { options: Record<string, React.ReactNode>, values: string[], onChange: (newVals: string[]) => void, placeholder?: string,
-        searchable?: boolean } &
-Omit<React.SelectHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "children">) {
+type SelectMultipleProps = {
+    options: Record<string, React.ReactNode>;
+    values: string[];
+    onChange: (newVals: string[]) => void;
+    placeholder?: string;
+    searchable?: boolean;
+} & Omit<React.SelectHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "children">;
+
+export function SelectMultiple({ options, values, onChange, placeholder, searchable, ...props }: SelectMultipleProps) {
     const [search, setSearch] = useState("");
 
     return (

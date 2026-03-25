@@ -9,10 +9,14 @@ import CreateFilamentPresetModal from "../modals/CreateFilamentPresetModal";
 import { DeleteModal } from "../modals/DeleteModal";
 import { pb } from "@/api/pb";
 
-export default function FilamentPresetCard({ preset, noninteractable, onModify, onDelete }: { preset: FilamentPresetsRecord,
-    noninteractable?: boolean,
-    onModify?: (p: FilamentPresetsRecord) => void, onDelete?: () => void
-}) {
+type Props = {
+    preset: FilamentPresetsRecord;
+    noninteractable?: boolean;
+    onModify?: (p: FilamentPresetsRecord) => void;
+    onDelete?: () => void;
+};
+
+export default function FilamentPresetCard({ preset, noninteractable, onModify, onDelete }: Props) {
     const [openModal, setOpenModal] = useState("");
 
     return <>

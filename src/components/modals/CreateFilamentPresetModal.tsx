@@ -11,8 +11,12 @@ import { pb } from "@/api/pb";
 import { Create } from "@/types/general";
 import { FilamentPresetsRecord, FilamentPresetsSpoolTypeOptions } from "@/types/pb";
 
-export default function CreateFilamentPresetModal(props: ModalProps & { initial?: FilamentPresetsRecord,
-    onCreate: (f: FilamentPresetsRecord) => void }) {
+type Props = {
+    initial?: FilamentPresetsRecord;
+    onCreate: (f: FilamentPresetsRecord) => void;
+} & ModalProps;
+
+export default function CreateFilamentPresetModal(props: Props) {
     const user = pb.authStore.record;
 
     if (!user)
