@@ -95,7 +95,7 @@ export default function CreateFilamentModal(props: ModalProps & { initial?: Fila
         setDrawer(0);
         props.onClose();
     }} title={props.initial ? "Edit Filament" : "Create Filament"}>
-        <ModalHeader>{props.initial ? "Edit an existing filament roll" : "Add a new filament roll to your collection."}</ModalHeader>
+        <ModalHeader>{props.initial ? "Edit an existing filament roll." : "Add a new filament roll to your collection."}</ModalHeader>
 
         <div className="flex flex-col gap-2">
             <Drawer label="Basic Details" open={drawer === 0} onChange={open => setDrawer(open ? 0 : -1)}>
@@ -126,12 +126,14 @@ export default function CreateFilamentModal(props: ModalProps & { initial?: Fila
                 <p>Color<RequiredStar /></p>
                 <FilamentColorPicker value={filament.color} onChange={color => setFilament({ color })}/>
 
-                <p>Storage</p>
-                <StoragePicker
-                    value={filament.storage ?? ""}
-                    storages={props.storages}
-                    onChange={s => setFilament({ storage: s.id })}
-                />
+                {!props.initial && <>
+                    <p>Storage</p>
+                    <StoragePicker
+                        value={filament.storage ?? ""}
+                        storages={props.storages}
+                        onChange={s => setFilament({ storage: s.id })}
+                    />
+                </>}
             </Drawer>
 
             <Drawer label="Spool Details" open={drawer === 1} onChange={open => setDrawer(open ? 1 : -1)}>

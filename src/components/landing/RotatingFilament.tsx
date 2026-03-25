@@ -15,5 +15,5 @@ export default function RotatingFilament() {
         return () => clearInterval(interval);
     }, []);
 
-    return <FilamentCard filament={filament} noninteractable />;
+    return <FilamentCard filament={filament} noninteractable storagesList={[]} />;
 }

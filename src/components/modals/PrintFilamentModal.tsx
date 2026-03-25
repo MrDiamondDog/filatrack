@@ -73,7 +73,7 @@ export default function PrintFilamentModal({ filament, onPrintCreate, ...props }
         </ModalHeader>
 
         <div className="flex gap-2">
-            <FilamentCard filament={filament} noninteractable className="bg-bg-lighter" />
+            <FilamentCard filament={filament} noninteractable className="bg-bg-lighter" storagesList={[]} />
 
             <div>
                 <Input
