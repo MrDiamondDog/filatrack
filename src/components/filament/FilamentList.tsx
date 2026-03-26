@@ -4,7 +4,7 @@ import FilamentCard from "./FilamentCard";
 import Divider from "../base/Divider";
 import Tablist from "../base/tabs/Tablist";
 import { useEffect, useState } from "react";
-import { Images, Pencil, Plus, Search, SortDesc, TableIcon, Trash2, X } from "lucide-react";
+import { ArchiveRestore, Images, Pencil, Plus, Search, SortDesc, TableIcon, Trash2, X } from "lucide-react";
 import Table, { EmptyCell } from "../base/Table";
 import { sortFn as colorSort } from "color-sorter";
 import { grams } from "@/lib/util/units";
@@ -22,6 +22,9 @@ import { toastError } from "@/lib/util/error";
 import { randomFilament } from "@/lib/util/random";
 import Input from "../base/Input";
 import { Select } from "../base/Select";
+import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../base/Dropdown";
+import StorageMiniCard from "../storage/StorageMiniCard";
+import { moveFilament } from "@/lib/filament";
 
 type Props = {
     filament: FilamentRecord[];
@@ -68,6 +71,30 @@ export default function FilamentList({
         await Promise.all(selectedFilament.map(filament => pb.collection("filament").delete(filament.id)))
             .then(() => onListModified?.(filament.filter(f => !selectedFilament.includes(f))))
             .catch(e => toastError("Could not delete one or more filament", e));
+    }
+
+    async function moveSelected(destination: string) {
+        await new Promise<void>(async(resolve, reject) => {
+            for (const f of selectedFilament)
+                await moveFilament(f, destination, storagesList)
+                    .catch(reject);
+            resolve();
+        })
+            .then(() => {
+                pb.collection("filament").getFullList({
+                    filter: `user.id = "${user!.id}"`,
+                })
+                    .then(onListModified)
+                    .catch(e => toastError("Could not fetch filament", e));
+
+                pb.collection("storage").getFullList<StorageWithFilament>({
+                    filter: `user.id = "${user!.id}"`,
+                    expand: "filament",
+                })
+                    .then(onStoragesModified)
+                    .catch(e => toastError("Could not fetch storages", e));
+            })
+            .catch(e => toastError("Could not move one or more filament", e));
     }
 
     function handleList() {
@@ -143,6 +170,23 @@ export default function FilamentList({
                         disabled={selectedFilament.length === 0}>
                         <Trash2 />
                     </Button>}
+
+                    {editMode && <Dropdown>
+                        <DropdownTrigger asChild disabled={selectedFilament.length === 0}>
+                            <Button look={ButtonStyles.secondary}
+                                disabled={selectedFilament.length === 0}>
+                                <ArchiveRestore />
+                            </Button>
+                        </DropdownTrigger>
+                        <DropdownContent>
+                            <p>Moving {selectedFilament.length} filament</p>
+                            <Divider className="bg-bg-lightest" />
+                            {storagesList.map(s => <DropdownItem onClick={() => moveSelected(s.id)}
+                                disabled={!!s.capacity && (selectedFilament.length > s.capacity - s.filament.length)}>
+                                <StorageMiniCard storage={s} />
+                            </DropdownItem>)}
+                        </DropdownContent>
+                    </Dropdown>}
 
                     {(allowAdd && !editMode) && <Button onClick={() => setOpenModal("create")}>
                         <Plus />

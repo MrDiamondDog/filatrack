@@ -1,6 +1,7 @@
 import {
     DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuItemProps, DropdownMenuPortal,
     DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger,
+    DropdownMenuTriggerProps,
 }
     from "@radix-ui/react-dropdown-menu";
 import { Check } from "lucide-react";
@@ -13,9 +14,13 @@ export function Dropdown({ children }: React.PropsWithChildren) {
     );
 }
 
-export function DropdownTrigger({ asChild, children }: { asChild?: boolean } & React.PropsWithChildren) {
+type DropdownTriggerProps = {
+    asChild?: boolean
+} & React.PropsWithChildren & DropdownMenuTriggerProps;
+
+export function DropdownTrigger({ asChild, children, ...props }: DropdownTriggerProps) {
     return (
-        <DropdownMenuTrigger asChild={asChild}>
+        <DropdownMenuTrigger asChild={asChild} {...props} >
             {children}
         </DropdownMenuTrigger>
     );
