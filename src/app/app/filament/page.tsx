@@ -42,7 +42,7 @@ export default function FilamentPage({
 
     return <MotionContainer>
         <FilamentList title="Your Filament" filament={filament} storagesList={storages} allowAdd
-            onListModified={setFilament} onStoragesModified={setStorages} />
+            onListModified={setFilament} onStoragesModified={setStorages} allowEdit />
         {!filament.length && <p className="w-full text-center">
             You don't have any filament yet. Press the + button in the top right to get started!
         </p>}

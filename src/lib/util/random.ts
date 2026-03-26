@@ -1,4 +1,5 @@
-import { FilamentRecord, IsoAutoDateString } from "@/types/pb";
+import { Create } from "@/types/general";
+import { FilamentRecord } from "@/types/pb";
 
 export function randomFrom<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -45,14 +46,12 @@ export const randomFilamentMaterials = [
 
 export const randomFilamentMaxMass = [2000, 1000, 500, 250, 200];
 
-export function randomFilament(): FilamentRecord {
+export function randomFilament(): Create<FilamentRecord> {
     const name = randomFrom(Object.keys(randomFilamentNames));
     const maxMass = randomFrom(randomFilamentMaxMass);
 
     return {
         name,
-        id: `${randomInt(1, 10000000)}`,
-        user: "",
         prints: [],
         brand: randomFrom(randomFilamentBrands),
         color: randomFilamentNames[name as keyof typeof randomFilamentNames]!,
@@ -62,8 +61,5 @@ export function randomFilament(): FilamentRecord {
         diameter: 1.75,
         initialMass: maxMass,
         note: "Test",
-
-        created: new Date().toISOString() as IsoAutoDateString,
-        updated: new Date().toISOString() as IsoAutoDateString,
     };
 }

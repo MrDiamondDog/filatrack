@@ -80,6 +80,8 @@ export default function DashboardPage() {
                 storagesList={storages}
                 onListModified={setFilament}
                 onStoragesModified={setStorages}
+                allowEdit
+                allowAdd
             />
         </>}
     </MotionContainer>);

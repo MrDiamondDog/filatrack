@@ -4,14 +4,15 @@ import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
 type Props = {
     preview: React.ReactNode;
     object: string;
+    plural?: boolean;
     onDelete: () => void;
 } & ModalProps;
 
-export function DeleteModal({ preview, object, onDelete, ...props }: Props) {
+export function DeleteModal({ preview, object, plural, onDelete, ...props }: Props) {
     return <Modal title={`Delete ${object}`} {...props} danger>
         <ModalHeader>Permanently delete {object}.</ModalHeader>
 
-        Are you sure you want to delete this {object}?
+        Are you sure you want to delete {plural ? "these" : "this"} {object}?
 
         {preview}
 

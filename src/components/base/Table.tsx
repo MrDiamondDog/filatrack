@@ -2,25 +2,25 @@ import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export type TableColumn<T> = {
-    label: string,
-    key: keyof T,
+    label: React.ReactNode,
+    key?: keyof T,
     notSortable?: boolean,
-    render?(data: T): React.ReactNode,
+    render?(row: T): React.ReactNode,
     sort?(a: T[keyof T], b: T[keyof T]): number,
 };
 
-export function EmptyCell() {
-    return <div className="w-12 h-0.5 bg-bg-lightest" />;
-}
-
 type Props<T> = {
-    columns: TableColumn<T>[];
+    columns: (TableColumn<T> | null)[];
     data: T[];
     sort?: keyof T;
     sortType?: "asc" | "desc";
     rowClassName?: string;
     onRowClick?: (row: T) => void;
 };
+
+export function EmptyCell() {
+    return <div className="w-12 h-0.5 bg-bg-lightest" />;
+}
 
 export default function Table<T extends Record<string, any>>({ columns, data, sort, sortType, rowClassName, onRowClick }: Props<T>) {
     const [tableData, setTableData] = useState([...data]);
@@ -29,7 +29,7 @@ export default function Table<T extends Record<string, any>>({ columns, data, so
     const [sortDir, setSortDir] = useState<"asc" | "desc">(sortType ?? "desc");
 
     function handleSort(key: keyof T, setDir?: "asc" | "desc") {
-        const col = columns.find(c => c.key === key);
+        const col = columns.find(c => c?.key === key);
 
         if (!col)
             return;
@@ -64,20 +64,21 @@ export default function Table<T extends Record<string, any>>({ columns, data, so
     }
 
     useEffect(() => {
-        handleSort(sort ?? columns.filter(c => !c.notSortable)[0]?.key ?? "", sortType);
+        handleSort(sort ?? columns.filter(c => !c?.notSortable)[0]?.key ?? "", sortType);
     }, [data]);
 
     return (
         <table className="w-full bg-bg-light rounded-lg overflow-x-scroll md:overflow-hidden">
             <thead>
                 <tr>
-                    {columns.map(c => <th
+                    {columns.filter(c => !!c).map(c => <th
                         className={`text-left pl-4 pr-3 p-2 ${!c.notSortable && "hover:bg-bg-lighter"} transition-colors`}
                         key={c.key as string}
                     >
                         <div
                             className={`flex justify-between items-center ${!c.notSortable && "cursor-pointer"}`}
-                            onClick={() => handleSort(c.key, sortKey === c.key ? (sortDir === "asc" ? "desc" : "asc") : undefined)}
+                            onClick={() => c.key &&
+                                handleSort(c.key, sortKey === c.key ? (sortDir === "asc" ? "desc" : "asc") : undefined)}
                         >
                             {c.label}
                             <ChevronDown
@@ -94,13 +95,13 @@ export default function Table<T extends Record<string, any>>({ columns, data, so
                     key={i}
                     onClick={() => onRowClick?.(item)}
                 >
-                    {columns.map(col => <td
+                    {columns.filter(c => !!c).map(col => <td
                         className="px-4 py-2"
                         key={col.key as string}
                     >
                         {col.render && col.render(item)}
-                        {(!col.render && !item[col.key]) && <EmptyCell />}
-                        {!col.render && item[col.key]}
+                        {(!col.render && col.key && !item[col.key]) && <EmptyCell />}
+                        {!col.render && col.key && item[col.key]}
                     </td>)}
                 </tr>)}
             </tbody>

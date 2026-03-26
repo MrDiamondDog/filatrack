@@ -4,18 +4,22 @@ import FilamentCard from "./FilamentCard";
 import Divider from "../base/Divider";
 import Tablist from "../base/tabs/Tablist";
 import { useState } from "react";
-import { Images, Plus, TableIcon } from "lucide-react";
+import { Images, Pencil, Plus, TableIcon, Trash2, X } from "lucide-react";
 import Table, { EmptyCell } from "../base/Table";
 import { sortFn as colorSort } from "color-sorter";
 import { grams } from "@/lib/util/units";
 import { FilamentRecord } from "@/types/pb";
-import Button from "../base/Button";
+import Button, { ButtonStyles } from "../base/Button";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 import { pb } from "@/api/pb";
 import { StorageWithFilament } from "@/types/storage";
 import { deleteFromArray, modifyArrayItem } from "@/lib/util/array";
 import { startHolyLoader } from "holy-loader";
 import { useRouter } from "next/navigation";
+import Checkbox from "../base/Checkbox";
+import { DeleteModal } from "../modals/DeleteModal";
+import { toastError } from "@/lib/util/error";
+import { randomFilament } from "@/lib/util/random";
 
 type Props = {
     filament: FilamentRecord[];
@@ -23,11 +27,21 @@ type Props = {
     title?: string;
     viewLock?: "cards" | "table";
     allowAdd?: boolean;
+    allowEdit?: boolean;
     onListModified?: (l: FilamentRecord[]) => void;
     onStoragesModified?: (s: StorageWithFilament[]) => void;
 };
 
-export default function FilamentList({ filament, storagesList, title, viewLock, allowAdd, onListModified, onStoragesModified }
+export default function FilamentList({
+    filament,
+    storagesList,
+    title,
+    viewLock,
+    allowAdd,
+    allowEdit,
+    onListModified,
+    onStoragesModified,
+}
 : Props) {
     const user = pb.authStore.record;
 
@@ -35,10 +49,19 @@ export default function FilamentList({ filament, storagesList, title, viewLock, 
         return null;
 
     const [view, setView] = useState<"cards" | "table">(viewLock ?? "cards");
+    const [editMode, setEditMode] = useState(false);
+
+    const [selectedFilament, setSelectedFilament] = useState<FilamentRecord[]>([]);
 
     const [openModal, setOpenModal] = useState("");
 
     const router = useRouter();
+
+    async function deleteSelected() {
+        await Promise.all(selectedFilament.map(filament => pb.collection("filament").delete(filament.id)))
+            .then(() => onListModified?.(filament.filter(f => !selectedFilament.includes(f))))
+            .catch(e => toastError("Could not delete one or more filament", e));
+    }
 
     return <>
         {title && <>
@@ -52,7 +75,21 @@ export default function FilamentList({ filament, storagesList, title, viewLock, 
                         onTabChange={v => setView(v as "cards" | "table")}
                     />}
 
-                    {allowAdd && <Button onClick={() => setOpenModal("create")}><Plus /></Button>}
+                    {allowEdit && <Button onClick={() => {
+                        setView("table");
+                        setEditMode(m => !m);
+                    }} look={ButtonStyles.secondary}>
+                        {editMode ? <X /> : <Pencil />}
+                    </Button>}
+
+                    {editMode && <Button look={ButtonStyles.danger} onClick={() => setOpenModal("deleteSelected")}
+                        disabled={selectedFilament.length === 0}>
+                        <Trash2 />
+                    </Button>}
+
+                    {(allowAdd && !editMode) && <Button onClick={() => setOpenModal("create")}>
+                        <Plus />
+                    </Button>}
                 </div>
             </div>
             <Divider />
@@ -72,6 +109,18 @@ export default function FilamentList({ filament, storagesList, title, viewLock, 
         {view === "table" &&
             <Table
                 columns={[
+                    (editMode ? {
+                        label: <Checkbox
+                            checked={selectedFilament.length === filament.length}
+                            onCheckedChange={checked => setSelectedFilament(checked ? [...filament] : [])}
+                        />,
+                        render: row => <Checkbox
+                            checked={!!selectedFilament.find(f => f.id === row.id)}
+                            onCheckedChange={checked => setSelectedFilament(checked ?
+                                [...selectedFilament, row] :
+                                deleteFromArray(selectedFilament, row, "id"))}
+                        />,
+                    } : null),
                     { label: "Name", key: "name" },
                     {
                         label: "Color", key: "color",
@@ -93,15 +142,42 @@ export default function FilamentList({ filament, storagesList, title, viewLock, 
                 ]}
                 data={filament}
                 rowClassName="cursor-pointer hover:bg-bg-lighter transition-colors"
+                sort="name"
+                sortType="desc"
                 onRowClick={row => {
+                    if (editMode) {
+                        const isSelected = selectedFilament.includes(row);
+                        setSelectedFilament(isSelected ? deleteFromArray(selectedFilament, row, "id") : [...selectedFilament, row]);
+                        return;
+                    }
                     startHolyLoader();
                     router.push(`/app/filament/${row.id}`);
                 }}
             />
         }
 
+        {/* For testing, change to true to enable */}
+        {false && <Button onClick={() => {
+            const f = randomFilament();
+            pb.collection("filament").create({ ...f, user: user!.id })
+                .then(res => onListModified?.([...filament, res]))
+                .catch(e => toastError("", e));
+        }}>Add Random</Button>}
+
         <CreateFilamentModal open={openModal === "create"} onClose={() => setOpenModal("")}
             onCreate={f => onListModified?.([...filament, f])} storages={storagesList}
+        />
+
+        <DeleteModal
+            open={openModal === "deleteSelected"}
+            onClose={() => setOpenModal("")}
+            object={`${selectedFilament.length} filament`}
+            plural
+            preview={" "}
+            onDelete={() => {
+                deleteSelected();
+                setOpenModal("");
+            }}
         />
     </>;
 }
