@@ -107,12 +107,12 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                 <Subtext>{filament.brand}</Subtext>
 
                 <div className="flex flex-col mb-2 items-center w-full *:justify-center">
-                    <CardDetail icon={<Weight size={20} />}>{grams(filament.mass)}/{grams(filament.initialMass)}</CardDetail>
-                    <CardDetail icon={<Box size={20} />}>{filament.material}</CardDetail>
                     {(filament.storage && storagesList && !!storagesList.length) &&
                         <CardDetail icon={<Archive size={20} />}>
                             {storagesList.find(s => s.id === filament.storage)?.name!}
                         </CardDetail>}
+                    <CardDetail icon={<Weight size={20} />}>{grams(filament.mass)}/{grams(filament.initialMass)}</CardDetail>
+                    <CardDetail icon={<Box size={20} />}>{filament.material}</CardDetail>
                     {!!filament.nozzleTemperature &&
                         <CardDetail icon={<Thermometer size={20} />}>{celcius(filament.nozzleTemperature)}</CardDetail>}
                     {!!filament.bedTemperature &&

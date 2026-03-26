@@ -74,6 +74,8 @@ export default function DashboardPage() {
                 </div>
             </div>
 
+            <Divider />
+
             <FilamentList
                 title="All Filament"
                 filament={filament}
@@ -82,6 +84,7 @@ export default function DashboardPage() {
                 onStoragesModified={setStorages}
                 allowEdit
                 allowAdd
+                allowSort
             />
         </>}
     </MotionContainer>);

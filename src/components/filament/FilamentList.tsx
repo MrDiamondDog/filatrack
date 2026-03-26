@@ -3,8 +3,8 @@
 import FilamentCard from "./FilamentCard";
 import Divider from "../base/Divider";
 import Tablist from "../base/tabs/Tablist";
-import { useState } from "react";
-import { Images, Pencil, Plus, TableIcon, Trash2, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Images, Pencil, Plus, Search, SortDesc, TableIcon, Trash2, X } from "lucide-react";
 import Table, { EmptyCell } from "../base/Table";
 import { sortFn as colorSort } from "color-sorter";
 import { grams } from "@/lib/util/units";
@@ -20,6 +20,8 @@ import Checkbox from "../base/Checkbox";
 import { DeleteModal } from "../modals/DeleteModal";
 import { toastError } from "@/lib/util/error";
 import { randomFilament } from "@/lib/util/random";
+import Input from "../base/Input";
+import { Select } from "../base/Select";
 
 type Props = {
     filament: FilamentRecord[];
@@ -28,6 +30,7 @@ type Props = {
     viewLock?: "cards" | "table";
     allowAdd?: boolean;
     allowEdit?: boolean;
+    allowSort?: boolean;
     onListModified?: (l: FilamentRecord[]) => void;
     onStoragesModified?: (s: StorageWithFilament[]) => void;
 };
@@ -39,10 +42,10 @@ export default function FilamentList({
     viewLock,
     allowAdd,
     allowEdit,
+    allowSort,
     onListModified,
     onStoragesModified,
-}
-: Props) {
+} : Props) {
     const user = pb.authStore.record;
 
     if (!user)
@@ -52,6 +55,10 @@ export default function FilamentList({
     const [editMode, setEditMode] = useState(false);
 
     const [selectedFilament, setSelectedFilament] = useState<FilamentRecord[]>([]);
+
+    const [displayedFilament, setDisplayedFilament] = useState<FilamentRecord[]>([]);
+    const [sortKey, setSortKey] = useState<keyof FilamentRecord>("name");
+    const [search, setSearch] = useState("");
 
     const [openModal, setOpenModal] = useState("");
 
@@ -63,7 +70,57 @@ export default function FilamentList({
             .catch(e => toastError("Could not delete one or more filament", e));
     }
 
+    function handleList() {
+        const filteredList = filament.filter(f => f.name.toLowerCase().includes(search.toLowerCase()));
+
+        const sortedList = filteredList.sort((a, b) => {
+            if (sortKey === "name" || sortKey === "material" || sortKey === "brand")
+                return (a[sortKey] ?? "").localeCompare(b[sortKey] ?? "");
+            if (sortKey === "color")
+                return colorSort(a[sortKey], b[sortKey]);
+            if (sortKey === "updated")
+                return new Date(b[sortKey]).getTime() - new Date(a[sortKey]).getTime();
+
+            return 0;
+        });
+
+        setDisplayedFilament(sortedList);
+    }
+
+    useEffect(() => {
+        handleList();
+    }, [filament, sortKey, search]);
+
     return <>
+        {(allowSort && view !== "table") && <div className="w-full bg-bg-light rounded-lg p-2 my-2 flex items-center gap-2">
+            <SortDesc />
+
+            <Select
+                options={{
+                    name: "Name",
+                    color: "Color",
+                    material: "Material",
+                    brand: "Brand",
+                    updated: "Recent",
+                } as Record<keyof FilamentRecord, string>}
+                value={sortKey}
+                onChange={k => setSortKey(k as keyof FilamentRecord)}
+                placeholder="Sort By..."
+                className="w-fit!"
+            />
+
+            <Divider vertical />
+
+            <Search />
+
+            <Input
+                placeholder="Search Filament..."
+                className="w-fit"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+            />
+        </div>}
+
         {title && <>
             <div className="flex justify-between items-center">
                 <h2>{title}</h2>
@@ -96,7 +153,7 @@ export default function FilamentList({
         </>}
 
         {view === "cards" && <div className="grid grid-cols-2 md:flex flex-row flex-wrap w-full gap-2 mb-2">
-            {filament.map(f => <FilamentCard
+            {displayedFilament.map(f => <FilamentCard
                 filament={f}
                 key={f.id}
                 storagesList={storagesList}

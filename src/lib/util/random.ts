@@ -58,6 +58,7 @@ export function randomFilament(): Create<FilamentRecord> {
         material: randomFrom(randomFilamentMaterials),
         mass: randomInt(1, maxMass),
         nozzleTemperature: 220,
+        bedTemperature: 60,
         diameter: 1.75,
         initialMass: maxMass,
         note: "Test",
