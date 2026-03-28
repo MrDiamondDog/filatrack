@@ -39,7 +39,7 @@ export default function Tablist({ tabs, activeTab, onTabChange, className, child
                 {Object.entries(tabs).map(tab => (
                     <TabButton
                         key={tab[0]}
-                        active={activeTab === tab[0]}
+                        active={currentTab === tab[0]}
                         onClick={() => {
                             setCurrentTab(tab[0]);
                             onTabChange?.(tab[0]);
@@ -53,7 +53,7 @@ export default function Tablist({ tabs, activeTab, onTabChange, className, child
             if (React.isValidElement(child)) {
                 const childElement = child as React.ReactElement<any>;
                 const props = childElement.props as { [key: string]: any };
-                if (props["data-tab"] === activeTab || props.name === activeTab) {
+                if (props["data-tab"] === currentTab || props.name === currentTab) {
                     return child;
                 }
             }

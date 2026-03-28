@@ -8,7 +8,7 @@ import FilamentChart from "@/components/dashboard/FilamentChart";
 import FilamentList from "@/components/filament/FilamentList";
 import StorageList from "@/components/storage/StorageList";
 import { toastError } from "@/lib/util/error";
-import { FilamentRecord } from "@/types/pb";
+import { FilamentPresetsRecord, FilamentRecord } from "@/types/pb";
 import { StorageWithFilament } from "@/types/storage";
 import { useEffect, useState } from "react";
 
@@ -20,6 +20,7 @@ export default function DashboardPage() {
 
     const [filament, setFilament] = useState<FilamentRecord[]>([]);
     const [storages, setStorages] = useState<StorageWithFilament[]>([]);
+    const [presets, setPresets] = useState<FilamentPresetsRecord[]>([]);
 
     useEffect(() => {
         pb.collection("filament").getFullList({
@@ -34,6 +35,12 @@ export default function DashboardPage() {
         })
             .then(setStorages)
             .catch(e => toastError("Could not fetch storages", e));
+
+        pb.collection("filamentPresets").getFullList({
+            filter: `user.id = "${user.id}"`,
+        })
+            .then(setPresets)
+            .catch(e => toastError("Could not fetch filament", e));
     }, []);
 
     return (<MotionContainer>
@@ -80,6 +87,7 @@ export default function DashboardPage() {
                 title="All Filament"
                 filament={filament}
                 storagesList={storages}
+                presets={presets}
                 onListModified={setFilament}
                 onStoragesModified={setStorages}
                 allowEdit

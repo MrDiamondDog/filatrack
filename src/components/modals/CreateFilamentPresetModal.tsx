@@ -31,7 +31,6 @@ export default function CreateFilamentPresetModal(props: Props) {
 
     const [preset, setPreset, reset] = useObjectState<Create<FilamentPresetsRecord>>(props.initial ?? {
         name: "",
-        color: "#000",
     });
 
     async function createPreset() {

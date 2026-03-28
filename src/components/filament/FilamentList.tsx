@@ -8,7 +8,7 @@ import { ArchiveRestore, Images, Pencil, Plus, Search, SortDesc, TableIcon, Tras
 import Table, { EmptyCell } from "../base/Table";
 import { sortFn as colorSort } from "color-sorter";
 import { grams } from "@/lib/util/units";
-import { FilamentRecord } from "@/types/pb";
+import { FilamentPresetsRecord, FilamentRecord } from "@/types/pb";
 import Button, { ButtonStyles } from "../base/Button";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 import { pb } from "@/api/pb";
@@ -29,6 +29,7 @@ import { moveFilament } from "@/lib/filament";
 type Props = {
     filament: FilamentRecord[];
     storagesList: StorageWithFilament[];
+    presets?: FilamentPresetsRecord[];
     title?: string;
     viewLock?: "cards" | "table";
     allowAdd?: boolean;
@@ -41,6 +42,7 @@ type Props = {
 export default function FilamentList({
     filament,
     storagesList,
+    presets,
     title,
     viewLock,
     allowAdd,
@@ -266,7 +268,7 @@ export default function FilamentList({
         }}>Add Random</Button>}
 
         <CreateFilamentModal open={openModal === "create"} onClose={() => setOpenModal("")}
-            onCreate={f => onListModified?.([...filament, f])} storages={storagesList}
+            onCreate={f => onListModified?.([...filament, f])} storages={storagesList} presets={presets}
         />
 
         <DeleteModal

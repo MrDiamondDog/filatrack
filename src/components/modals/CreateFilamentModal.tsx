@@ -10,16 +10,18 @@ import FilamentMassPicker from "../filament/FilamentMassPicker";
 import Button from "../base/Button";
 import Divider from "../base/Divider";
 import RequiredStar from "../base/RequiredStar";
-import { FilamentRecord, FilamentSpoolTypeOptions } from "@/types/pb";
+import { FilamentPresetsRecord, FilamentRecord, FilamentSpoolTypeOptions } from "@/types/pb";
 import { pb } from "@/api/pb";
 import { Create } from "@/types/general";
 import { StorageWithFilament } from "@/types/storage";
 import StoragePicker from "../storage/StoragePicker";
+import Subtext from "../base/Subtext";
 
 type Props = {
     initial?: FilamentRecord;
     onCreate: (f: FilamentRecord) => void;
     storages: StorageWithFilament[];
+    presets?: FilamentPresetsRecord[];
 } & ModalProps;
 
 export default function CreateFilamentModal(props: Props) {
@@ -39,16 +41,29 @@ export default function CreateFilamentModal(props: Props) {
         name: "",
         material: "",
         color: "#fff",
+        brand: "",
         mass: 1000,
         initialMass: 1000,
         spoolType: FilamentSpoolTypeOptions.plastic,
     });
+
+    const [preset, setPreset] = useState<FilamentPresetsRecord>();
 
     useEffect(() => {
         if (!props.initial)
             return;
         setFilament(props.initial);
     }, [props.initial]);
+
+    useEffect(() => {
+        reset();
+
+        if (!preset)
+            return;
+
+        // @ts-ignore The types it's saying aren't compatible are, in fact, identical
+        setFilament({ ...preset });
+    }, [preset]);
 
     async function createFilament() {
         setError("");
@@ -103,11 +118,23 @@ export default function CreateFilamentModal(props: Props) {
 
     return <Modal {...props} onClose={() => {
         setDrawer(0);
+        reset();
         props.onClose();
     }} title={props.initial ? "Edit Filament" : "Create Filament"}>
         <ModalHeader>{props.initial ? "Edit an existing filament roll." : "Add a new filament roll to your collection."}</ModalHeader>
 
         <div className="flex flex-col gap-2">
+            {(!props.initial && props.presets?.length) &&
+                <Select
+                    options={props.presets.reduce(
+                        (prev, curr) => ({ ...prev, [curr.id]: curr.name }),
+                        { "": <Subtext>No preset selected</Subtext> }
+                    )}
+                    value={preset?.id ?? ""}
+                    onChange={p => setPreset(props.presets!.find(pr => pr.id === p))}
+                />
+            }
+
             <Drawer label="Basic Details" open={drawer === 0} onChange={open => setDrawer(open ? 0 : -1)}>
                 <Input
                     label="Name"
