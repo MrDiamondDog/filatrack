@@ -8,7 +8,7 @@ import { ArchiveRestore, Images, Pencil, Plus, Search, SortDesc, TableIcon, Tras
 import Table, { EmptyCell } from "../base/Table";
 import { sortFn as colorSort } from "color-sorter";
 import { grams } from "@/lib/util/units";
-import { FilamentPresetsRecord, FilamentRecord } from "@/types/pb";
+import { FilamentPresetsRecord, FilamentRecord, UsersRecord } from "@/types/pb";
 import Button, { ButtonStyles } from "../base/Button";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 import { pb } from "@/api/pb";
@@ -51,7 +51,7 @@ export default function FilamentList({
     onListModified,
     onStoragesModified,
 } : Props) {
-    const user = pb.authStore.record;
+    const user = pb.authStore.record as UsersRecord | null;
 
     if (!user)
         return null;
@@ -62,7 +62,7 @@ export default function FilamentList({
     const [selectedFilament, setSelectedFilament] = useState<FilamentRecord[]>([]);
 
     const [displayedFilament, setDisplayedFilament] = useState<FilamentRecord[]>([]);
-    const [sortKey, setSortKey] = useState<keyof FilamentRecord>("name");
+    const [sortKey, setSortKey] = useState<keyof FilamentRecord>(user.filamentSort ?? "name");
     const [search, setSearch] = useState("");
 
     const [openModal, setOpenModal] = useState("");
@@ -245,7 +245,7 @@ export default function FilamentList({
                 ]}
                 data={filament}
                 rowClassName="cursor-pointer hover:bg-bg-lighter transition-colors"
-                sort="name"
+                sort={sortKey}
                 sortType="desc"
                 onRowClick={row => {
                     if (editMode) {

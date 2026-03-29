@@ -287,6 +287,41 @@
       },
       {
         "hidden": false,
+        "id": "bool399182318",
+        "name": "legacy",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "bool"
+      },
+      {
+        "hidden": false,
+        "id": "bool66088533",
+        "name": "supporter",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "bool"
+      },
+      {
+        "hidden": false,
+        "id": "select1803463214",
+        "maxSelect": 1,
+        "name": "filamentSort",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "select",
+        "values": [
+          "name",
+          "color",
+          "material",
+          "brand",
+          "updated"
+        ]
+      },
+      {
+        "hidden": false,
         "id": "select2227413883",
         "maxSelect": 1,
         "name": "tempUnit",
@@ -326,24 +361,6 @@
           "mm",
           "in"
         ]
-      },
-      {
-        "hidden": false,
-        "id": "bool399182318",
-        "name": "legacy",
-        "presentable": false,
-        "required": false,
-        "system": false,
-        "type": "bool"
-      },
-      {
-        "hidden": false,
-        "id": "bool66088533",
-        "name": "supporter",
-        "presentable": false,
-        "required": false,
-        "system": false,
-        "type": "bool"
       },
       {
         "hidden": false,

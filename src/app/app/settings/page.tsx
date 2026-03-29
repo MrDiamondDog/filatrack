@@ -20,6 +20,7 @@ import { toastError } from "@/lib/util/error";
 import { useObjectState } from "@/lib/util/hooks";
 import {
     FilamentPresetsRecord,
+    UsersFilamentSortOptions,
     UsersLengthUnitOptions,
     UsersMassUnitOptions,
     UsersRecord,
@@ -170,10 +171,28 @@ export default function SettingsPage() {
                 </Tab>
                 <Tab name="preferences" className="max-w-150">
                     <div>
+                        <h2 className="mt-2">Defaults</h2>
+                        <Subtext>The defaults for various options.</Subtext>
+
+                        <Divider />
+
+                        <p>Filament Sorting</p>
+                        <Select
+                            options={{
+                                name: "Name",
+                                color: "Color",
+                                material: "Material",
+                                brand: "Brand",
+                                updated: "Recent",
+                            }}
+                            value={userData.filamentSort}
+                            onChange={v => updateSettings({ filamentSort: v as UsersFilamentSortOptions })}
+                        />
+
+                        <Divider />
+
                         <h2 className="mt-2">Units</h2>
-                        <Subtext>
-                            The default units that Filatrack will display.
-                        </Subtext>
+                        <Subtext>The default units that Filatrack will display.</Subtext>
 
                         <Divider />
 
