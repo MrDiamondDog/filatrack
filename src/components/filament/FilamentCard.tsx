@@ -16,7 +16,6 @@ import FilamentMiniRow from "./FilamentMiniRow";
 import { deleteFilament, moveFilament } from "@/lib/filament";
 import { toast } from "sonner";
 import Link from "next/link";
-import { pb } from "@/api/pb";
 import Spinner from "../base/Spinner";
 import Button from "../base/Button";
 import { StorageWithFilament } from "@/types/storage";
@@ -34,11 +33,6 @@ type Props = {
 
 export default function FilamentCard({ filament, storagesList, noninteractable, className, onModify, onStoragesModify, onDelete }
 : Props) {
-    const user = pb.authStore.record;
-
-    if (!user)
-        return null;
-
     const [openModal, setOpenModal] = useState("");
     const [isMobile, _] = useDevice();
 

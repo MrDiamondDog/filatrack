@@ -33,7 +33,10 @@ export function AccountCard() {
                 <Divider />
                 <button
                     className="w-full flex items-center gap-1 hover:bg-bg-light p-1 rounded-lg cursor-pointer transition-all"
-                    onClick={logout}
+                    onClick={() => {
+                        pb.authStore.clear();
+                        logout();
+                    }}
                 >
                     <LogOut /> Log Out
                 </button>

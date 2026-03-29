@@ -175,8 +175,8 @@
     "id": "_pb_users_auth_",
     "listRule": "id = @request.auth.id",
     "viewRule": "id = @request.auth.id",
-    "createRule": "",
-    "updateRule": "id = @request.auth.id",
+    "createRule": "@request.body.supporter:isset = false && @request.body.legacy:isset = false",
+    "updateRule": "id = @request.auth.id && @request.body.supporter:changed = false && @request.body.legacy:changed = false",
     "deleteRule": "id = @request.auth.id",
     "name": "users",
     "type": "auth",
@@ -252,11 +252,11 @@
         "type": "bool"
       },
       {
-        "autogeneratePattern": "",
+        "autogeneratePattern": "[a-z]{10}",
         "hidden": false,
         "id": "text1579384326",
-        "max": 255,
-        "min": 0,
+        "max": 0,
+        "min": 1,
         "name": "name",
         "pattern": "",
         "presentable": false,
@@ -326,6 +326,24 @@
           "mm",
           "in"
         ]
+      },
+      {
+        "hidden": false,
+        "id": "bool399182318",
+        "name": "legacy",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "bool"
+      },
+      {
+        "hidden": false,
+        "id": "bool66088533",
+        "name": "supporter",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "bool"
       },
       {
         "hidden": false,

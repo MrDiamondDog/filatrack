@@ -3,13 +3,17 @@
 import { pb } from "@/api/pb";
 import Button, { ButtonStyles } from "@/components/base/Button";
 import Divider from "@/components/base/Divider";
+import Input from "@/components/base/Input";
+import Modal, { ModalFooter, ModalHeader } from "@/components/base/Modal";
 import MotionContainer from "@/components/base/MotionContainer";
 import { Select } from "@/components/base/Select";
+import Spinner from "@/components/base/Spinner";
 import Subtext from "@/components/base/Subtext";
 import Tab from "@/components/base/tabs/Tab";
 import Tablist from "@/components/base/tabs/Tablist";
 import FilamentPresetCard from "@/components/filament/FilamentPresetCard";
 import CreateFilamentPresetModal from "@/components/modals/CreateFilamentPresetModal";
+import UserTag from "@/components/settings/UserTag";
 import { logout } from "@/lib/auth";
 import { deleteFromArray, modifyArrayItem } from "@/lib/util/array";
 import { toastError } from "@/lib/util/error";
@@ -22,7 +26,7 @@ import {
     UsersTempUnitOptions,
 } from "@/types/pb";
 import { startHolyLoader, stopHolyLoader } from "holy-loader";
-import { Plus } from "lucide-react";
+import { Heart, Pencil, Plus, Save, Spool, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -35,7 +39,16 @@ export default function SettingsPage() {
     const [userData, setUserData] = useObjectState({ ...user });
     const [filamentPresets, setFilamentPresets] = useState<FilamentPresetsRecord[]>([]);
 
+    const [filamentCount, setFilamentCount] = useState<number>();
+    const [storagesCount, setStoragesCount] = useState<number>();
+    const [printsCount, setPrintsCount] = useState<number>();
+
     const [openModal, setOpenModal] = useState("");
+
+    const [editing, setEditing] = useState(false);
+    const [usernameInput, setUsernameInput] = useState(userData.name);
+
+    const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
     async function updateSettings(newSettings: Partial<UsersRecord>) {
         startHolyLoader();
@@ -47,29 +60,113 @@ export default function SettingsPage() {
         stopHolyLoader();
     }
 
+    async function deleteAccount() {
+        if (!deleteConfirmation)
+            return void setDeleteConfirmation(true);
+
+        pb.collection("users").delete(user!.id)
+            .then(logout);
+    }
+
     useEffect(() => {
         pb.collection("filamentPresets").getFullList({
             filter: `user.id = "${user.id}"`,
         })
             .then(setFilamentPresets)
             .catch(e => toastError("Could not fetch filament presets", e));
+
+        pb.collection("filament").getFullList({
+            filter: `user.id = "${user.id}"`,
+        })
+            .then(res => setFilamentCount(res.length))
+            .catch(e => toastError("Could not fetch filament", e));
+
+        pb.collection("storage").getFullList({
+            filter: `user.id = "${user.id}"`,
+        })
+            .then(res => setStoragesCount(res.length))
+            .catch(e => toastError("Could not fetch filament", e));
+
+        pb.collection("prints").getFullList({
+            filter: `user.id = "${user.id}"`,
+        })
+            .then(res => setPrintsCount(res.length))
+            .catch(e => toastError("Could not fetch filament", e));
     }, []);
+
+    useEffect(() => {
+        setDeleteConfirmation(false);
+    }, [openModal]);
 
     return (<>
         <MotionContainer>
             <Tablist tabs={{ account: "Account", preferences: "Preferences" }} activeTab="account">
-                <Tab name="account">
+                <Tab name="account" className="max-w-300">
                     <div className="bg-bg-light rounded-lg p-4 flex gap-2 w-fit mt-2 items-center">
                         <img src={pb.files.getURL(userData, userData.avatar!)} className="rounded-full size-30" />
-                        <div className="*:w-full">
-                            <h2>{userData.name}</h2>
+                        <div className="w-full">
+                            <div className="flex gap-2 items-center">
+                                {!editing && <h2>{userData.name}</h2>}
+                                {editing && <Input value={usernameInput} onChange={e => setUsernameInput(e.target.value)} />}
+
+                                {!editing && <Pencil
+                                    className="text-gray-500 cursor-pointer"
+                                    onClick={() => setEditing(true)}
+                                />}
+                                {editing && <>
+                                    <Save
+                                        className="text-primary cursor-pointer"
+                                        onClick={() => {
+                                            setEditing(false);
+                                            updateSettings({ name: usernameInput });
+                                        }}
+                                    />
+                                    <X
+                                        className="text-danger cursor-pointer"
+                                        onClick={() => {
+                                            setEditing(false);
+                                            setUsernameInput(userData.name);
+                                        }}
+                                    />
+                                </>}
+                            </div>
+                            <div className="flex gap-1 items-center">
+                                {userData.supporter && <UserTag hexColor="#ffb2cb"><Heart size={16} /> Supporter</UserTag>}
+                                {userData.legacy && <UserTag hexColor="#0dd599"><Spool size={16} /> Early User</UserTag>}
+                            </div>
                             <Divider />
-                            <Link href="/about/privacy-policy">Privacy Policy</Link>
-                            <Button look={ButtonStyles.secondary} className="mb-1" onClick={logout}>Log Out</Button>
-                            <Button look={ButtonStyles.secondary} className="mb-1">Edit Username</Button>
-                            <Button look={ButtonStyles.danger}>Delete Account</Button>
+                            <div className="w-full flex">
+                                <Divider vertical />
+                                <div>
+                                    <h3>Filament</h3>
+                                    <Divider />
+                                    <h2>{filamentCount ?? <Spinner />}</h2>
+                                </div>
+                                <Divider vertical />
+                                <div>
+                                    <h3>Storages</h3>
+                                    <Divider />
+                                    <h2>{storagesCount ?? <Spinner />}</h2>
+                                </div>
+                                <Divider vertical />
+                                <div>
+                                    <h3>Prints</h3>
+                                    <Divider />
+                                    <h2>{printsCount ?? <Spinner />}</h2>
+                                </div>
+                                <Divider vertical />
+                            </div>
+                            <Divider />
+                            <div className="*:w-full w-full flex gap-1">
+                                <Button look={ButtonStyles.secondary} onClick={() => {
+                                    logout();
+                                    pb.authStore.clear();
+                                }}>Log Out</Button>
+                                <Button look={ButtonStyles.danger} onClick={() => setOpenModal("delete")}>Delete Account</Button>
+                            </div>
                         </div>
                     </div>
+                    <Link href="/about/privacy-policy">Privacy Policy</Link>
                 </Tab>
                 <Tab name="preferences" className="max-w-150">
                     <div>
@@ -143,6 +240,30 @@ export default function SettingsPage() {
             </Tablist>
 
         </MotionContainer>
+
+        <Modal title="Delete Filatrack Account" open={openModal === "delete"} onClose={() => setOpenModal("")} danger>
+            <ModalHeader>Permanently delete your Filatrack account and all associated data.</ModalHeader>
+            <h3>This action is permanent!</h3>
+            <div className="whitespace-pre-wrap">
+                Once deleted, your data can not be retrieved.{"\n"}
+                All filament, storages, and prints will be permanently lost.{"\n"}
+                {(userData.supporter || userData.legacy) && <>
+                    You will also lose the following user tags:
+                    <div className="flex gap-1 w-full justify-center">
+                        {userData.supporter && <UserTag hexColor="#ffb2cb"><Heart size={16} /> Supporter</UserTag>}
+                        {userData.legacy && <UserTag hexColor="#0dd599"><Spool size={16} /> Early User</UserTag>}
+                    </div>
+                    You may not get these back, even if you make a new account.{"\n"}
+                </>}
+                <b>Are you sure you want to continue?</b>
+            </div>
+            <ModalFooter>
+                <Button onClick={() => setOpenModal("")}>Cancel</Button>
+                <Button look={ButtonStyles.danger} className="text-nowrap" onClick={deleteAccount}>
+                    {deleteConfirmation ? "Are you sure?" : "Delete Account"}
+                </Button>
+            </ModalFooter>
+        </Modal>
 
         <CreateFilamentPresetModal open={openModal === "filament-preset"} onClose={() => setOpenModal("")}
             onCreate={p => setFilamentPresets([...filamentPresets, p])} />

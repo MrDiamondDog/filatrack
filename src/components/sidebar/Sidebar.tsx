@@ -10,6 +10,8 @@ import FilamentIcon from "../filament/FilamentIcon";
 import { randomFilamentNames, randomFrom } from "@/lib/util/random";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa6";
+import { pb } from "@/api/pb";
+import { UsersRecord } from "@/types/pb";
 
 export function MobileSidebar() {
     return (<div className="z-1 bottom-0 left-0 right-0 h-15 bg-bg-light p-2 px-4 fixed flex items-center justify-around gap-2">
@@ -26,6 +28,11 @@ export default function Sidebar() {
 
     if (isMobile)
         return <MobileSidebar />;
+
+    const user = pb.authStore.record as UsersRecord | null;
+
+    if (!user)
+        return null;
 
     const [iconColor, setIconColor] = useState(randomFrom(Object.keys(randomFilamentNames)));
 
@@ -49,11 +56,11 @@ export default function Sidebar() {
 
         <div>
             <SidebarItem href="https://github.com/mrdiamonddog/filatrack"><FaGithub size={24} /> GitHub</SidebarItem>
-            <SidebarItem href="/about/support"
-                className="mb-2 bg-[rgba(228,29,95,0.15)] text-[rgb(255,178,203)]"
+            {!user.supporter && <SidebarItem href="/about/support"
+                className="mb-2 bg-[#e41d5f26] text-[#ffb2cb]"
             >
                 <Heart /> Support
-            </SidebarItem>
+            </SidebarItem>}
             <AccountCard />
         </div>
     </div>);

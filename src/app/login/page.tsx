@@ -1,9 +1,17 @@
+"use client";
+
+import { pb } from "@/api/pb";
 import SSOButton from "@/components/auth/SSOButton";
 import Divider from "@/components/base/Divider";
 import LandingBackground from "@/components/landing/LandingBackground";
+import { useEffect } from "react";
 import { FaGoogle, FaGithub } from "react-icons/fa6";
 
 export default function LoginPage() {
+    useEffect(() => {
+        pb.authStore.clear();
+    }, []);
+
     return (<>
         <LandingBackground />
 
