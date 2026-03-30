@@ -2,6 +2,7 @@
 
 import { pb } from "@/api/pb";
 import Button, { ButtonStyles } from "@/components/base/Button";
+import Checkbox from "@/components/base/Checkbox";
 import Divider from "@/components/base/Divider";
 import Input from "@/components/base/Input";
 import Modal, { ModalFooter, ModalHeader } from "@/components/base/Modal";
@@ -235,6 +236,7 @@ export default function SettingsPage() {
                                 key={p.id} preset={p} onModify={p => setFilamentPresets(modifyArrayItem(filamentPresets, p, "id"))}
                                 onDelete={() => setFilamentPresets(deleteFromArray(filamentPresets, p, "id"))}
                             />)}
+                            {!filamentPresets.length && <p>You don't have any filament presets yet.</p>}
                         </div>
                     </div>
                     <Divider />
@@ -255,6 +257,12 @@ export default function SettingsPage() {
                             {userSettings.expand.customAttributes?.map(a => <CustomAttributeCard attribute={a} />)}
                         </div> */}
                     </div>
+
+                    <Divider />
+
+                    <Checkbox checked={userData.advancedView ?? false} onCheckedChange={c => updateSettings({ advancedView: c })}>
+                        Advanced View
+                    </Checkbox>
                 </Tab>
             </Tablist>
 

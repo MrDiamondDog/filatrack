@@ -8,7 +8,7 @@ import CardDetail from "../util/CardDetail";
 import { useState } from "react";
 import PrintFilamentModal from "../modals/PrintFilamentModal";
 import { useDevice } from "@/lib/util/hooks";
-import { FilamentRecord } from "@/types/pb";
+import { FilamentRecord, UsersRecord } from "@/types/pb";
 import { Dropdown, DropdownContent, DropdownItem, DropdownSub, DropdownSubContent, DropdownSubTrigger, DropdownTrigger }
     from "../base/Dropdown";
 import { DeleteModal } from "../modals/DeleteModal";
@@ -20,6 +20,7 @@ import Spinner from "../base/Spinner";
 import Button from "../base/Button";
 import { StorageWithFilament } from "@/types/storage";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
+import { pb } from "@/api/pb";
 
 type Props = {
     filament: FilamentRecord;
@@ -33,6 +34,8 @@ type Props = {
 
 export default function FilamentCard({ filament, storagesList, noninteractable, className, onModify, onStoragesModify, onDelete }
 : Props) {
+    const user = pb.authStore.record as unknown as UsersRecord;
+
     const [openModal, setOpenModal] = useState("");
     const [isMobile, _] = useDevice();
 
@@ -98,6 +101,7 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                 <p className="text-md md:text-lg text-nowrap overflow-hidden font-bold text-center text-ellipsis w-full">
                     {filament.name}
                 </p>
+                {user.advancedView && <p className="text-xs text-gray-500">{filament.id}</p>}
                 <Subtext>{filament.brand}</Subtext>
 
                 <div className="flex flex-col mb-2 items-center w-full *:justify-center">

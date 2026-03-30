@@ -17,7 +17,7 @@ export default function SSOButton({ provider, icon, children }: Props) {
         onClick={() => pb.collection("users").authWithOAuth2({
             provider,
             createData: {
-                filamentSorting: "name",
+                filamentSort: "name",
                 tempUnit: "c",
                 massUnit: "g",
                 lengthUnit: "mm",

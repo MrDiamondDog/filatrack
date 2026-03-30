@@ -124,7 +124,7 @@ export default function CreateFilamentModal(props: Props) {
         <ModalHeader>{props.initial ? "Edit an existing filament roll." : "Add a new filament roll to your collection."}</ModalHeader>
 
         <div className="flex flex-col gap-2">
-            {(!props.initial && props.presets?.length) &&
+            {(!props.initial && !!props.presets?.length) &&
                 <Select
                     options={props.presets.reduce(
                         (prev, curr) => ({ ...prev, [curr.id]: curr.name }),
