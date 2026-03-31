@@ -1,7 +1,7 @@
 "use client";
 
 import { randomFrom, randomInt } from "@/lib/util/random";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const randomColors = [
     "#ff0000",
@@ -158,22 +158,22 @@ function initCanvas(ctx: CanvasRenderingContext2D) {
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("mousedown", onMouseClick);
 
-    // return () => {
-    //     clearInterval(interval);
+    return () => {
+        clearInterval(interval);
 
-    //     window.removeEventListener("mousemove", onMouseMove);
-    //     window.removeEventListener("mousedown", onMouseClick);
+        window.removeEventListener("mousemove", onMouseMove);
+        window.removeEventListener("mousedown", onMouseClick);
 
-    //     stopped = true;
-    // };
+        stopped = true;
+    };
 }
 
 export default function LandingBackground() {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const hasInit = useRef(false);
+    const [hasInit, setHasInit] = useState(false);
 
     useEffect(() => {
-        if (!canvasRef.current)
+        if (!canvasRef.current || hasInit)
             return;
 
         canvasRef.current.width = canvasRef.current.clientWidth;
@@ -186,10 +186,14 @@ export default function LandingBackground() {
 
         window.addEventListener("resize", resize);
 
-        initCanvas(canvasRef.current.getContext("2d")!);
+        const cleanup = initCanvas(canvasRef.current.getContext("2d")!);
 
-        hasInit.current = true;
-    }, [canvasRef.current]);
+        setHasInit(true);
+        return () => {
+            cleanup();
+            window.removeEventListener("resize", resize);
+        };
+    }, []);
 
     return <canvas ref={canvasRef} className="bottom-fade absolute-center w-full h-full motion-reduce:hidden opacity-50" />;
 }
