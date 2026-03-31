@@ -5,6 +5,7 @@ export async function proxy(request: NextRequest) {
     if (!(await isAuthed(request.cookies))) {
         const newUrl = request.nextUrl.clone();
         newUrl.pathname = "/login";
+        newUrl.search = `to=${request.nextUrl.pathname}`;
         return NextResponse.redirect(newUrl);
     }
 }

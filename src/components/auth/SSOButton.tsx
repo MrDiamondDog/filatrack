@@ -9,9 +9,10 @@ import { toastError } from "@/lib/util/error";
 type Props = {
     provider: string;
     icon: React.ReactNode;
+    redirect?: string;
 } & React.PropsWithChildren;
 
-export default function SSOButton({ provider, icon, children }: Props) {
+export default function SSOButton({ provider, icon, redirect, children }: Props) {
     return <Button
         className="flex gap-1 items-center justify-center"
         onClick={() => pb.collection("users").authWithOAuth2({
@@ -23,7 +24,7 @@ export default function SSOButton({ provider, icon, children }: Props) {
                 lengthUnit: "mm",
             },
         })
-            .then(login)
+            .then(res => login(res, redirect))
             .catch(e => toastError("Could not authenticate", e))
         }
     >

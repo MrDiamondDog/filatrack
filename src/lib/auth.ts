@@ -8,11 +8,12 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { isTokenExpired, RecordAuthResponse } from "pocketbase";
 
-export async function login(authRes: RecordAuthResponse<UsersResponse>) {
+export async function login(authRes: RecordAuthResponse<UsersResponse>, to?: string) {
     const cookie = await cookies();
     cookie.set("pb_auth", JSON.stringify({ token: authRes.token }), { expires: Date.now() + 1000 * 60 * 60 * 24 * 7 });
 
-    redirect("/app");
+    console.log(to);
+    redirect(to ?? "/app");
 }
 
 export async function logout() {
