@@ -21,6 +21,7 @@ function initCanvas(ctx: CanvasRenderingContext2D) {
         decay: number;
     }[][] = [];
     const squareSize = 25;
+    let stopped = false;
 
     for (let col = 0; col < Math.ceil(ctx.canvas.width / squareSize); col++) {
         grid.push([]);
@@ -35,6 +36,8 @@ function initCanvas(ctx: CanvasRenderingContext2D) {
     }
 
     function drawGrid() {
+        if (stopped)
+            return;
         if (!document.hasFocus())
             return void requestAnimationFrame(drawGrid);
 
@@ -64,7 +67,7 @@ function initCanvas(ctx: CanvasRenderingContext2D) {
 
     drawGrid();
 
-    setInterval(() => {
+    const interval = setInterval(() => {
         const randX = randomInt(0, grid.length - 1);
         const randY = randomInt(0, grid[0].length - 1);
         const randColor = randomFrom(randomColors);
@@ -75,7 +78,7 @@ function initCanvas(ctx: CanvasRenderingContext2D) {
 
     let prevX = 0;
     let prevY = 0;
-    window.addEventListener("mousemove", e => {
+    function onMouseMove(e: MouseEvent) {
         const x = e.clientX;
         const y = e.clientY - ctx.canvas.getBoundingClientRect().top;
 
@@ -94,10 +97,10 @@ function initCanvas(ctx: CanvasRenderingContext2D) {
         grid[gridX][gridY].color = randomFrom(randomColors);
         grid[gridX][gridY].opacity = 1;
         grid[gridX][gridY].decay = 0.05;
-    });
+    }
 
     const maxDepth = 3;
-    window.addEventListener("mousedown", e => {
+    function onMouseClick(e: MouseEvent) {
         const x = e.clientX;
         const y = e.clientY - ctx.canvas.getBoundingClientRect().top;
 
@@ -151,7 +154,19 @@ function initCanvas(ctx: CanvasRenderingContext2D) {
         // grid[gridX][gridY].color = "#fff";
         // grid[gridX][gridY].opacity = 1;
         // grid[gridX][gridY].decay = 0;
-    });
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mousedown", onMouseClick);
+
+    return () => {
+        clearInterval(interval);
+
+        window.removeEventListener("mousemove", onMouseMove);
+        window.removeEventListener("mousedown", onMouseClick);
+
+        stopped = true;
+    };
 }
 
 function LandingBackground() {
@@ -165,14 +180,17 @@ function LandingBackground() {
         canvasRef.current.width = canvasRef.current.clientWidth;
         canvasRef.current.height = canvasRef.current.clientHeight;
 
-        window.addEventListener("resize", () => {
+        function resize() {
             canvasRef.current!.width = canvasRef.current!.clientWidth;
             canvasRef.current!.height = canvasRef.current!.clientHeight;
-        });
+        }
 
-        initCanvas(canvasRef.current.getContext("2d")!);
+        window.addEventListener("resize", resize);
+
+        const cleanup = initCanvas(canvasRef.current.getContext("2d")!);
 
         hasInit.current = true;
+        return cleanup;
     }, [canvasRef.current]);
 
     return <canvas ref={canvasRef} className="bottom-fade absolute-center w-full h-full motion-reduce:hidden opacity-50" />;
