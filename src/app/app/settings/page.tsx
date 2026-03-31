@@ -77,22 +77,16 @@ export default function SettingsPage() {
             .then(setFilamentPresets)
             .catch(e => toastError("Could not fetch filament presets", e));
 
-        pb.collection("filament").getFullList({
-            filter: `user.id = "${user.id}"`,
-        })
-            .then(res => setFilamentCount(res.length))
+        pb.collection("filament").getList()
+            .then(res => setFilamentCount(res.totalItems))
             .catch(e => toastError("Could not fetch filament", e));
 
-        pb.collection("storage").getFullList({
-            filter: `user.id = "${user.id}"`,
-        })
-            .then(res => setStoragesCount(res.length))
+        pb.collection("storage").getList()
+            .then(res => setStoragesCount(res.totalItems))
             .catch(e => toastError("Could not fetch filament", e));
 
-        pb.collection("prints").getFullList({
-            filter: `user.id = "${user.id}"`,
-        })
-            .then(res => setPrintsCount(res.length))
+        pb.collection("prints").getList()
+            .then(res => setPrintsCount(res.totalItems))
             .catch(e => toastError("Could not fetch filament", e));
     }, []);
 
