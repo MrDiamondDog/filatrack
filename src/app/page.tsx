@@ -4,7 +4,6 @@ import Subtext from "@/components/base/Subtext";
 import LandingBackground from "@/components/landing/LandingBackground";
 import RotatingFilament from "@/components/landing/RotatingFilament";
 import { endpoints } from "@/constants";
-import { bigNum } from "@/lib/util/number";
 import { ArrowRight, ChevronDown, CircleDollarSign, Code, GlobeLock, QrCode, ScrollText, Smartphone } from "lucide-react";
 import Link from "next/link";
 
@@ -24,20 +23,7 @@ function LandingCardHeader({ children }: React.PropsWithChildren) {
     );
 }
 
-export default async function Home() {
-    // TODO: backend
-    function getTotalUsers() {
-        return { data: 1234 };
-    }
-
-    function getTotalFilament() {
-        return { data: 4321 };
-    }
-
-    function getTotalLogs() {
-        return { data: 54321 };
-    }
-
+export default function Home() {
     return (<>
         <LandingBackground />
 
@@ -47,8 +33,8 @@ export default async function Home() {
                 <div>
                     <h1>Filatrack</h1>
                     <Subtext className="whitespace-pre-wrap">
-                        The simplest way to track your 3d printing filament.{"\n"}
-                        No ads, open source, free forever.
+                        The simplest filament tracker for 3d printing.{"\n"}
+                        No ads, free-forever, open-source, and self-hostable.
                     </Subtext>
 
                     <div className="flex gap-2 mt-1 *:w-full *:*:w-full">
@@ -63,32 +49,7 @@ export default async function Home() {
             </div>
         </div>
 
-        <div className="mt-[100vh] md:mt-[70vh] w-full flex justify-center">
-            <div className="bg-bg-light rounded-lg p-4 drop-shadow-lg">
-                <div className="flex flex-row gap-2">
-                    <div>
-                        <Subtext className="text-xl">Users</Subtext>
-                        <h2>{bigNum((await getTotalUsers()).data)}</h2>
-                    </div>
-
-                    <Divider vertical />
-
-                    <div>
-                        <Subtext className="text-xl">Filament</Subtext>
-                        <h2>{bigNum((await getTotalFilament()).data)}</h2>
-                    </div>
-
-                    <Divider vertical />
-
-                    <div>
-                        <Subtext className="text-xl">Logs</Subtext>
-                        <h2>{bigNum((await getTotalLogs()).data)}</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <ChevronDown className="bounce w-full text-center mt-15" size={48} />
+        <ChevronDown className="mt-[100vh] md:mt-[90vh] bounce w-full text-center" size={48} />
 
         <div className="absolute top-[150%] md:top-full pb-20">
             <h1 className="w-full text-center" id="About">About Filatrack</h1>
