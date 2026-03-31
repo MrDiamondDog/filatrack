@@ -1,7 +1,6 @@
 "use client";
 
 import { randomFrom, randomInt } from "@/lib/util/random";
-import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
 
 const randomColors = [
@@ -159,22 +158,22 @@ function initCanvas(ctx: CanvasRenderingContext2D) {
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("mousedown", onMouseClick);
 
-    return () => {
-        clearInterval(interval);
+    // return () => {
+    //     clearInterval(interval);
 
-        window.removeEventListener("mousemove", onMouseMove);
-        window.removeEventListener("mousedown", onMouseClick);
+    //     window.removeEventListener("mousemove", onMouseMove);
+    //     window.removeEventListener("mousedown", onMouseClick);
 
-        stopped = true;
-    };
+    //     stopped = true;
+    // };
 }
 
-function LandingBackground() {
+export default function LandingBackground() {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const hasInit = useRef(false);
 
     useEffect(() => {
-        if (!canvasRef.current || hasInit.current)
+        if (!canvasRef.current)
             return;
 
         canvasRef.current.width = canvasRef.current.clientWidth;
@@ -187,13 +186,10 @@ function LandingBackground() {
 
         window.addEventListener("resize", resize);
 
-        const cleanup = initCanvas(canvasRef.current.getContext("2d")!);
+        initCanvas(canvasRef.current.getContext("2d")!);
 
         hasInit.current = true;
-        return cleanup;
     }, [canvasRef.current]);
 
     return <canvas ref={canvasRef} className="bottom-fade absolute-center w-full h-full motion-reduce:hidden opacity-50" />;
 }
-
-export default dynamic(() => Promise.resolve(LandingBackground), { ssr: false });
