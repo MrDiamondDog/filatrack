@@ -1,15 +1,18 @@
 "use client";
 
 import { pb } from "@/api/pb";
+import Button from "@/components/base/Button";
 import Divider from "@/components/base/Divider";
 import MotionContainer from "@/components/base/MotionContainer";
 import CreateButton from "@/components/dashboard/CreateButton";
 import FilamentChart from "@/components/dashboard/FilamentChart";
 import FilamentList from "@/components/filament/FilamentList";
+import ScanQRModal from "@/components/modals/ScanQRModal";
 import StorageList from "@/components/storage/StorageList";
 import { toastError } from "@/lib/util/error";
 import { FilamentPresetsRecord, FilamentRecord } from "@/types/pb";
 import { StorageWithFilament } from "@/types/storage";
+import { ScanLine } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
@@ -21,6 +24,8 @@ export default function DashboardPage() {
     const [filament, setFilament] = useState<FilamentRecord[]>([]);
     const [storages, setStorages] = useState<StorageWithFilament[]>([]);
     const [presets, setPresets] = useState<FilamentPresetsRecord[]>([]);
+
+    const [openModal, setOpenModal] = useState("");
 
     useEffect(() => {
         pb.collection("filament").getFullList({
@@ -47,7 +52,10 @@ export default function DashboardPage() {
         <div className="flex justify-between items-center">
             <h1>Dashboard</h1>
 
-            <CreateButton onFilamentCreate={f => setFilament([...filament, f])} storages={storages} />
+            <div className="flex gap-2">
+                <Button className="flex gap-1 items-center" onClick={() => setOpenModal("scan")}><ScanLine /> Scan</Button>
+                <CreateButton onFilamentCreate={f => setFilament([...filament, f])} storages={storages} />
+            </div>
         </div>
 
         <Divider />
@@ -95,5 +103,7 @@ export default function DashboardPage() {
                 allowSort
             />
         </>}
+
+        <ScanQRModal open={openModal === "scan"} onClose={() => setOpenModal("")} />
     </MotionContainer>);
 }

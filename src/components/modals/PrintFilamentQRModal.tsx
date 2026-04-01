@@ -18,7 +18,7 @@ const displayableFields = {
     note: { title: "Note", key: "note" },
     nozzleTemperature: { title: "Nozzle Temperature", render: f => (f.nozzleTemperature ? celcius(f.nozzleTemperature) : "N/A") },
     bedTemperature: { title: "Bed Temperature", render: f => (f.bedTemperature ? celcius(f.bedTemperature) : "N/A") },
-    diameter: { title: "Diameter", render: f => `${f.diameter}mm` },
+    diameter: { title: "Diameter", render: f => (f.diameter ? `${f.diameter}mm` : "N/A") },
     cost: { title: "Cost", render: f => `$${f.cost}` },
     transmissionDistance: { title: "Transmission Distance", render: f => f.transmissionDistance?.toFixed(2) },
     flowRatio: { title: "Flow Ratio", render: f => f.flowRatio?.toFixed(2) },

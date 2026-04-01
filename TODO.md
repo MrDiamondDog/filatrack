@@ -1,0 +1,38 @@
+PRE-ship:
+-[x] Filament Editing (1hr)
+-[x] Box editing (.75hr)
+-[x] Separate types for component props
+-[x] Bulk Deleting (too long)
+-[x] Filament list sorting and searching
+-[x] Bulk Moving
+-[x] Filament Presets (2hr)
+-[x] Account settings (.5hr)
+-[x] Default sort setting
+-[x] Advanced View (show ids)
+-[x] QR Codes (3hr)
+-[ ] In app QR scanner
+-[ ] Bulk print QR codes
+-[ ] Options for default QR settings
+-[ ] PDF QR codes
+-[ ] Buttons on individual filament page
+-[ ] Customize what is shown on filament cards/table
+-[ ] Avatar editing
+-[ ] Unit Settings (1-1.5hr)
+-[ ] Credentials auth?
+-[ ] MOBILE SUPPORT (4hr)
+-[ ] Selfhosting
+-[ ] Selfhosting docs
+-[ ] Transfer script
+
+POST-ship:
+-[ ] Custom attributes
+-[ ] Bulk Editing
+-[ ] Favorites
+-[ ] Filament sharing? (2hr)
+-[ ] Public Filament Presets (4hr)
+-[ ] Another thing on the dashboard page?
+-[ ] Default view setting (table/card)
+-[ ] Comment code (if desperate)
+-[ ] Light Mode
+-[ ] Mobile Vibrations
+-[ ] Translations support

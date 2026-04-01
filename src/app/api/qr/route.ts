@@ -123,6 +123,7 @@ export async function GET(req: NextRequest) {
     await QRCode.toCanvas(qrcodeCanvas, `https://filatrack.app/app/filament/${data.id}`, {
         width: qrcodeSize,
         margin: 0,
+        errorCorrectionLevel: "low",
     });
     ctx.drawImage(qrcodeCanvas, width - padding - qrcodeSize, height - padding - qrcodeSize);
 
