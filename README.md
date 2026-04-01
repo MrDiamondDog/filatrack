@@ -4,7 +4,7 @@ A super-duper simple way to track your 3d printing filament!
 
 ![image](/public/app_example.png)
 
-Made with Next.JS, Auth.JS, Drizzle ORM, and Supabase!
+Made with Next.JS and Pocketbase!
 
 Join the [Discord server](https://filatrack.app/discord) for more info and feature requests!
 
@@ -26,7 +26,7 @@ Filatrack is fully self-hostable through Docker!
 - http://localhost:3000/
 
 You'll also need to set up the Pocketbase instance to go with it. Set it up [here](https://pocketbase.io/docs/going-to-production/),
-then make sure to set up the .env.
+then make sure to set up the .env file.
 
 ## Star History
 
