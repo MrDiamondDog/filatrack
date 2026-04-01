@@ -21,6 +21,7 @@ import Button from "../base/Button";
 import { StorageWithFilament } from "@/types/storage";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 import { pb } from "@/api/pb";
+import PrintFilamentQRModal from "../modals/PrintFilamentQRModal";
 
 type Props = {
     filament: FilamentRecord;
@@ -90,6 +91,7 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                             {!storagesList && <Spinner />}
                         </DropdownSubContent>
                     </DropdownSub>
+                    <DropdownItem onClick={() => setOpenModal("qr")}>QR Code</DropdownItem>
                     <DropdownItem onClick={() => setOpenModal("delete")} danger>Delete</DropdownItem>
                 </DropdownContent>
             </Dropdown>}
@@ -131,6 +133,12 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
             onClose={() => setOpenModal("")}
             filament={filament}
             onPrintCreate={p => onModify?.({ ...filament, mass: filament.mass - p.totalFilamentUsed })}
+        />
+
+        <PrintFilamentQRModal
+            open={openModal === "qr"}
+            onClose={() => setOpenModal("")}
+            filament={filament}
         />
 
         <DeleteModal
