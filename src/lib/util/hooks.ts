@@ -11,7 +11,7 @@ export function useObjectState<T extends object>(initial: T) {
 
     const reset = useCallback(() => {
         setState(initial);
-    }, []);
+    }, [initial]);
 
     return [state, update, reset] as const;
 }

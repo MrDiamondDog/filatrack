@@ -2,9 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { createCanvas, loadImage, registerFont } from "canvas";
 import QRCode from "qrcode";
 
-const width = 750;
-const height = 500;
-
 type QRDataField = { title: string, data: string };
 
 export type QRData = {
@@ -14,6 +11,7 @@ export type QRData = {
     color: string;
     brand?: string;
     fields: QRDataField[];
+    format: "PNG" | "SVG"
 }
 
 export async function GET(req: NextRequest) {
@@ -27,10 +25,13 @@ export async function GET(req: NextRequest) {
 
     const data = JSON.parse(atob(dataParam)) as QRData;
 
-    if (!data.title || !data.id || !data.fields || !data.material || !data.color)
+    if (!data.title || !data.id || !data.fields || !data.material || !data.color || !data.format)
         return NextResponse.json({ error: "Fill out all required fields." }, { status: 400 });
 
-    const canvas = createCanvas(width, height, "svg");
+    const width = 750;
+    const height = 430 + (data.fields.length > 4 ? (data.fields.length - 4) * 35 : 0);
+
+    const canvas = createCanvas(width, height, data.format === "PNG" ? undefined : "svg");
     const ctx = canvas.getContext("2d");
 
     registerFont("public/fonts/Lexend-VariableFont_wght.ttf", { family: "Lexend" });
@@ -107,6 +108,12 @@ export async function GET(req: NextRequest) {
 
     const logo = await loadImage("public/filament-black.png");
     ctx.drawImage(logo, padding, height - padding - logoSize, logoSize, logoSize);
+
+    ctx.fillStyle = data.color;
+    const logoFill = await loadImage("public/filament-color-mask.png");
+    ctx.drawImage(logoFill, padding, height - padding - logoSize, logoSize, logoSize);
+
+    ctx.fillStyle = "#000";
     ctx.fillText("Filatrack", padding + logoSize + 10, height - padding - logoSize / 2);
 
     // QR Code
@@ -124,7 +131,7 @@ export async function GET(req: NextRequest) {
 
     return new Response(body, {
         headers: {
-            "Content-Type": "image/svg+xml",
+            "Content-Type": data.format === "PNG" ? "image/png" : "image/svg+xml",
         },
     });
 }
