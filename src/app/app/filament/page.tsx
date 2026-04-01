@@ -6,16 +6,14 @@ import FilamentList from "@/components/filament/FilamentList";
 import { toastError } from "@/lib/util/error";
 import { FilamentPresetsRecord, FilamentRecord, UsersResponse } from "@/types/pb";
 import { StorageWithFilament } from "@/types/storage";
-import { redirect } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function FilamentPage({
-    searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}) {
+export default function FilamentPage() {
+    const searchParams = useSearchParams();
     // Backwards compatibility with old qr codes
-    searchParams.then(s => !!s.f && redirect(`/app/filament/${s.f}`));
+    if (searchParams.get("f"))
+        redirect(`/app/filament/${searchParams.get("f")}`);
 
     const user = pb.authStore.record as unknown as UsersResponse;
 

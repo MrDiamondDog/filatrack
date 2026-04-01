@@ -18,7 +18,7 @@ export default function CreateStorageModal(props: Props) {
     const user = pb.authStore.record;
 
     if (!user)
-        return;
+        return null;
 
     const [storage, setStorage, reset] = useObjectState<Create<StorageRecord>>(props.initial ?? {
         name: "",

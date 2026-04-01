@@ -15,6 +15,9 @@ type Props = {
 export default function FilamentPicker({ values, onChange, multiple }: Props) {
     const user = pb.authStore.record as unknown as UsersRecord;
 
+    if (!user)
+        return null;
+
     const [allFilament, setAllFilament] = useState<FilamentRecord[]>([]);
 
     useEffect(() => {

@@ -12,7 +12,6 @@ export async function login(authRes: RecordAuthResponse<UsersResponse>, to?: str
     const cookie = await cookies();
     cookie.set("pb_auth", JSON.stringify({ token: authRes.token }), { expires: Date.now() + 1000 * 60 * 60 * 24 * 7 });
 
-    console.log(to);
     redirect(to ?? "/app");
 }
 
@@ -26,7 +25,11 @@ export async function logout() {
 
 export async function isAuthed(cookies: RequestCookies | ReadonlyRequestCookies) {
     const authCookie = cookies.get("pb_auth");
-    const token = authCookie?.value ? JSON.parse(authCookie.value).token : null;
 
-    return token && !isTokenExpired(token);
+    try {
+        const token = authCookie?.value ? JSON.parse(authCookie.value).token : null;
+        return token && !isTokenExpired(token);
+    } catch {
+        return false;
+    }
 }

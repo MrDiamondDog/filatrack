@@ -32,8 +32,6 @@ export default function CreatePrintModal({ onCreate, ...props }: { onCreate: (p:
         if (selectedFilament.length === 0)
             return void setError("Please select one or more filament.");
 
-        console.log(Object.values(filamentUsed), Object.values(filamentUsed).filter(v => !v));
-
         if (Object.values(filamentUsed).filter(v => !v || v <= 0).length > 0)
             return void setError("Please fill out all required fields.");
 
@@ -44,7 +42,7 @@ export default function CreatePrintModal({ onCreate, ...props }: { onCreate: (p:
             user: user!.id,
             filamentRolls: selectedFilament.map(f => f.id),
             filamentUsage: filamentUsed,
-            totalFilamentUsed: Object.values(filamentUsed).reduce((prev, curr) => prev + curr),
+            totalFilamentUsed: Object.values(filamentUsed).reduce((prev, curr) => prev + curr, 0),
             totalRollsUsed: selectedFilament.length,
         });
 
