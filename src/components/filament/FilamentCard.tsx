@@ -138,7 +138,7 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
         <PrintFilamentQRModal
             open={openModal === "qr"}
             onClose={() => setOpenModal("")}
-            filament={filament}
+            filament={[filament]}
         />
 
         <DeleteModal

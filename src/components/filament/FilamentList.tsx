@@ -4,7 +4,7 @@ import FilamentCard from "./FilamentCard";
 import Divider from "../base/Divider";
 import Tablist from "../base/tabs/Tablist";
 import { useEffect, useState } from "react";
-import { ArchiveRestore, Images, Pencil, Plus, Search, SortDesc, TableIcon, Trash2, X } from "lucide-react";
+import { ArchiveRestore, Images, Pencil, Plus, QrCode, Search, SortDesc, TableIcon, Trash2, X } from "lucide-react";
 import Table, { EmptyCell } from "../base/Table";
 import { sortFn as colorSort } from "color-sorter";
 import { grams } from "@/lib/util/units";
@@ -25,6 +25,7 @@ import { Select } from "../base/Select";
 import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../base/Dropdown";
 import StorageMiniCard from "../storage/StorageMiniCard";
 import { moveFilament } from "@/lib/filament";
+import PrintFilamentQRModal from "../modals/PrintFilamentQRModal";
 
 type Props = {
     filament: FilamentRecord[];
@@ -155,7 +156,7 @@ export default function FilamentList({
                 <h2>{title}</h2>
 
                 <div className="flex gap-2 items-center">
-                    {!viewLock && <Tablist
+                    {(!viewLock && !editMode) && <Tablist
                         tabs={{ cards: <Images />, table: <TableIcon /> }}
                         activeTab={view}
                         onTabChange={v => setView(v as "cards" | "table")}
@@ -166,11 +167,6 @@ export default function FilamentList({
                         setEditMode(m => !m);
                     }} look={ButtonStyles.secondary}>
                         {editMode ? <X /> : <Pencil />}
-                    </Button>}
-
-                    {editMode && <Button look={ButtonStyles.danger} onClick={() => setOpenModal("deleteSelected")}
-                        disabled={selectedFilament.length === 0}>
-                        <Trash2 />
                     </Button>}
 
                     {editMode && <Dropdown>
@@ -189,6 +185,16 @@ export default function FilamentList({
                             </DropdownItem>)}
                         </DropdownContent>
                     </Dropdown>}
+
+                    {editMode && <Button look={ButtonStyles.secondary} onClick={() => setOpenModal("qr")}
+                        disabled={selectedFilament.length === 0}>
+                        <QrCode />
+                    </Button>}
+
+                    {editMode && <Button look={ButtonStyles.danger} onClick={() => setOpenModal("deleteSelected")}
+                        disabled={selectedFilament.length === 0}>
+                        <Trash2 />
+                    </Button>}
 
                     {(allowAdd && !editMode) && <Button onClick={() => setOpenModal("create")}>
                         <Plus />
@@ -260,7 +266,7 @@ export default function FilamentList({
         }
 
         {/* For testing, change to true to enable */}
-        {false && <Button onClick={() => {
+        {true && <Button onClick={() => {
             const f = randomFilament();
             pb.collection("filament").create({ ...f, user: user!.id })
                 .then(res => onListModified?.([...filament, res]))
@@ -269,6 +275,12 @@ export default function FilamentList({
 
         <CreateFilamentModal open={openModal === "create"} onClose={() => setOpenModal("")}
             onCreate={f => onListModified?.([...filament, f])} storages={storagesList} presets={presets}
+        />
+
+        <PrintFilamentQRModal
+            open={openModal === "qr"}
+            onClose={() => setOpenModal("")}
+            filament={selectedFilament}
         />
 
         <DeleteModal

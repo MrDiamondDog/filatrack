@@ -54,11 +54,11 @@ export async function GET(req: NextRequest) {
     ctx.textBaseline = "top";
     ctx.textAlign = "left";
 
-    const titleWidth = ctx.measureText(data.title).width;
+    const titleWidth = Math.min(ctx.measureText(data.title).width, 550);
 
     ctx.fillRect(padding, padding, titleWidth + 30, 105);
     ctx.fillStyle = "#fff";
-    ctx.fillText(data.title, padding + 10, padding - 10);
+    ctx.fillText(data.title, padding + 10, padding - 10, 550);
 
     // Color swatch
     const swatchSize = 100;
@@ -85,7 +85,7 @@ export async function GET(req: NextRequest) {
     ctx.fillStyle = "#000";
     ctx.font = "50px Lexend";
 
-    ctx.fillText(`${data.brand ? `${data.brand} ` : ""}${data.material}`, padding, padding + brandTopOffset);
+    ctx.fillText(`${data.brand ? `${data.brand} ` : ""}${data.material}`, padding, padding + brandTopOffset, 440);
 
     // Details
     const detailsTopOffset = brandTopOffset + 60;
@@ -95,7 +95,7 @@ export async function GET(req: NextRequest) {
 
     let i = 0;
     for (const field of data.fields) {
-        ctx.fillText(`${field.title}: ${field.data}`, padding, padding + detailsTopOffset + detailsGap * i);
+        ctx.fillText(`${field.title}: ${field.data}`, padding, padding + detailsTopOffset + detailsGap * i, 440);
         i++;
     }
 

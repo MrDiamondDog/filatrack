@@ -80,7 +80,7 @@ export function ModalFooter({ children, tip, error }: { tip?: string, error?: st
                     <Info className="text-primary min-w-8 min-h-8" /> {tip}
                 </Subtext>}
             </div>
-            <div className={"flex flex-row gap-1 justify-end"}>
+            <div className="flex flex-row gap-1 justify-end">
                 {children}
             </div>
         </div>
