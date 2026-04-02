@@ -105,7 +105,7 @@ export default function PrintFilamentQRModal({ filament, ...props }: { filament:
 
     const [selectedFields, setSelectedFields] = useState<QRDisplayField[]>(getFullDefaultFields());
 
-    const [format, setFormat] = useState<"SVG" | "PNG">("SVG");
+    const [format, setFormat] = useState<"SVG" | "PNG">((user.defaultQrSettings as QRSettings)?.format ?? "SVG");
 
     const [qrdata, setQrdata] = useState<QRData[]>(filament.map(f => ({
         id: f.id,
