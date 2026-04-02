@@ -1,4 +1,4 @@
-import { FilamentRecord } from "@/types/pb";
+import { FilamentRecord, UsersRecord } from "@/types/pb";
 import Modal, { ModalFooter, ModalHeader, ModalProps } from "../base/Modal";
 import { QRData } from "@/app/api/qr/route";
 import Divider from "../base/Divider";
@@ -9,8 +9,10 @@ import { deleteFromArray } from "@/lib/util/array";
 import { useEffect, useState } from "react";
 import Button from "../base/Button";
 import Subtext from "../base/Subtext";
+import { pb } from "@/api/pb";
+import { QRSettings } from "@/types/users";
 
-type QRDisplayField = { title: string, render?: (f: FilamentRecord) => string, key?: keyof FilamentRecord };
+export type QRDisplayField = { title: string, render?: (f: FilamentRecord) => string, key?: keyof FilamentRecord };
 
 const displayableFields = {
     color: { title: "Color", key: "color" },
@@ -36,8 +38,73 @@ function QRDisplayField({ title, onMove, onDelete }: { title: string, onMove: (d
     </div>);
 }
 
+export function QRFieldSelector({ fields, onListUpdate }: { fields: QRDisplayField[], onListUpdate: (l: QRDisplayField[]) => void }) {
+    function onFieldMove(dir: "up" | "down", field: QRDisplayField) {
+        const index = fields.indexOf(field);
+
+        if (index === -1)
+            return;
+
+        if (dir === "up" && index === 0)
+            return;
+
+        if (dir === "down" && index === fields.length - 1)
+            return;
+
+        let newSelectedFields = [...fields];
+
+        if (dir === "up")
+            [newSelectedFields[index - 1], newSelectedFields[index]] = [newSelectedFields[index], newSelectedFields[index - 1]];
+
+        if (dir === "down")
+            [newSelectedFields[index], newSelectedFields[index + 1]] = [newSelectedFields[index + 1], newSelectedFields[index]];
+
+        onListUpdate(newSelectedFields);
+    }
+
+    return <>
+        <p>Fields</p>
+        <div className="flex flex-col gap-1 bg-bg-lighter rounded-lg p-2">
+            {fields.map((f, i) => <QRDisplayField
+                title={f.title}
+                key={i}
+                onMove={dir => onFieldMove(dir, f)}
+                onDelete={() => onListUpdate(deleteFromArray(fields, f, "title"))}
+            />)}
+        </div>
+
+        <p>Add Fields</p>
+        <Select
+            options={{
+                ...Object.fromEntries(Object.entries(displayableFields)
+                    .filter(v => !fields.find(s => s.title === v[1].title))
+                    .map(v => [v[0], v[1].title])),
+            }}
+            placeholder="Select a field to add"
+            value=""
+            onChange={v => {
+                const field = displayableFields[v as keyof FilamentRecord];
+                onListUpdate([...fields, field]);
+            }}
+        />
+    </>;
+}
+
 export default function PrintFilamentQRModal({ filament, ...props }: { filament: FilamentRecord[] } & ModalProps) {
-    const [selectedFields, setSelectedFields] = useState<QRDisplayField[]>([]);
+    const user = pb.authStore.record as UsersRecord | null;
+
+    if (!user)
+        return null;
+
+    function getFullDefaultFields() {
+        const defaultFields = ((user!.defaultQrSettings as QRSettings)?.fields ?? []) as Omit<QRDisplayField, "render">[];
+        const defaultFieldKeys = defaultFields.map(f => f.title);
+
+        return Object.values(displayableFields).filter(f => defaultFieldKeys.includes(f.title));
+    }
+
+    const [selectedFields, setSelectedFields] = useState<QRDisplayField[]>(getFullDefaultFields());
+
     const [format, setFormat] = useState<"SVG" | "PNG">("SVG");
 
     const [qrdata, setQrdata] = useState<QRData[]>(filament.map(f => ({
@@ -64,29 +131,6 @@ export default function PrintFilamentQRModal({ filament, ...props }: { filament:
             })),
         } as QRData)));
     }, [filament, selectedFields, format]);
-
-    function onFieldMove(dir: "up" | "down", field: QRDisplayField) {
-        const index = selectedFields.indexOf(field);
-
-        if (index === -1)
-            return;
-
-        if (dir === "up" && index === 0)
-            return;
-
-        if (dir === "down" && index === selectedFields.length - 1)
-            return;
-
-        let newSelectedFields = [...selectedFields];
-
-        if (dir === "up")
-            [newSelectedFields[index - 1], newSelectedFields[index]] = [newSelectedFields[index], newSelectedFields[index - 1]];
-
-        if (dir === "down")
-            [newSelectedFields[index], newSelectedFields[index + 1]] = [newSelectedFields[index + 1], newSelectedFields[index]];
-
-        setSelectedFields(newSelectedFields);
-    }
 
     function makeUrl(data: QRData) {
         return `/api/qr?data=${btoa(JSON.stringify(data))}`;
@@ -120,38 +164,15 @@ export default function PrintFilamentQRModal({ filament, ...props }: { filament:
 
         <Divider />
 
-        <p>Fields</p>
-        <div className="flex flex-col gap-1 bg-bg-lighter rounded-lg p-2">
-            {selectedFields.map((f, i) => <QRDisplayField
-                title={f.title}
-                key={i}
-                onMove={dir => onFieldMove(dir, f)}
-                onDelete={() => setSelectedFields(deleteFromArray(selectedFields, f, "title"))}
-            />)}
-        </div>
-
-        <p>Add Fields</p>
-        <Select
-            options={{
-                ...Object.fromEntries(Object.entries(displayableFields)
-                    .filter(v => !selectedFields.find(s => s.title === v[1].title))
-                    .map(v => [v[0], v[1].title])),
-            }}
-            placeholder="Select a field to add"
-            value=""
-            onChange={v => {
-                const field = displayableFields[v as keyof FilamentRecord];
-                setSelectedFields([...selectedFields, field]);
-            }}
-        />
+        <QRFieldSelector fields={selectedFields} onListUpdate={setSelectedFields} />
 
         <Divider />
 
         <p>Format</p>
         <Select
             options={{
-                png: "PNG",
-                svg: "SVG",
+                PNG: "PNG",
+                SVG: "SVG",
             }}
             placeholder="SVG"
             value={format}

@@ -14,6 +14,7 @@ import Tab from "@/components/base/tabs/Tab";
 import Tablist from "@/components/base/tabs/Tablist";
 import FilamentPresetCard from "@/components/filament/FilamentPresetCard";
 import CreateFilamentPresetModal from "@/components/modals/CreateFilamentPresetModal";
+import { QRFieldSelector } from "@/components/modals/PrintFilamentQRModal";
 import UserTag from "@/components/settings/UserTag";
 import { logout } from "@/lib/auth";
 import { deleteFromArray, modifyArrayItem } from "@/lib/util/array";
@@ -27,6 +28,7 @@ import {
     UsersRecord,
     UsersTempUnitOptions,
 } from "@/types/pb";
+import { QRSettings } from "@/types/users";
 import { startHolyLoader, stopHolyLoader } from "holy-loader";
 import { Heart, Pencil, Plus, Save, Spool, X } from "lucide-react";
 import Link from "next/link";
@@ -183,6 +185,25 @@ export default function SettingsPage() {
                             value={userData.filamentSort}
                             onChange={v => updateSettings({ filamentSort: v as UsersFilamentSortOptions })}
                         />
+
+                        <p>Default QR code options</p>
+                        <div className="bg-bg-light rounded-lg p-2">
+                            <QRFieldSelector
+                                fields={(userData.defaultQrSettings as QRSettings)?.fields ?? []}
+                                onListUpdate={f => updateSettings({
+                                    defaultQrSettings: { ...(userData.defaultQrSettings as object), fields: f },
+                                })}
+                            />
+
+                            <p>Format</p>
+                            <Select
+                                options={{ PNG: "PNG", SVG: "SVG" }}
+                                value={(userData.defaultQrSettings as QRSettings)?.format ?? "SVG"}
+                                onChange={f => updateSettings({
+                                    defaultQrSettings: { ...(userData.defaultQrSettings as object), format: f },
+                                })}
+                            />
+                        </div>
 
                         <Divider />
 

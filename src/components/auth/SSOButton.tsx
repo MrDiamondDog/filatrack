@@ -22,6 +22,7 @@ export default function SSOButton({ provider, icon, redirect, children }: Props)
                 tempUnit: "c",
                 massUnit: "g",
                 lengthUnit: "mm",
+                defaultQrSettings: { fields: ["mass", "nozzleTemperature", "bedTemperature", "note"], format: "SVG" },
             },
         })
             .then(res => login(res, redirect))
