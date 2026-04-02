@@ -98,9 +98,9 @@ export default function PrintFilamentQRModal({ filament, ...props }: { filament:
 
     function getFullDefaultFields() {
         const defaultFields = ((user!.defaultQrSettings as QRSettings)?.fields ?? []) as Omit<QRDisplayField, "render">[];
-        const defaultFieldKeys = defaultFields.map(f => f.title);
+        const displayFields = Object.values(displayableFields);
 
-        return Object.values(displayableFields).filter(f => defaultFieldKeys.includes(f.title));
+        return defaultFields.map(f => ({ ...f, render: displayFields.find(d => d.title === f.title)?.render }));
     }
 
     const [selectedFields, setSelectedFields] = useState<QRDisplayField[]>(getFullDefaultFields());
