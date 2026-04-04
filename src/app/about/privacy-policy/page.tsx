@@ -99,6 +99,15 @@ export default function PrivacyPolicyPage() {
                 Once you have deleted your account, none of your data will remain in our database. This action cannot be undone.
             </p>
 
+            <h2>Requesting your Data</h2>
+            <Divider />
+
+            <p>
+                To view your data that Filatrack has collected, please fill out the contact form at the bottom of this page.
+                Please use the title "Data Request" and input the same email that you used to sign up to Filatrack.
+                Please allow us up to 2 weeks for a response.
+            </p>
+
             <h2>Cookies</h2>
             <Divider />
 
