@@ -11,6 +11,7 @@ import Button from "../base/Button";
 import Subtext from "../base/Subtext";
 import { pb } from "@/api/pb";
 import { QRSettings } from "@/types/users";
+import { createZip, getImageBlob, ZipFile } from "@/lib/util/qr";
 
 export type QRDisplayField = { title: string, render?: (f: FilamentRecord) => string, key?: keyof FilamentRecord };
 
@@ -155,6 +156,26 @@ export default function PrintFilamentQRModal({ filament, ...props }: { filament:
         tab.close();
     }
 
+    async function downloadQR() {
+        let blob: Blob;
+
+        if (qrdata.length > 1) {
+            const files: ZipFile[] = qrdata.map(data => ({
+                name: data.title,
+                url: makeUrl(data),
+                fileType: format === "PNG" ? "png" : "svg",
+            }));
+
+            blob = await createZip(files);
+        } else
+            blob = await getImageBlob(makeUrl(qrdata[0]));
+
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = qrdata.length > 1 ? "filatrack-qrcodes.zip" : `${qrdata[0].title}.${format.toLowerCase()}`;
+        a.click();
+    }
+
     return <Modal {...props} title="Print QR Code">
         <ModalHeader>Print a QR code to quickly access filament.</ModalHeader>
 
@@ -180,6 +201,7 @@ export default function PrintFilamentQRModal({ filament, ...props }: { filament:
         />
 
         <ModalFooter>
+            <Button onClick={downloadQR} className="flex gap-1 items-center">Download</Button>
             <Button onClick={printQR} className="flex gap-1 items-center">Print <ExternalLink /></Button>
         </ModalFooter>
     </Modal>;

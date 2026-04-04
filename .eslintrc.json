@@ -20,7 +20,6 @@
         "@typescript-eslint/default-param-last": "warn",
         "space-before-function-paren": ["warn", { "anonymous": "never", "named": "never", "asyncArrow": "never" }],
         "space-before-blocks": "warn",
-        "function-paren-newline": "warn",
         "prefer-arrow-callback": "warn",
         "arrow-spacing": "warn",
         "arrow-parens": ["warn", "as-needed"],
