@@ -1,6 +1,6 @@
 "use client";
 
-import { Archive, Cog, Heart, Home, Printer, Spool } from "lucide-react";
+import { Archive, Cog, Heart, Home, MessageSquareText, Printer, Spool } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 import Divider from "../base/Divider";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import { AccountCard } from "../auth/AccountCard";
 import FilamentIcon from "../filament/FilamentIcon";
 import { randomFilamentNames, randomFrom } from "@/lib/util/random";
 import { useState } from "react";
-import { FaGithub } from "react-icons/fa6";
+import { FaDiscord, FaGithub } from "react-icons/fa6";
 import { pb } from "@/api/pb";
 import { UsersRecord } from "@/types/pb";
 
@@ -55,7 +55,9 @@ export default function Sidebar() {
         </div>
 
         <div>
+            <SidebarItem href="/about/feedback"><MessageSquareText size={24} /> Feedback</SidebarItem>
             <SidebarItem href="https://github.com/mrdiamonddog/filatrack"><FaGithub size={24} /> GitHub</SidebarItem>
+            <SidebarItem href="https://discord.gg/HUjRATbH2g"><FaDiscord size={24} /> Discord</SidebarItem>
             {!user.supporter && <SidebarItem href="/about/support"
                 className="mb-2 bg-[#e41d5f26] text-[#ffb2cb]"
             >
