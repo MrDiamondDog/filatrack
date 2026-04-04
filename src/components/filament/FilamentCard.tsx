@@ -125,7 +125,7 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
             {!noninteractable && <Button className="w-full" onClick={e => {
                 e.stopPropagation();
                 setOpenModal("log");
-            }}>Print</Button>}
+            }} disabled={filament.mass <= 0}>Print</Button>}
         </div>
 
         <PrintFilamentModal
