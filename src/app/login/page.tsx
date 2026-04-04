@@ -31,6 +31,13 @@ export default function LoginPage() {
                     Sign in with GitHub
                 </SSOButton>
             </div>
+
+            <Divider />
+
+            <p className="whitespace-pre-wrap">
+                By logging in using the methods above,{"\n"}
+                you agree to Filatrack's <a href="/about/privacy-policy">Privacy Policy</a>.
+            </p>
         </main>
     </>);
 }
