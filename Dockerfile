@@ -31,7 +31,9 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm install -g corepack -f
-RUN corepack enable pnpm && pnpm run build
+RUN corepack enable pnpm
+RUN pnpm run build-types
+RUN pnpm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
