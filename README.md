@@ -20,13 +20,17 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for info on how to set up your developmen
 
 Filatrack is fully self-hostable through Docker!
 
+Linux:
 ```
 docker run -d \
   --name filatrack \
   -p 3000:3000 \
-  --env NEXT_PUBLIC_PB_URL=[put FULL pocketbase url here (with trailing slash)]
-  mrdiamonddog/filatrack:stable
+  --env NEXT_PUBLIC_PB_URL="pocketbase url"
+  mrdiamonddog/filatrack:latest
 ```
+
+Windows:
+`docker run -d --name filatrack -p 3000:3000 --env NEXT_PUBLIC_PB_URL="pocketbase url" mrdiamonddog/filatrack:latest`
 
 You'll also need to set up the Pocketbase instance to go with it. Set it up [here](https://pocketbase.io/docs/going-to-production/).
 
