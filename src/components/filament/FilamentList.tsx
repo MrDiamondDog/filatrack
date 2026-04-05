@@ -26,6 +26,7 @@ import StorageMiniCard from "../storage/StorageMiniCard";
 import { moveFilament } from "@/lib/filament";
 import PrintFilamentQRModal from "../modals/PrintFilamentQRModal";
 import { getFilamentTableKey } from "@/lib/filamentKeys";
+import { useDevice } from "@/lib/util/hooks";
 
 type Props = {
     filament: FilamentRecord[];
@@ -56,6 +57,8 @@ export default function FilamentList({
 
     if (!user)
         return null;
+
+    const [isMobile, _] = useDevice();
 
     const [view, setView] = useState<"cards" | "table">(viewLock ?? "cards");
     const [editMode, setEditMode] = useState(false);
@@ -122,40 +125,47 @@ export default function FilamentList({
     }, [filament, sortKey, search]);
 
     return <>
-        {(allowSort && view !== "table") && <div className="w-full bg-bg-light rounded-lg p-2 my-2 flex items-center gap-2">
-            <SortDesc />
+        {(allowSort && view !== "table") && <div
+            className="w-full bg-bg-light rounded-lg p-2 my-2 flex md:flex-row flex-col md:items-center gap-2"
+        >
+            <div className="flex items-center gap-2">
+                <SortDesc />
 
-            <Select
-                options={{
-                    name: "Name",
-                    color: "Color",
-                    material: "Material",
-                    brand: "Brand",
-                    updated: "Recent",
-                } as Record<keyof FilamentRecord, string>}
-                value={sortKey}
-                onChange={k => setSortKey(k as keyof FilamentRecord)}
-                placeholder="Sort By..."
-                className="w-fit!"
-            />
+                <Select
+                    options={{
+                        name: "Name",
+                        color: "Color",
+                        material: "Material",
+                        brand: "Brand",
+                        updated: "Recent",
+                    } as Record<keyof FilamentRecord, string>}
+                    value={sortKey}
+                    onChange={k => setSortKey(k as keyof FilamentRecord)}
+                    placeholder="Sort By..."
+                    className="md:w-fit!"
+                />
+            </div>
 
-            <Divider vertical />
+            {!isMobile && <Divider vertical />}
 
-            <Search />
+            <div className="flex items-center gap-2">
+                <Search />
 
-            <Input
-                placeholder="Search Filament..."
-                className="w-fit"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-            />
+                <Input
+                    placeholder="Search Filament..."
+                    className="md:w-fit w-full"
+                    containerClassName="md:w-unset w-full"
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                />
+            </div>
         </div>}
 
         {title && <>
             <div className="flex justify-between items-center">
-                <h2>{title}</h2>
+                <h2 className="w-full">{title}</h2>
 
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-2 items-center justify-end md:flex-nowrap flex-wrap">
                     {(!viewLock && !editMode) && <Tablist
                         tabs={{ cards: <Images />, table: <TableIcon /> }}
                         activeTab={view}

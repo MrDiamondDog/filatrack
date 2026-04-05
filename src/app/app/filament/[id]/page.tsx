@@ -14,6 +14,7 @@ import PrintFilamentModal from "@/components/modals/PrintFilamentModal";
 import PrintFilamentQRModal from "@/components/modals/PrintFilamentQRModal";
 import PrintList from "@/components/prints/PrintList";
 import { toastError } from "@/lib/util/error";
+import { useDevice } from "@/lib/util/hooks";
 import { celcius, grams } from "@/lib/util/units";
 import { FilamentWithPrints } from "@/types/filament";
 import { FilamentRecord, PrintsRecord, UsersRecord } from "@/types/pb";
@@ -32,6 +33,8 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
 
     const [filamentList, setFilamentList] = useState<FilamentWithPrints[]>([]);
     const [filament, setFilament] = useState<FilamentWithPrints>();
+
+    const [isMobile, _] = useDevice();
 
     const router = useRouter();
 
@@ -79,16 +82,16 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
                 <Divider />
 
                 <div className="flex items-center justify-between">
-                    <div className="flex gap-2 items-center mt-1">
+                    <div className="flex gap-2 items-center mt-1 w-full">
                         <FilamentIcon filament={filament} size={48} />
                         <h2>{filament.name}</h2>
                     </div>
 
-                    <div className="flex gap-1">
-                        <Button onClick={() => setOpenModal("delete")} look={ButtonStyles.danger}><Trash2 /></Button>
-                        <Button onClick={() => setOpenModal("edit")} look={ButtonStyles.secondary}><Pencil /></Button>
-                        <Button onClick={() => setOpenModal("qrcode")} look={ButtonStyles.secondary}><QrCode /></Button>
+                    <div className="flex md:flex-nowrap flex-wrap justify-end gap-1">
                         <Button onClick={() => setOpenModal("print")} look={ButtonStyles.primary}><Printer /></Button>
+                        <Button onClick={() => setOpenModal("qrcode")} look={ButtonStyles.secondary}><QrCode /></Button>
+                        <Button onClick={() => setOpenModal("edit")} look={ButtonStyles.secondary}><Pencil /></Button>
+                        <Button onClick={() => setOpenModal("delete")} look={ButtonStyles.danger}><Trash2 /></Button>
                     </div>
                 </div>
 
@@ -96,32 +99,45 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
 
                 <Divider />
 
-                <div className="flex gap-1">
+                <div className="md:flex grid grid-cols-2 gap-1">
                     <div className="text-center"><Subtext>Material</Subtext> {filament.material}</div>
-                    <Divider vertical />
+
+                    {!isMobile && <Divider vertical />}
+
                     {filament.brand && <>
                         <div className="text-center"><Subtext>Brand</Subtext> {filament.brand}</div>
-                        <Divider vertical />
+
+                        {!isMobile && <Divider vertical />}
                     </>}
+
                     <div className="text-center">
                         <Subtext>Mass</Subtext>
                         {grams((filament.mass ?? 0))}/{grams(filament.initialMass)}
                     </div>
-                    <Divider vertical />
+
+                    {!isMobile && <Divider vertical />}
+
                     {!!filament.nozzleTemperature && <>
                         <div className="text-center"><Subtext>Nozzle Temp.</Subtext> {celcius(filament.nozzleTemperature)}</div>
-                        <Divider vertical />
+
+                        {!isMobile && <Divider vertical />}
                     </>}
+
                     {!!filament.bedTemperature && <>
                         <div className="text-center"><Subtext>Bed Temp.</Subtext> {celcius(filament.bedTemperature)}</div>
-                        <Divider vertical />
+
+                        {!isMobile && <Divider vertical />}
                     </>}
+
                     {!!filament.diameter && <>
                         <div className="text-center"><Subtext>Diameter</Subtext> {filament.diameter}mm</div>
-                        <Divider vertical />
+
+                        {!isMobile && <Divider vertical />}
                     </>}
+
                     <div className="text-center"><Subtext>Total Prints</Subtext> {filament.prints?.length}</div>
-                    <Divider vertical />
+
+                    {!isMobile && <Divider vertical />}
                 </div>
                 <Divider />
 

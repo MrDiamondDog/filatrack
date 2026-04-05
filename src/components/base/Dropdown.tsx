@@ -76,7 +76,10 @@ export function DropdownSub({ children }: React.PropsWithChildren) {
 
 export function DropdownSubTrigger({ asChild, children }: { asChild?: boolean } & React.PropsWithChildren) {
     return (
-        <DropdownMenuSubTrigger asChild={asChild}>
+        <DropdownMenuSubTrigger
+            asChild={asChild}
+            className={`px-2 py-1 rounded-lg data-disabled:text-gray-400!
+                not-data-disabled:cursor-pointer outline-none transition-all not-data-disabled:hover:bg-bg-lightest`}>
             {children}
         </DropdownMenuSubTrigger>
     );

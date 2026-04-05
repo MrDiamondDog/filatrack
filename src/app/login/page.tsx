@@ -16,7 +16,7 @@ export default function LoginPage() {
     return (<Suspense fallback={<Spinner />}>
         <LandingBackground />
 
-        <main className="absolute-center bg-bg-light rounded-lg p-4">
+        <main className="absolute-center bg-bg-light rounded-lg p-4 md:w-fit w-3/4">
             <h2 className="text-center w-full">Login</h2>
 
             <Divider />
@@ -32,10 +32,7 @@ export default function LoginPage() {
 
             <Divider />
 
-            <p className="whitespace-pre-wrap">
-                By logging in using the methods above,{"\n"}
-                you agree to Filatrack's <a href="/about/privacy-policy">Privacy Policy</a>.
-            </p>
+            <a href="/about/privacy-policy">Privacy Policy</a>
         </main>
     </Suspense>);
 }

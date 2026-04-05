@@ -13,7 +13,7 @@ const lexend = Lexend({
 
 export const metadata: Metadata = {
     title: "Filatrack - Simple Filament Tracking",
-    description: "Super-simple tracking of all your 3d printing filaments!",
+    description: "The simplest 3d printing filament tracker. Free forever, no ads, open-source, self-hostable!!",
     icons: [
         {
             url: "/favicon-96x96.png",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     keywords: ["filament", "3d printing", "tracker", "spool", "pla", "filament tracking", "track filament"],
     openGraph: {
         title: "Filatrack",
-        description: "A super-simple way to keep inventory of your filament rolls.",
+        description: "The simplest way to track 3d printing filament!",
         url: prodUrl,
         siteName: "Filatrack",
         images: [

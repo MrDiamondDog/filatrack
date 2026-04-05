@@ -111,43 +111,49 @@ export default function SettingsPage() {
             <Tablist tabs={{ account: "Account", preferences: "Preferences", appearance: "Appearance" }} activeTab="account">
                 <Tab name="account" className="max-w-300">
                     <div className="bg-bg-light rounded-lg p-4 flex gap-2 w-fit mt-2 items-center">
-                        <div className="relative w-full">
-                            <img src={pb.files.getURL(userData, userData.avatar!)} className="rounded-full size-30 object-cover" />
-                            <div className={`absolute inset-0 rounded-full opacity-0 hover:opacity-100 
-                                transition-opacity bg-[#000000a4] cursor-pointer`}
-                            onClick={() => setOpenModal("avatar")}>
-                                <Pencil size={32} className="absolute-center" />
-                            </div>
-                        </div>
                         <div className="w-full">
-                            <div className="flex gap-2 items-center">
-                                {!editing && <h2>{userData.name}</h2>}
-                                {editing && <Input value={usernameInput} onChange={e => setUsernameInput(e.target.value)} />}
+                            <div className="w-full flex gap-3 items-center">
+                                <div className="relative">
+                                    <img src={pb.files.getURL(userData, userData.avatar!)}
+                                        className="rounded-full size-20 object-cover"
+                                    />
+                                    <div className={`absolute inset-0 rounded-full opacity-0 hover:opacity-100 
+                                transition-opacity bg-[#000000a4] cursor-pointer`}
+                                    onClick={() => setOpenModal("avatar")}>
+                                        <Pencil size={32} className="absolute-center" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="flex gap-2 items-center">
+                                        {!editing && <h2>{userData.name}</h2>}
+                                        {editing && <Input value={usernameInput} onChange={e => setUsernameInput(e.target.value)} />}
 
-                                {!editing && <Pencil
-                                    className="text-gray-500 cursor-pointer"
-                                    onClick={() => setEditing(true)}
-                                />}
-                                {editing && <>
-                                    <Save
-                                        className="text-primary cursor-pointer"
-                                        onClick={() => {
-                                            setEditing(false);
-                                            updateSettings({ name: usernameInput });
-                                        }}
-                                    />
-                                    <X
-                                        className="text-danger cursor-pointer"
-                                        onClick={() => {
-                                            setEditing(false);
-                                            setUsernameInput(userData.name);
-                                        }}
-                                    />
-                                </>}
-                            </div>
-                            <div className="flex gap-1 items-center">
-                                {userData.supporter && <UserTag hexColor="#ffb2cb"><Heart size={16} /> Supporter</UserTag>}
-                                {userData.legacy && <UserTag hexColor="#0dd599"><Spool size={16} /> Early User</UserTag>}
+                                        {!editing && <Pencil
+                                            className="text-gray-500 cursor-pointer"
+                                            onClick={() => setEditing(true)}
+                                        />}
+                                        {editing && <>
+                                            <Save
+                                                className="text-primary cursor-pointer"
+                                                onClick={() => {
+                                                    setEditing(false);
+                                                    updateSettings({ name: usernameInput });
+                                                }}
+                                            />
+                                            <X
+                                                className="text-danger cursor-pointer"
+                                                onClick={() => {
+                                                    setEditing(false);
+                                                    setUsernameInput(userData.name);
+                                                }}
+                                            />
+                                        </>}
+                                    </div>
+                                    <div className="flex gap-1 items-center md:flex-nowarp flex-wrap">
+                                        {userData.supporter && <UserTag hexColor="#ffb2cb"><Heart size={16} /> Supporter</UserTag>}
+                                        {userData.legacy && <UserTag hexColor="#0dd599"><Spool size={16} /> Early User</UserTag>}
+                                    </div>
+                                </div>
                             </div>
                             <Divider />
                             <div className="w-full flex">

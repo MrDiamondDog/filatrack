@@ -18,8 +18,8 @@ export default function PrintPage() {
         return null;
 
     const [openModal, setOpenModal] = useState("");
-    const [prints, setPrints] = useState<PrintsRecord[]>([]);
-    const [filament, setFilament] = useState<FilamentRecord[]>([]);
+    const [prints, setPrints] = useState<PrintsRecord[]>();
+    const [filament, setFilament] = useState<FilamentRecord[]>();
 
     useEffect(() => {
         pb.collection("prints").getFullList({ filter: `user.id = "${user.id}"` })
@@ -40,11 +40,15 @@ export default function PrintPage() {
         </div>
         <Divider />
 
-        <PrintList prints={prints} filament={filament} />
-        {!prints.length && <p className="w-full text-center">
+        {(prints && filament) && <PrintList prints={prints} filament={filament} />}
+        {!prints?.length && <p className="w-full text-center">
             You haven't logged any prints yet. Press the + in the top right to get started!
         </p>}
 
-        <CreatePrintModal open={openModal === "print"} onClose={() => setOpenModal("")} onCreate={p => setPrints([...prints, p])} />
+        <CreatePrintModal
+            open={openModal === "print"}
+            onClose={() => setOpenModal("")}
+            onCreate={p => setPrints([...(prints ?? []), p])}
+        />
     </MotionContainer>);
 }

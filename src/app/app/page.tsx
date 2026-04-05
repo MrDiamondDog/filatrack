@@ -10,6 +10,7 @@ import FilamentList from "@/components/filament/FilamentList";
 import ScanQRModal from "@/components/modals/ScanQRModal";
 import StorageList from "@/components/storage/StorageList";
 import { toastError } from "@/lib/util/error";
+import { useDevice } from "@/lib/util/hooks";
 import { FilamentPresetsRecord, FilamentRecord } from "@/types/pb";
 import { StorageWithFilament } from "@/types/storage";
 import { ScanLine } from "lucide-react";
@@ -20,6 +21,8 @@ export default function DashboardPage() {
 
     if (!user)
         return null;
+
+    const [isMobile, _] = useDevice();
 
     const [filament, setFilament] = useState<FilamentRecord[]>([]);
     const [storages, setStorages] = useState<StorageWithFilament[]>([]);
@@ -53,8 +56,10 @@ export default function DashboardPage() {
             <h1>Dashboard</h1>
 
             <div className="flex gap-2">
-                <Button className="flex gap-1 items-center" onClick={() => setOpenModal("scan")}><ScanLine /> Scan</Button>
-                <CreateButton onFilamentCreate={f => setFilament([...filament, f])} storages={storages} />
+                <Button className="flex gap-1 items-center" onClick={() => setOpenModal("scan")}>
+                    <ScanLine size={32} /> {!isMobile && "Scan"}
+                </Button>
+                <CreateButton onFilamentCreate={f => setFilament([...filament, f])} storages={storages} presets={presets} />
             </div>
         </div>
 

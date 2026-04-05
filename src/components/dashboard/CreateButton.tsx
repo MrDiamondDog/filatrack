@@ -6,22 +6,25 @@ import Button from "../base/Button";
 import { useState } from "react";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 import CreateStorageModal from "../modals/CreateStorageModal";
-import { FilamentRecord, StorageResponse } from "@/types/pb";
+import { FilamentPresetsRecord, FilamentRecord, StorageResponse } from "@/types/pb";
 import { StorageWithFilament } from "@/types/storage";
+import { useDevice } from "@/lib/util/hooks";
 
 type Props = {
     onFilamentCreate?: (f: FilamentRecord) => void;
     onStorageCreate?: (s: StorageResponse) => void;
     storages: StorageWithFilament[];
+    presets: FilamentPresetsRecord[];
 };
 
-export default function CreateButton({ onFilamentCreate, onStorageCreate, storages }: Props) {
+export default function CreateButton({ onFilamentCreate, onStorageCreate, storages, presets }: Props) {
+    const [isMobile, _] = useDevice();
     const [openModal, setOpenModal] = useState("");
 
     return <>
         <Dropdown>
             <DropdownTrigger asChild>
-                <Button className="h-full flex items-center justify-center gap-1"><Plus size={32} /> New</Button>
+                <Button className="h-full flex items-center justify-center gap-1"><Plus size={32} /> {!isMobile && "New"}</Button>
             </DropdownTrigger>
             <DropdownContent>
                 <DropdownItem onClick={() => setOpenModal("filament")} className="flex gap-1 items-center">

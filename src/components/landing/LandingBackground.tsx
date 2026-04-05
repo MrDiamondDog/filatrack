@@ -1,5 +1,6 @@
 "use client";
 
+import { useDevice } from "@/lib/util/hooks";
 import { randomFrom, randomInt } from "@/lib/util/random";
 import { useEffect, useRef, useState } from "react";
 
@@ -171,6 +172,7 @@ function initCanvas(ctx: CanvasRenderingContext2D) {
 export default function LandingBackground() {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [hasInit, setHasInit] = useState(false);
+    const [isMobile, _] = useDevice();
 
     useEffect(() => {
         if (!canvasRef.current || hasInit)
@@ -195,5 +197,8 @@ export default function LandingBackground() {
         };
     }, []);
 
-    return <canvas ref={canvasRef} className="bottom-fade absolute-center w-full h-full motion-reduce:hidden opacity-50" />;
+    if (isMobile)
+        return null;
+
+    return <canvas ref={canvasRef} className="bottom-fade absolute-center w-full h-full motion-reduce:hidden opacity-50 -z-10" />;
 }

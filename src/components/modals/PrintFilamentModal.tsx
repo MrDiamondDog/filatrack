@@ -76,7 +76,7 @@ export default function PrintFilamentModal({ filament, onPrintCreate, ...props }
             If you want to make a print with multiple filaments, go <Link href="/app/prints">here</Link>.
         </ModalHeader>
 
-        <div className="flex gap-2">
+        <div className="flex md:flex-row flex-col items-center gap-2">
             <FilamentCard filament={filament} noninteractable className="bg-bg-lighter" storagesList={[]} />
 
             <div>
@@ -100,7 +100,7 @@ export default function PrintFilamentModal({ filament, onPrintCreate, ...props }
                     onChange={e => setPrint({ label: e.target.value })}
                 />
 
-                <p>You will have
+                <p>You will have{" "}
                     {grams((filament.mass ?? 0) - (print.totalFilamentUsed ?? 0))}/{grams(filament.initialMass)} remaining.
                 </p>
             </div>

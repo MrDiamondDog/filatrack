@@ -25,6 +25,7 @@ export function MobileSidebar() {
 
 export default function Sidebar() {
     const [isMobile, _] = useDevice();
+    const [iconColor, setIconColor] = useState(randomFrom(Object.keys(randomFilamentNames)));
 
     if (isMobile)
         return <MobileSidebar />;
@@ -33,8 +34,6 @@ export default function Sidebar() {
 
     if (!user)
         return null;
-
-    const [iconColor, setIconColor] = useState(randomFrom(Object.keys(randomFilamentNames)));
 
     return (<div className="h-screen w-50 bg-bg-light p-2 px-4 fixed flex flex-col justify-between">
         <div>

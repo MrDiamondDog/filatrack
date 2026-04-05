@@ -63,12 +63,10 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                 <DropdownContent>
                     <DropdownItem onClick={() => setOpenModal("edit")}>Edit</DropdownItem>
                     <DropdownSub>
-                        <DropdownSubTrigger asChild>
-                            <DropdownItem
-                                className="flex justify-between items-center pr-0"
-                            >
+                        <DropdownSubTrigger>
+                            <div className="flex justify-between items-center pr-0">
                                 Move <ChevronRight size={20} className="text-gray-500" />
-                            </DropdownItem>
+                            </div>
                         </DropdownSubTrigger>
                         <DropdownSubContent>
                             {storagesList && storagesList.map(s => <DropdownItem

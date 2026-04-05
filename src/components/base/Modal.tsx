@@ -36,8 +36,8 @@ export default function Modal({ children, title, open, onClose, danger }: Props)
 
             {open && <motion.div
                 key="content"
-                className={`fixed top-1/2 left-1/2 -translate-1/2 bg-bg-light rounded-lg min-h-25 max-h-[95vh] overflow-scroll
-                    border-2 ${danger ? "border-danger" : "border-primary"} px-4 py-3 z-110`}
+                className={`fixed top-1/2 left-1/2 -translate-1/2 bg-bg-light rounded-lg min-h-25 max-h-[95vh] md:w-fit w-[98vw]
+                    overflow-scroll border-2 ${danger ? "border-danger" : "border-primary"} px-4 py-3 z-110`}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0 }}
