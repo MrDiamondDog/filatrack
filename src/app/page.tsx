@@ -27,17 +27,17 @@ export default function Home() {
     return (<>
         <LandingBackground />
 
-        <div className="absolute-center">
-            <div className="flex gap-4 items-center">
+        <div className="absolute-center md:w-fit w-[90vw]">
+            <div className="flex md:flex-row flex-col md:gap-4 items-center md:w-fit w-full">
                 <RotatingFilament />
-                <div>
+                <div className="md:w-fit w-full md:text-left text-center">
                     <h1>Filatrack</h1>
-                    <Subtext className="whitespace-pre-wrap">
+                    <Subtext className="md:whitespace-pre-wrap">
                         The simplest filament tracker for 3d printing.{"\n"}
                         No ads, free-forever, open-source, and self-hostable.
                     </Subtext>
 
-                    <div className="flex gap-2 mt-1 *:w-full *:*:w-full">
+                    <div className="flex md:flex-row flex-col gap-2 mt-1 *:w-full *:*:w-full">
                         <Link href="/#About" className="unstyled">
                             <Button look={ButtonStyles.secondary}>Learn More <ArrowRight /></Button>
                         </Link>
