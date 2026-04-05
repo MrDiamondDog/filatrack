@@ -3,19 +3,17 @@
 import { pb } from "@/api/pb";
 import SSOButton from "@/components/auth/SSOButton";
 import Divider from "@/components/base/Divider";
+import Spinner from "@/components/base/Spinner";
 import LandingBackground from "@/components/landing/LandingBackground";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { FaGoogle, FaGithub } from "react-icons/fa6";
 
 export default function LoginPage() {
-    const searchParams = useSearchParams();
-
     useEffect(() => {
         pb.authStore.clear();
     }, []);
 
-    return (<>
+    return (<Suspense fallback={<Spinner />}>
         <LandingBackground />
 
         <main className="absolute-center bg-bg-light rounded-lg p-4">
@@ -24,10 +22,10 @@ export default function LoginPage() {
             <Divider />
 
             <div className="flex flex-col gap-2">
-                <SSOButton provider="google" icon={<FaGoogle />} redirect={searchParams.get("to") ?? undefined}>
+                <SSOButton provider="google" icon={<FaGoogle />}>
                     Sign in with Google
                 </SSOButton>
-                <SSOButton provider="github" icon={<FaGithub />} redirect={searchParams.get("to") ?? undefined}>
+                <SSOButton provider="github" icon={<FaGithub />}>
                     Sign in with GitHub
                 </SSOButton>
             </div>
@@ -39,5 +37,5 @@ export default function LoginPage() {
                 you agree to Filatrack's <a href="/about/privacy-policy">Privacy Policy</a>.
             </p>
         </main>
-    </>);
+    </Suspense>);
 }

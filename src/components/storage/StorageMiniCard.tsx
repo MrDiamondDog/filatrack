@@ -3,7 +3,7 @@ import Subtext from "../base/Subtext";
 import { grams } from "@/lib/util/units";
 
 export default function StorageMiniCard({ storage }: { storage: StorageWithFilament }) {
-    const totalMass = storage.expand?.filament?.reduce((prev, curr) => prev + curr.mass, 0) ?? 0;
+    const totalMass = storage.expand?.filament?.reduce((prev, curr) => prev + (curr.mass ?? 0), 0) ?? 0;
     const totalInitialMass = storage.expand?.filament?.reduce((prev, curr) => prev + curr.initialMass, 0) ?? 0;
 
     return (<div className="relative w-full">

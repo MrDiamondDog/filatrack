@@ -30,7 +30,7 @@ export default function FilamentChart({ filament }: { filament: FilamentRecord[]
         if (chartMode === "color") {
             const colors: Record<string, number> = {};
 
-            filament.forEach(f => (colors[f.color] ? colors[f.color] += f.mass : colors[f.color] = f.mass));
+            filament.forEach(f => (colors[f.color] ? (colors[f.color] += (f.mass ?? 0)) : (colors[f.color] = f.mass ?? 0)));
 
             setChartData(Object.keys(colors).map(k => ({
                 value: colors[k],
@@ -40,7 +40,8 @@ export default function FilamentChart({ filament }: { filament: FilamentRecord[]
         } else if (chartMode === "brand") {
             const brands: Record<string, number> = {};
 
-            filament.forEach(f => (brands[f.brand ?? "N/A"] ? brands[f.brand ?? "N/A"] += f.mass : brands[f.brand ?? "N/A"] = f.mass));
+            filament.forEach(f => (brands[f.brand ?? "N/A"] ?
+                (brands[f.brand ?? "N/A"] += f.mass ?? 0) : (brands[f.brand ?? "N/A"] = f.mass ?? 0)));
 
             setChartData(Object.keys(brands).map(k => ({
                 value: brands[k],
@@ -49,7 +50,8 @@ export default function FilamentChart({ filament }: { filament: FilamentRecord[]
         } else if (chartMode === "material") {
             const materials: Record<string, number> = {};
 
-            filament.forEach(f => (materials[f.material] ? materials[f.material] += f.mass : materials[f.material] = f.mass));
+            filament.forEach(f => (materials[f.material] ?
+                (materials[f.material] += f.mass ?? 0) : (materials[f.material] = f.mass ?? 0)));
 
             setChartData(Object.keys(materials).map(k => ({
                 value: materials[k],
@@ -84,7 +86,7 @@ export default function FilamentChart({ filament }: { filament: FilamentRecord[]
             className="[&_path]:stroke-bg-light! [&_text]:fill-white! [&_text]:text-shadow-md [&_text]:text-shadow-black"
         >
             <PieCenterLabel>
-                {grams(filament.map(f => f.mass).reduce((prev, curr) => prev + curr, 0))}{"\n"}
+                {grams(filament.map(f => (f.mass ?? 0)).reduce((prev, curr) => prev + curr, 0))}{"\n"}
                 / {grams(filament.map(f => f.initialMass).reduce((prev, curr) => prev + curr, 0))}
             </PieCenterLabel>
         </PieChart>

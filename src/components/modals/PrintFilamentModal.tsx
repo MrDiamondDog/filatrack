@@ -48,7 +48,7 @@ export default function PrintFilamentModal({ filament, onPrintCreate, ...props }
 
         await pb.collection("filament").update(filament.id, {
             prints: [...filament.prints ?? [], newPrint.id],
-            mass: filament.mass - print.totalFilamentUsed,
+            mass: (filament.mass ?? 0) - print.totalFilamentUsed,
         })
             .then(() => {
                 setLoading(false);
@@ -100,7 +100,9 @@ export default function PrintFilamentModal({ filament, onPrintCreate, ...props }
                     onChange={e => setPrint({ label: e.target.value })}
                 />
 
-                <p>You will have {grams(filament.mass - (print.totalFilamentUsed ?? 0))}/{grams(filament.initialMass)} remaining.</p>
+                <p>You will have
+                    {grams((filament.mass ?? 0) - (print.totalFilamentUsed ?? 0))}/{grams(filament.initialMass)} remaining.
+                </p>
             </div>
         </div>
 

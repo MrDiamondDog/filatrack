@@ -20,7 +20,7 @@ type Props = {
 export default function StorageCard({ storage, noninteractable, onDelete, onModify }: Props) {
     const [filament, setFilament] = useState(storage.expand?.filament ?? []);
 
-    const totalMass = filament.reduce((prev, curr) => prev + curr.mass, 0);
+    const totalMass = filament.reduce((prev, curr) => prev + (curr.mass ?? 0), 0);
     const totalInitialMass = filament.reduce((prev, curr) => prev + curr.initialMass, 0);
 
     const [openModal, setOpenModal] = useState("");

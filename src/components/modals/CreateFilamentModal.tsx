@@ -174,7 +174,10 @@ export default function CreateFilamentModal(props: Props) {
             </Drawer>
 
             <Drawer label="Spool Details" open={drawer === 1} onChange={open => setDrawer(open ? 1 : -1)}>
-                <FilamentMassPicker values={filament} onChange={v => setFilament({ ...v })} />
+                <FilamentMassPicker
+                    values={{ mass: filament.mass ?? 0, initialMass: filament.initialMass }}
+                    onChange={v => setFilament({ ...v })}
+                />
 
                 <Divider />
 
