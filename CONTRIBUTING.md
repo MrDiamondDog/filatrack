@@ -1,9 +1,5 @@
 # Contributing
 
-> [!WARNING]
-> Filatrack is currently undergoing a major overhaul. Many things you would make PRs for are already being worked on.
-> If you have something you want to PR, please let me know in the Discord first!
-
 Thank you for your interest in contributing to Filatrack! Please follow this guide before making your first pull request.
 
 ## Guidelines
@@ -30,4 +26,4 @@ You'll need to set up a Pocketbase instance for anything to work.
 - It should open a browser with a superuser sign up. Put in whatever info you want, this is a local instance.
 - Go to Settings > Import Collections, and import the `pb_schema.json`.
 - Go to the `users` collection and set up Google and/or GitHub OAuth.
-- Run `pnpm dlx pocketbase-typegen --json pb_schema.json` to generate Typescript types.
+- Run `pnpm build-types` to generate Typescript types.

@@ -6,7 +6,7 @@ A super-duper simple way to track your 3d printing filament!
 
 Made with Next.JS and Pocketbase!
 
-Join the [Discord server](https://filatrack.app/discord) for more info and feature requests!
+Join the [Discord server](https://discord.gg/HUjRATbH2g) for more info and feature requests!
 
 ## Bugs
 
@@ -20,13 +20,15 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for info on how to set up your developmen
 
 Filatrack is fully self-hostable through Docker!
 
-- `git clone https://github.com/MrDiamondDog/filatrack`
-- `docker build -t filatrack .`
-- `docker run -p 3000:3000 filatrack`
-- http://localhost:3000/
+```
+docker run -d \
+  --name filatrack \
+  -p 3000:3000 \
+  --env NEXT_PUBLIC_PB_URL=[put FULL pocketbase url here (with trailing slash)]
+  mrdiamonddog/filatrack:stable
+```
 
-You'll also need to set up the Pocketbase instance to go with it. Set it up [here](https://pocketbase.io/docs/going-to-production/),
-then make sure to set up the .env file.
+You'll also need to set up the Pocketbase instance to go with it. Set it up [here](https://pocketbase.io/docs/going-to-production/).
 
 ## Star History
 
