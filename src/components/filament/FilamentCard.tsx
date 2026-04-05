@@ -2,8 +2,7 @@
 
 import FilamentIcon from "./FilamentIcon";
 import Subtext from "../base/Subtext";
-import { celcius, grams } from "@/lib/util/units";
-import { Archive, BedSingle, Box, ChevronRight, Diameter, EllipsisVertical, Thermometer, Weight } from "lucide-react";
+import { Archive, ChevronRight, EllipsisVertical } from "lucide-react";
 import CardDetail from "../util/CardDetail";
 import { useState } from "react";
 import PrintFilamentModal from "../modals/PrintFilamentModal";
@@ -13,8 +12,7 @@ import { Dropdown, DropdownContent, DropdownItem, DropdownSub, DropdownSubConten
     from "../base/Dropdown";
 import { DeleteModal } from "../modals/DeleteModal";
 import FilamentMiniRow from "./FilamentMiniRow";
-import { deleteFilament, moveFilament } from "@/lib/filament";
-import { toast } from "sonner";
+import { moveFilament } from "@/lib/filament";
 import Link from "next/link";
 import Spinner from "../base/Spinner";
 import Button from "../base/Button";
@@ -22,6 +20,8 @@ import { StorageWithFilament } from "@/types/storage";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 import { pb } from "@/api/pb";
 import PrintFilamentQRModal from "../modals/PrintFilamentQRModal";
+import { toastError } from "@/lib/util/error";
+import { getFilamentCardKey } from "@/lib/filamentKeys";
 
 type Props = {
     filament: FilamentRecord;
@@ -49,7 +49,7 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
             <div className="absolute top-0 left-0 right-0 w-full h-1 bg-bg-lighter">
                 <div
                     className="absolute h-full bg-primary rounded-full"
-                    style={{ width: `${filament.mass / filament.initialMass * 100}%` }}
+                    style={{ width: `${(filament.mass ?? 0) / filament.initialMass * 100}%` }}
                 />
             </div>
 
@@ -104,35 +104,45 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                     {filament.name}
                 </p>
                 {user?.advancedView && <p className="text-xs text-gray-500">{filament.id}</p>}
-                <Subtext>{filament.brand}</Subtext>
 
                 <div className="flex flex-col mb-2 items-center w-full *:justify-center">
-                    {(filament.storage && storagesList && !!storagesList.length) &&
+                    {(
+                        filament.storage && storagesList && !!storagesList.length &&
+                        ((user?.shownFilamentCardKeys as string[]) ?? []).includes("storage")
+                    ) &&
                         <CardDetail icon={<Archive size={20} />}>
                             {storagesList.find(s => s.id === filament.storage)?.name!}
-                        </CardDetail>}
-                    <CardDetail icon={<Weight size={20} />}>{grams(filament.mass)}/{grams(filament.initialMass)}</CardDetail>
-                    <CardDetail icon={<Box size={20} />}>{filament.material}</CardDetail>
-                    {!!filament.nozzleTemperature &&
-                        <CardDetail icon={<Thermometer size={20} />}>{celcius(filament.nozzleTemperature)}</CardDetail>}
-                    {!!filament.bedTemperature &&
-                        <CardDetail icon={<BedSingle size={20} />}>{celcius(filament.bedTemperature)}</CardDetail>}
-                    {!!filament.diameter &&
-                        <CardDetail icon={<Diameter size={20} /> }>{filament.diameter}mm</CardDetail>}
+                        </CardDetail>
+                    }
+
+                    {((user?.shownFilamentCardKeys as string[]) ?? []).map(key => {
+                        const keyData = getFilamentCardKey(key);
+                        if (!keyData || keyData.customRender)
+                            return null;
+                        // Return null if there is no data to display
+                        if ((keyData.render && !keyData.render(filament)) || (!filament[key as keyof FilamentRecord]))
+                            return null;
+                        return <CardDetail icon={keyData.icon} key={key}>
+                            {keyData.render ?
+                                (keyData.render(filament)!) :
+                                (`${filament[key as keyof FilamentRecord]}`)
+                            }
+                        </CardDetail>;
+                    })}
                 </div>
             </Link>
 
             {!noninteractable && <Button className="w-full" onClick={e => {
                 e.stopPropagation();
                 setOpenModal("log");
-            }} disabled={filament.mass <= 0}>Print</Button>}
+            }} disabled={(filament.mass ?? 0) <= 0}>Print</Button>}
         </div>
 
         <PrintFilamentModal
             open={openModal === "log"}
             onClose={() => setOpenModal("")}
             filament={filament}
-            onPrintCreate={p => onModify?.({ ...filament, mass: filament.mass - p.totalFilamentUsed })}
+            onPrintCreate={p => onModify?.({ ...filament, mass: (filament.mass ?? 0) - p.totalFilamentUsed })}
         />
 
         <PrintFilamentQRModal
@@ -147,7 +157,8 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
             object="Filament"
             preview={<div className="bg-bg-lighter rounded-lg p-2"><FilamentMiniRow filament={filament} /></div>}
             onDelete={() => {
-                deleteFilament(filament).catch(e => toast.error("Failed to delete filament", { description: e.message }));
+                pb.collection("filament").delete(filament.id)
+                    .catch(e => toastError("Could not delete filament", e));
                 onDelete?.();
                 setOpenModal("");
             }}

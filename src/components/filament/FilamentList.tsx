@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { ArchiveRestore, Images, Pencil, Plus, QrCode, Search, SortDesc, TableIcon, Trash2, X } from "lucide-react";
 import Table, { EmptyCell } from "../base/Table";
 import { sortFn as colorSort } from "color-sorter";
-import { grams } from "@/lib/util/units";
 import { FilamentPresetsRecord, FilamentRecord, UsersRecord } from "@/types/pb";
 import Button, { ButtonStyles } from "../base/Button";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
@@ -26,6 +25,7 @@ import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../bas
 import StorageMiniCard from "../storage/StorageMiniCard";
 import { moveFilament } from "@/lib/filament";
 import PrintFilamentQRModal from "../modals/PrintFilamentQRModal";
+import { getFilamentTableKey } from "@/lib/filamentKeys";
 
 type Props = {
     filament: FilamentRecord[];
@@ -233,21 +233,26 @@ export default function FilamentList({
                     { label: "Name", key: "name" },
                     {
                         label: "Color", key: "color",
-                        render: data => <div style={{ backgroundColor: data.color }} className="p-2 rounded-lg w-full h-full" />,
+                        render: data => <div style={{ backgroundColor: data.color }} className="p-2 rounded-lg h-full w-20" />,
                         sort: (a, b) => colorSort(a as string, b as string),
                     },
-                    { label: "Mass", key: "mass", render: data => grams(data.mass) },
-                    { label: "Initial Mass", key: "initialMass", render: data => grams(data.initialMass) },
-                    { label: "Material", key: "material" },
-                    { label: "Brand", key: "brand" },
-                    {
-                        label: "Nozzle Temp.", key: "nozzleTemperature",
-                        render: data => (data.nozzleTemperature ? `${data.nozzleTemperature}°C` : <EmptyCell />),
-                    },
-                    {
-                        label: "Diameter", key: "diameter",
-                        render: data => (data.diameter ? `${data.diameter}mm` : <EmptyCell />),
-                    },
+                    (((user.shownFilamentTableKeys as string[]) ?? []).includes("storage") ? {
+                        label: "Storage",
+                        key: "storage",
+                        render: data => storagesList.find(s => s.id === data.storage)?.name ?? <EmptyCell />,
+                        // TODO: sort this properly (hard)
+                    } : null),
+                    ...((user.shownFilamentTableKeys as string[]) ?? []).map(key => {
+                        const filamentKey = getFilamentTableKey(key);
+                        if (!filamentKey || filamentKey.customRender)
+                            return null;
+
+                        return {
+                            label: filamentKey.title,
+                            key: filamentKey.key,
+                            render: filamentKey.render,
+                        };
+                    }),
                 ]}
                 data={filament}
                 rowClassName="cursor-pointer hover:bg-bg-lighter transition-colors"

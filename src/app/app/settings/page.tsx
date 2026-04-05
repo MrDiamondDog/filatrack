@@ -17,7 +17,8 @@ import CreateFilamentPresetModal from "@/components/modals/CreateFilamentPresetM
 import { QRFieldSelector } from "@/components/modals/PrintFilamentQRModal";
 import UserTag from "@/components/settings/UserTag";
 import { logout } from "@/lib/auth";
-import { deleteFromArray, modifyArrayItem } from "@/lib/util/array";
+import { filamentCardKeys, filamentTableKeys, getFilamentCardKey, getFilamentTableKey } from "@/lib/filamentKeys";
+import { deleteFromArray, modifyArrayItem, moveArrayItem } from "@/lib/util/array";
 import { toastError } from "@/lib/util/error";
 import { useObjectState } from "@/lib/util/hooks";
 import {
@@ -30,9 +31,20 @@ import {
 } from "@/types/pb";
 import { QRSettings } from "@/types/users";
 import { startHolyLoader, stopHolyLoader } from "holy-loader";
-import { Heart, Pencil, Plus, Save, Spool, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Heart, Pencil, Plus, Save, Spool, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
+function FilamentKeyField({ title, onMove, onDelete }: { title: string, onMove: (dir: "up" | "down") => void, onDelete: () => void }) {
+    return (<div className="flex items-center justify-between">
+        <p>{title}</p>
+        <div className="flex gap-1 items-center text-gray-500 *:cursor-pointer">
+            <ChevronUp size={20} onClick={() => onMove("up")} />
+            <ChevronDown size={20} onClick={() => onMove("down")} />
+            <Trash2 size={20} onClick={onDelete} />
+        </div>
+    </div>);
+}
 
 export default function SettingsPage() {
     const user = pb.authStore.record as unknown as UsersRecord | null;
@@ -98,7 +110,7 @@ export default function SettingsPage() {
 
     return (<>
         <MotionContainer>
-            <Tablist tabs={{ account: "Account", preferences: "Preferences" }} activeTab="account">
+            <Tablist tabs={{ account: "Account", preferences: "Preferences", appearance: "Appearance" }} activeTab="account">
                 <Tab name="account" className="max-w-300">
                     <div className="bg-bg-light rounded-lg p-4 flex gap-2 w-fit mt-2 items-center">
                         <img src={pb.files.getURL(userData, userData.avatar!)} className="rounded-full size-30" />
@@ -204,37 +216,6 @@ export default function SettingsPage() {
                                 })}
                             />
                         </div>
-
-                        <Divider />
-
-                        <h2 className="mt-2">Units</h2>
-                        <Subtext>The default units that Filatrack will display.</Subtext>
-
-                        <Divider />
-
-                        <p>Temperature</p>
-                        <Select
-                            options={{ c: "°C", f: "°F" }}
-                            value={userData.tempUnit}
-                            onChange={v => updateSettings({ tempUnit: v as UsersTempUnitOptions })}
-                        />
-
-                        <p>Mass</p>
-                        <Select
-                            options={{ g: "g", lb: "lb" }}
-                            value={userData.massUnit}
-                            onChange={v => updateSettings({ massUnit: v as UsersMassUnitOptions })}
-                        />
-                        {userData.massUnit === "lb" && <Subtext className="text-[12px]">
-                            Why did I make this an option...
-                        </Subtext>}
-
-                        <p>Length</p>
-                        <Select
-                            options={{ mm: "mm", in: "in" }}
-                            value={userData.lengthUnit}
-                            onChange={v => updateSettings({ lengthUnit: v as UsersLengthUnitOptions })}
-                        />
                     </div>
                     <Divider />
                     <div>
@@ -243,8 +224,6 @@ export default function SettingsPage() {
                             <Button onClick={() => setOpenModal("filament-preset")}><Plus /></Button>
                         </div>
                         <Subtext>Presets you can use to autofill common values when making filament.</Subtext>
-
-                        <Divider />
 
                         <div className="flex gap-2 flex-wrap">
                             {filamentPresets.map(p => <FilamentPresetCard
@@ -264,8 +243,6 @@ export default function SettingsPage() {
                             Allows you to track filament properties that Filatrack doesn't have.
                         </Subtext>
 
-                        <Divider />
-
                         <p>Coming soon!</p>
 
                         {/* <div className="flex flex-col gap-2">
@@ -278,6 +255,123 @@ export default function SettingsPage() {
                     <Checkbox checked={userData.advancedView ?? false} onCheckedChange={c => updateSettings({ advancedView: c })}>
                         Advanced View
                     </Checkbox>
+                </Tab>
+                <Tab name="appearance" className="max-w-150">
+                    {/* TODO: For the love of god this tab is awful. Split these into components */}
+                    <h2>Filament Card/Table Display</h2>
+                    <Subtext>Change data what is displayed on filament cards and tables.</Subtext>
+
+                    <div className="bg-bg-light rounded-lg p-2 flex gap-2 w-fit">
+                        <div>
+                            <p>Card Fields</p>
+                            <div className="flex flex-col gap-1 bg-bg-lighter rounded-lg p-2">
+                                {((user.shownFilamentCardKeys ?? []) as string[]).map((key, i) => {
+                                    const filamentKey = getFilamentCardKey(key);
+                                    if (!filamentKey)
+                                        return null;
+                                    return <FilamentKeyField
+                                        title={filamentKey.title}
+                                        key={i}
+                                        onMove={dir => updateSettings({
+                                            shownFilamentCardKeys:
+                                                moveArrayItem((user.shownFilamentCardKeys ?? []) as string[], i, dir),
+                                        })}
+                                        onDelete={() => updateSettings({
+                                            shownFilamentCardKeys:
+                                                deleteFromArray((user.shownFilamentCardKeys ?? []) as string[], key),
+                                        })}
+                                    />;
+                                })}
+                            </div>
+
+                            <p>Add Fields</p>
+                            <Select
+                                options={{
+                                    ...Object.fromEntries(
+                                        filamentCardKeys.map(k => !((user.shownFilamentCardKeys as string[]) ?? []).includes(k.key) &&
+                                        [k.key, k.title]
+                                        ).filter(e => !!e)
+                                    ),
+                                }}
+                                placeholder="Select a field to add"
+                                value=""
+                                onChange={v => updateSettings({
+                                    shownFilamentCardKeys: [...((user.shownFilamentCardKeys ?? []) as string[]), v],
+                                })}
+                            />
+                        </div>
+                        <Divider vertical />
+                        <div>
+                            <p>Table Fields</p>
+                            <div className="flex flex-col gap-1 bg-bg-lighter rounded-lg p-2">
+                                {((user.shownFilamentTableKeys ?? []) as string[]).map((key, i) => {
+                                    const filamentKey = getFilamentTableKey(key);
+                                    if (!filamentKey)
+                                        return null;
+                                    return <FilamentKeyField
+                                        title={filamentKey.title}
+                                        key={i}
+                                        onMove={dir => updateSettings({
+                                            shownFilamentTableKeys:
+                                                moveArrayItem((user.shownFilamentTableKeys ?? []) as string[], i, dir),
+                                        })}
+                                        onDelete={() => updateSettings({
+                                            shownFilamentTableKeys:
+                                                deleteFromArray((user.shownFilamentTableKeys ?? []) as string[], key),
+                                        })}
+                                    />;
+                                })}
+                            </div>
+
+                            <p>Add Fields</p>
+                            <Select
+                                options={{
+                                    ...Object.fromEntries(
+                                        filamentTableKeys
+                                            .map(k => !((user.shownFilamentTableKeys as string[]) ?? []).includes(k.key) &&
+                                                [k.key, k.title]
+                                            ).filter(e => !!e)
+                                    ),
+                                }}
+                                placeholder="Select a field to add"
+                                value=""
+                                onChange={v => updateSettings({
+                                    shownFilamentTableKeys: [...((user.shownFilamentTableKeys ?? []) as string[]), v],
+                                })}
+                            />
+                        </div>
+                    </div>
+
+                    <Divider />
+
+                    <h2 className="mt-2">Units</h2>
+                    <Subtext>The default units that Filatrack will display.</Subtext>
+
+                    <Divider />
+
+                    <p>Temperature</p>
+                    <Select
+                        options={{ c: "°C", f: "°F" }}
+                        value={userData.tempUnit}
+                        onChange={v => updateSettings({ tempUnit: v as UsersTempUnitOptions })}
+                    />
+
+                    <p>Mass</p>
+                    <Select
+                        options={{ g: "g", lb: "lb" }}
+                        value={userData.massUnit}
+                        onChange={v => updateSettings({ massUnit: v as UsersMassUnitOptions })}
+                    />
+                    {userData.massUnit === "lb" && <Subtext className="text-[12px]">
+                            Why did I make this an option...
+                    </Subtext>}
+
+                    <p>Length</p>
+                    <Select
+                        options={{ mm: "mm", in: "in" }}
+                        value={userData.lengthUnit}
+                        onChange={v => updateSettings({ lengthUnit: v as UsersLengthUnitOptions })}
+                    />
                 </Tab>
             </Tablist>
 

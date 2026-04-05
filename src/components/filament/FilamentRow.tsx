@@ -1,23 +1,33 @@
+import { pb } from "@/api/pb";
 import FilamentIcon from "./FilamentIcon";
-import { grams } from "@/lib/util/units";
-import { FilamentRecord } from "@/types/pb";
+import { FilamentRecord, UsersRecord } from "@/types/pb";
+import { getFilamentCardKey } from "@/lib/filamentKeys";
+import { EmptyCell } from "../base/Table";
 
 export default function FilamentRow({ filament }: { filament: FilamentRecord }) {
+    const user = pb.authStore.record as UsersRecord | null;
+
+    if (!user)
+        return null;
+
     return <tr>
         <td><FilamentIcon filament={filament} size={36} /></td>
         <td>{filament.name}</td>
         <td className="relative">
             <div style={{ backgroundColor: filament.color }} className="rounded-lg absolute inset-2" />
         </td>
-        <td className="relative">
-            {grams(filament.mass)}/{grams(filament.initialMass)}
-            <div className="absolute top-0 left-0 right-0 bg-bg-light w-full h-1">
-                <div className="absolute top-0 left-0 bg-primary h-full rounded-r-full"
-                    style={{ width: `${filament.mass / filament.initialMass * 100}%` }}
-                />
-            </div>
-        </td>
-        <td>{filament.material}</td>
-        <td>{filament.brand}</td>
+
+        {((user.shownFilamentCardKeys as string[]) ?? []).map(key => {
+            const filamentKey = getFilamentCardKey(key);
+            if (!filamentKey)
+                return null;
+
+            return <td>
+                {filamentKey.render ?
+                    (filamentKey.render(filament) ?? <EmptyCell />) :
+                    (filament[filamentKey.key] ? `${filament[filamentKey.key]}` : <EmptyCell />)
+                }
+            </td>;
+        })}
     </tr>;
 }

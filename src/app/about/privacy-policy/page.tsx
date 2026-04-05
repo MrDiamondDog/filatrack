@@ -38,6 +38,8 @@ export default function PrivacyPolicyPage() {
 
             <p>This data is retained for as long as you hold an account on Filatrack. See the Deleting your Data section below.</p>
 
+            <p>Due to how our infastructure works, we may process your IP address at various points.</p>
+
             <p>
                 Filatrack seperately collects completely anonymous, optional analytics to track trends and improve the platform.
                 You may turn off these analytics in the settings page.

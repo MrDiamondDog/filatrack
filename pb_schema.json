@@ -364,6 +364,26 @@
       },
       {
         "hidden": false,
+        "id": "json883048160",
+        "maxSize": 0,
+        "name": "shownFilamentCardKeys",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "hidden": false,
+        "id": "json2610229882",
+        "maxSize": 0,
+        "name": "shownFilamentTableKeys",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "hidden": false,
         "id": "json3471243795",
         "maxSize": 0,
         "name": "defaultQrSettings",
@@ -1099,7 +1119,7 @@
         "name": "mass",
         "onlyInt": false,
         "presentable": false,
-        "required": true,
+        "required": false,
         "system": false,
         "type": "number"
       },

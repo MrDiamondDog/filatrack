@@ -4,15 +4,6 @@ import { StorageWithFilament } from "@/types/storage";
 import { modifyArrayItem } from "./util/array";
 import { toastError } from "./util/error";
 
-export async function deleteFilament(filament: FilamentRecord) {
-    // for (const print of filament.prints ?? [])
-    //     await pb.collection("prints").update(print, {
-    //         "filamentRolls-": filament.id,
-    //     });
-
-    await pb.collection("filament").delete(filament.id);
-}
-
 export async function moveFilament(filament: FilamentRecord, destinationId: string, storages: StorageWithFilament[])
     : Promise<{ newStorages: StorageWithFilament[], newFilament: FilamentRecord } | undefined> {
     if (destinationId === filament.storage) {

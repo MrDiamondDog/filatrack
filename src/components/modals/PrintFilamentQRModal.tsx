@@ -5,7 +5,7 @@ import Divider from "../base/Divider";
 import { Select } from "../base/Select";
 import { celcius, grams } from "@/lib/util/units";
 import { ChevronDown, ChevronUp, ExternalLink, Trash2 } from "lucide-react";
-import { deleteFromArray } from "@/lib/util/array";
+import { deleteFromArray, moveArrayItem } from "@/lib/util/array";
 import { useEffect, useState } from "react";
 import Button from "../base/Button";
 import Subtext from "../base/Subtext";
@@ -46,21 +46,7 @@ export function QRFieldSelector({ fields, onListUpdate }: { fields: QRDisplayFie
         if (index === -1)
             return;
 
-        if (dir === "up" && index === 0)
-            return;
-
-        if (dir === "down" && index === fields.length - 1)
-            return;
-
-        let newSelectedFields = [...fields];
-
-        if (dir === "up")
-            [newSelectedFields[index - 1], newSelectedFields[index]] = [newSelectedFields[index], newSelectedFields[index - 1]];
-
-        if (dir === "down")
-            [newSelectedFields[index], newSelectedFields[index + 1]] = [newSelectedFields[index + 1], newSelectedFields[index]];
-
-        onListUpdate(newSelectedFields);
+        onListUpdate(moveArrayItem(fields, index, dir));
     }
 
     return <>

@@ -22,6 +22,17 @@ export default function SSOButton({ provider, icon, redirect, children }: Props)
                 tempUnit: "c",
                 massUnit: "g",
                 lengthUnit: "mm",
+                shownFilamentCardKeys: ["storage", "brand", "material", "mass"],
+                shownFilamentTableKeys: [
+                    "storage",
+                    "color",
+                    "brand",
+                    "material",
+                    "mass",
+                    "initialMass",
+                    "nozzleTemperature",
+                    "bedTemperature",
+                ],
                 defaultQrSettings: { fields: ["mass", "nozzleTemperature", "bedTemperature", "note"], format: "SVG" },
             },
         })
