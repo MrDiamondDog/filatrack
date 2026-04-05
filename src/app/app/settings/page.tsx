@@ -25,10 +25,7 @@ import { useObjectState } from "@/lib/util/hooks";
 import {
     FilamentPresetsRecord,
     UsersFilamentSortOptions,
-    UsersLengthUnitOptions,
-    UsersMassUnitOptions,
     UsersRecord,
-    UsersTempUnitOptions,
 } from "@/types/pb";
 import { QRSettings } from "@/types/users";
 import { startHolyLoader, stopHolyLoader } from "holy-loader";
@@ -349,37 +346,6 @@ export default function SettingsPage() {
                             />
                         </div>
                     </div>
-
-                    <Divider />
-
-                    <h2 className="mt-2">Units</h2>
-                    <Subtext>The default units that Filatrack will display.</Subtext>
-
-                    <Divider />
-
-                    <p>Temperature</p>
-                    <Select
-                        options={{ c: "°C", f: "°F" }}
-                        value={userData.tempUnit}
-                        onChange={v => updateSettings({ tempUnit: v as UsersTempUnitOptions })}
-                    />
-
-                    <p>Mass</p>
-                    <Select
-                        options={{ g: "g", lb: "lb" }}
-                        value={userData.massUnit}
-                        onChange={v => updateSettings({ massUnit: v as UsersMassUnitOptions })}
-                    />
-                    {userData.massUnit === "lb" && <Subtext className="text-[12px]">
-                            Why did I make this an option...
-                    </Subtext>}
-
-                    <p>Length</p>
-                    <Select
-                        options={{ mm: "mm", in: "in" }}
-                        value={userData.lengthUnit}
-                        onChange={v => updateSettings({ lengthUnit: v as UsersLengthUnitOptions })}
-                    />
                 </Tab>
             </Tablist>
 
