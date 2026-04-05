@@ -21,6 +21,7 @@ PRE-ship:
 -[x] MOBILE SUPPORT (4hr)
 -[x] Selfhosting
 -[x] Selfhosting docs
+-[ ] Privacy policy update banner
 -[ ] Transfer script
 
 POST-ship:

@@ -1,13 +1,13 @@
 import Divider from "@/components/base/Divider";
 import Link from "next/link";
 
-export const privacyPolicyLastUpdate = new Date("April 4, 2026 00:00:00 GMT-0600");
+export const privacyPolicyLastUpdate = new Date("April 11, 2026 00:00:00 GMT-0600");
 
 export default function PrivacyPolicyPage() {
     return (
-        <div className="mx-auto w-1/2 bg-bg-light p-10 *:[h2]:mt-2 [&_p]:mb-2 [&_ul]:mb-2">
+        <div className="mx-auto md:w-1/2 bg-bg-light md:p-10 p-4 *:[h2]:mt-2 [&_p]:mb-2 [&_ul]:mb-2">
             <h1>Privacy Policy</h1>
-            <p>Last Updated: {privacyPolicyLastUpdate.toLocaleString(undefined, { timeZone: "America/Denver" })} MST</p>
+            <p>Last Updated: {privacyPolicyLastUpdate.toLocaleString("en-US", { timeZone: "America/Denver" })} MST</p>
 
             <Divider />
 

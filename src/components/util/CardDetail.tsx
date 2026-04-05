@@ -7,7 +7,7 @@ type Props = {
 };
 
 export default function CardDetail({ children, icon }: Props) {
-    return (<Subtext className="flex items-center gap-1 w-full md:text-md">
+    return (<Subtext className="flex items-center gap-1 w-full">
         {icon}
         <span className="overflow-x-hidden text-nowrap text-ellipsis md:text-md text-xs">{children}</span>
     </Subtext>);

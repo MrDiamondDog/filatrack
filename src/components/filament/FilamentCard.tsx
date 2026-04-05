@@ -27,6 +27,7 @@ type Props = {
     filament: FilamentRecord;
     storagesList: StorageWithFilament[];
     noninteractable?: boolean;
+    keys?: string[];
     className?: string;
     onModify?: (f: FilamentRecord) => void;
     onStoragesModify?: (s: StorageWithFilament[]) => void;
@@ -38,6 +39,7 @@ export default function FilamentCard({
     filament,
     storagesList,
     noninteractable,
+    keys,
     className,
     onModify,
     onStoragesModify,
@@ -130,7 +132,7 @@ export default function FilamentCard({
                         </CardDetail>
                     }
 
-                    {((user?.shownFilamentCardKeys as string[]) ?? []).map(key => {
+                    {((user?.shownFilamentCardKeys as string[]) ?? keys ?? []).map(key => {
                         const keyData = getFilamentCardKey(key);
                         if (!keyData || keyData.customRender)
                             return null;

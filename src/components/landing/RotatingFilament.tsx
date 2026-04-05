@@ -24,5 +24,6 @@ export default function RotatingFilament() {
         }}
         noninteractable
         storagesList={[]}
+        keys={["brand", "material", "mass"]}
     />;
 }
