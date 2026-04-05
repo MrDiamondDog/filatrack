@@ -4,6 +4,7 @@ import { pb } from "@/api/pb";
 import Button from "@/components/base/Button";
 import Divider from "@/components/base/Divider";
 import MotionContainer from "@/components/base/MotionContainer";
+import Spinner from "@/components/base/Spinner";
 import CreateButton from "@/components/dashboard/CreateButton";
 import FilamentChart from "@/components/dashboard/FilamentChart";
 import FilamentList from "@/components/filament/FilamentList";
@@ -24,9 +25,9 @@ export default function DashboardPage() {
 
     const [isMobile, _] = useDevice();
 
-    const [filament, setFilament] = useState<FilamentRecord[]>([]);
-    const [storages, setStorages] = useState<StorageWithFilament[]>([]);
-    const [presets, setPresets] = useState<FilamentPresetsRecord[]>([]);
+    const [filament, setFilament] = useState<FilamentRecord[]>();
+    const [storages, setStorages] = useState<StorageWithFilament[]>();
+    const [presets, setPresets] = useState<FilamentPresetsRecord[]>();
 
     const [openModal, setOpenModal] = useState("");
 
@@ -52,30 +53,30 @@ export default function DashboardPage() {
     }, []);
 
     return (<MotionContainer>
-        <div className="flex justify-between items-center">
-            <h1>Dashboard</h1>
+        {(filament && storages && presets) ? <>
+            <div className="flex justify-between items-center">
+                <h1>Dashboard</h1>
 
-            <div className="flex gap-2">
-                <Button className="flex gap-1 items-center" onClick={() => setOpenModal("scan")}>
-                    <ScanLine size={32} /> {!isMobile && "Scan"}
-                </Button>
-                <CreateButton onFilamentCreate={f => setFilament([...filament, f])} storages={storages} presets={presets} />
+                <div className="flex gap-2">
+                    <Button className="flex gap-1 items-center" onClick={() => setOpenModal("scan")}>
+                        <ScanLine size={32} /> {!isMobile && "Scan"}
+                    </Button>
+                    <CreateButton onFilamentCreate={f => setFilament([...filament, f])} storages={storages} presets={presets} />
+                </div>
             </div>
-        </div>
 
-        <Divider />
+            <Divider />
 
-        {!!filament.length && <FilamentChart filament={filament} />}
-        {!filament.length && <p className="w-full text-center">
-            You don't have any filament yet. Press the + button in the top right to get started!
-        </p>}
+            <FilamentChart filament={filament} />
 
-        {!!filament.length && <>
             <div className="w-full flex flex-col md:flex-row mt-5">
                 <div className="w-full">
                     <h2>Storage</h2>
                     <Divider />
                     <StorageList storages={storages} onListUpdate={setStorages} />
+                    {!storages.length && <p className="w-full text-center">
+                        You don't have any storages yet. Press the + button in the top right to get started!
+                    </p>}
                 </div>
 
                 <Divider vertical />
@@ -107,8 +108,11 @@ export default function DashboardPage() {
                 allowAdd
                 allowSort
             />
-        </>}
+            {!filament.length && <p className="w-full text-center">
+                You don't have any filament yet. Press the + button in the top right to get started!
+            </p>}
 
-        <ScanQRModal open={openModal === "scan"} onClose={() => setOpenModal("")} />
+            <ScanQRModal open={openModal === "scan"} onClose={() => setOpenModal("")} />
+        </> : <Spinner />}
     </MotionContainer>);
 }

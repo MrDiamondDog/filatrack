@@ -4,6 +4,7 @@ import { pb } from "@/api/pb";
 import Button from "@/components/base/Button";
 import Divider from "@/components/base/Divider";
 import MotionContainer from "@/components/base/MotionContainer";
+import Spinner from "@/components/base/Spinner";
 import CreateStorageModal from "@/components/modals/CreateStorageModal";
 import StorageList from "@/components/storage/StorageList";
 import { toastError } from "@/lib/util/error";
@@ -18,7 +19,7 @@ export default function StoragePage() {
         return null;
 
     const [openModal, setOpenModal] = useState("");
-    const [storages, setStorages] = useState<StorageWithFilament[]>([]);
+    const [storages, setStorages] = useState<StorageWithFilament[]>();
 
     useEffect(() => {
         pb.collection("storage").getFullList<StorageWithFilament>({
@@ -30,22 +31,24 @@ export default function StoragePage() {
     }, []);
 
     return <MotionContainer>
-        <div className="flex items-center justify-between">
-            <h2>Storage</h2>
-            <Button className="h-full flex items-center justify-center gap-1" onClick={() => setOpenModal("storage")}>
-                <Plus size={32} /> New
-            </Button>
-        </div>
+        {storages ? <>
+            <div className="flex items-center justify-between">
+                <h2>Storage</h2>
+                <Button className="h-full flex items-center justify-center gap-1" onClick={() => setOpenModal("storage")}>
+                    <Plus size={32} /> New
+                </Button>
+            </div>
 
-        <Divider />
+            <Divider />
 
-        <StorageList storages={storages} onListUpdate={setStorages} />
+            <StorageList storages={storages} onListUpdate={setStorages} />
 
-        {!storages.length && <p className="w-full text-center">
-            You don't have any storages yet. Press the + button in the top right to get started!
-        </p>}
+            {!storages.length && <p className="w-full text-center">
+                You don't have any storages yet. Press the + button in the top right to get started!
+            </p>}
 
-        <CreateStorageModal open={openModal === "storage"} onClose={() => setOpenModal("")}
-            onCreate={s => setStorages([...storages, s])} />
+            <CreateStorageModal open={openModal === "storage"} onClose={() => setOpenModal("")}
+                onCreate={s => setStorages([...storages, s])} />
+        </> : <Spinner />}
     </MotionContainer>;
 }

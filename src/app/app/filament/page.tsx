@@ -2,6 +2,7 @@
 
 import { pb } from "@/api/pb";
 import MotionContainer from "@/components/base/MotionContainer";
+import Spinner from "@/components/base/Spinner";
 import FilamentList from "@/components/filament/FilamentList";
 import { toastError } from "@/lib/util/error";
 import { FilamentPresetsRecord, FilamentRecord, UsersResponse } from "@/types/pb";
@@ -20,9 +21,9 @@ export default function FilamentPage() {
     if (!user)
         return null;
 
-    const [filament, setFilament] = useState<FilamentRecord[]>([]);
-    const [storages, setStorages] = useState<StorageWithFilament[]>([]);
-    const [presets, setPresets] = useState<FilamentPresetsRecord[]>([]);
+    const [filament, setFilament] = useState<FilamentRecord[]>();
+    const [storages, setStorages] = useState<StorageWithFilament[]>();
+    const [presets, setPresets] = useState<FilamentPresetsRecord[]>();
 
     useEffect(() => {
         pb.collection("filament").getFullList({
@@ -46,10 +47,12 @@ export default function FilamentPage() {
     }, []);
 
     return <MotionContainer>
-        <FilamentList title="Your Filament" filament={filament} storagesList={storages} presets={presets} allowAdd
-            onListModified={setFilament} onStoragesModified={setStorages} allowEdit allowSort />
-        {!filament.length && <p className="w-full text-center">
-            You don't have any filament yet. Press the + button in the top right to get started!
-        </p>}
+        {(filament && presets && storages) ? <>
+            <FilamentList title="Your Filament" filament={filament} storagesList={storages} presets={presets} allowAdd
+                onListModified={setFilament} onStoragesModified={setStorages} allowEdit allowSort />
+            {!filament.length && <p className="w-full text-center">
+                You don't have any filament yet. Press the + button in the top right to get started!
+            </p>}
+        </> : <Spinner />}
     </MotionContainer>;
 }

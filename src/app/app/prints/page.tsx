@@ -4,6 +4,7 @@ import { pb } from "@/api/pb";
 import Button from "@/components/base/Button";
 import Divider from "@/components/base/Divider";
 import MotionContainer from "@/components/base/MotionContainer";
+import Spinner from "@/components/base/Spinner";
 import CreatePrintModal from "@/components/modals/CreatePrintModal";
 import PrintList from "@/components/prints/PrintList";
 import { toastError } from "@/lib/util/error";
@@ -32,23 +33,25 @@ export default function PrintPage() {
     }, []);
 
     return (<MotionContainer>
-        <div className="flex items-center justify-between">
-            <h2>Prints</h2>
-            <Button className="h-full flex items-center justify-center gap-1" onClick={() => setOpenModal("print")}>
-                <Plus size={32} /> New
-            </Button>
-        </div>
-        <Divider />
+        {(prints && filament) ? <>
+            <div className="flex items-center justify-between">
+                <h2>Prints</h2>
+                <Button className="h-full flex items-center justify-center gap-1" onClick={() => setOpenModal("print")}>
+                    <Plus size={32} /> New
+                </Button>
+            </div>
+            <Divider />
 
-        {(prints && filament) && <PrintList prints={prints} filament={filament} />}
-        {!prints?.length && <p className="w-full text-center">
-            You haven't logged any prints yet. Press the + in the top right to get started!
-        </p>}
+            <PrintList prints={prints} filament={filament} />
+            {!prints.length && <p className="w-full text-center">
+                You haven't logged any prints yet. Press the + in the top right to get started!
+            </p>}
 
-        <CreatePrintModal
-            open={openModal === "print"}
-            onClose={() => setOpenModal("")}
-            onCreate={p => setPrints([...(prints ?? []), p])}
-        />
+            <CreatePrintModal
+                open={openModal === "print"}
+                onClose={() => setOpenModal("")}
+                onCreate={p => setPrints([...(prints ?? []), p])}
+            />
+        </> : <Spinner />}
     </MotionContainer>);
 }
