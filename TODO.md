@@ -10,15 +10,16 @@ PRE-ship:
 -[x] Default sort setting
 -[x] Advanced View (show ids)
 -[x] QR Codes (3hr)
--[ ] In app QR scanner
--[ ] Bulk print QR codes
--[ ] Options for default QR settings
--[ ] PDF QR codes
--[ ] Buttons on individual filament page
--[ ] Customize what is shown on filament cards/table
+-[x] In app QR scanner
+-[x] Bulk print QR codes
+-[x] Options for default QR settings
+-[x] QR code download button
+-[x] Buttons on individual filament page
+-[x] Feedback page
+-[x] Customize what is shown on filament cards/table
 -[ ] Avatar editing
 -[ ] Unit Settings (1-1.5hr)
--[ ] Credentials auth?
+-[ ] Seperate table shown filament keys
 -[ ] MOBILE SUPPORT (4hr)
 -[ ] Selfhosting
 -[ ] Selfhosting docs
@@ -28,11 +29,11 @@ POST-ship:
 -[ ] Custom attributes
 -[ ] Bulk Editing
 -[ ] Favorites
+-[ ] Scanned barcode database (a long ass time)
 -[ ] Filament sharing? (2hr)
 -[ ] Public Filament Presets (4hr)
 -[ ] Another thing on the dashboard page?
 -[ ] Default view setting (table/card)
 -[ ] Comment code (if desperate)
--[ ] Light Mode
 -[ ] Mobile Vibrations
 -[ ] Translations support
