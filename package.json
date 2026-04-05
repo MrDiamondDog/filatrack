@@ -22,6 +22,7 @@
     "lucide-react": "^0.562.0",
     "motion": "^12.38.0",
     "next": "16.2.2",
+    "next-public-env": "^1.1.0",
     "pocketbase": "^0.26.8",
     "qr-scanner": "^1.4.2",
     "qrcode": "^1.5.4",

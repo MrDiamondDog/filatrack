@@ -5,6 +5,7 @@ import { Lexend } from "next/font/google";
 import HolyLoader from "holy-loader";
 import { Toaster } from "sonner";
 import { CheckCircle2, CircleAlert, Info } from "lucide-react";
+import { PublicEnv } from "@/public-env";
 
 const lexend = Lexend({
     variable: "--font-lexend",
@@ -71,6 +72,8 @@ export default function RootLayout({
             <body
                 className={`${lexend.className} antialiased bg-bg`}
             >
+                <PublicEnv />
+
                 <HolyLoader
                     color="linear-gradient(to right, #3263ce, #3364ce)"
                 />

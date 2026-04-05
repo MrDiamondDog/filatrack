@@ -25,14 +25,15 @@ Linux:
 docker run -d \
   --name filatrack \
   -p 3000:3000 \
-  --env NEXT_PUBLIC_PB_URL="pocketbase url"
+  --env PB_URL="pocketbase url"
   mrdiamonddog/filatrack:latest
 ```
 
 Windows:
-`docker run -d --name filatrack -p 3000:3000 --env NEXT_PUBLIC_PB_URL="pocketbase url" mrdiamonddog/filatrack:latest`
+`docker run -d --name filatrack -p 3000:3000 --env PB_URL="pocketbase url" mrdiamonddog/filatrack:latest`
 
 You'll also need to set up the Pocketbase instance to go with it. Set it up [here](https://pocketbase.io/docs/going-to-production/).
+Make sure to set up OAuth with google and/or github as well!
 
 ## Star History
 
