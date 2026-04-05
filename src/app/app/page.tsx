@@ -85,7 +85,7 @@ export default function DashboardPage() {
                         title="Recent Filament"
                         filament={(filament)
                             .sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime())
-                            .slice(0, 3)}
+                            .slice(0, isMobile ? 4 : 3)}
                         viewLock="cards"
                         storagesList={storages}
                         onListModified={setFilament}

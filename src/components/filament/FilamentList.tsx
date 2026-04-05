@@ -222,6 +222,7 @@ export default function FilamentList({
                 onModify={f => onListModified?.(modifyArrayItem(filament, f, "id"))}
                 onStoragesModify={onStoragesModified}
                 onDelete={() => onListModified?.(deleteFromArray(filament, f, "id"))}
+                onDuplicate={f => onListModified?.([...filament, f])}
             />)}
         </div>}
 
@@ -281,7 +282,7 @@ export default function FilamentList({
         }
 
         {/* For testing, change to true to enable */}
-        {true && <Button onClick={() => {
+        {false && <Button onClick={() => {
             const f = randomFilament();
             pb.collection("filament").create({ ...f, user: user!.id })
                 .then(res => onListModified?.([...filament, res]))

@@ -31,14 +31,30 @@ type Props = {
     onModify?: (f: FilamentRecord) => void;
     onStoragesModify?: (s: StorageWithFilament[]) => void;
     onDelete?: () => void;
+    onDuplicate?: (f: FilamentRecord) => void;
 };
 
-export default function FilamentCard({ filament, storagesList, noninteractable, className, onModify, onStoragesModify, onDelete }
+export default function FilamentCard({
+    filament,
+    storagesList,
+    noninteractable,
+    className,
+    onModify,
+    onStoragesModify,
+    onDelete,
+    onDuplicate,
+}
 : Props) {
     const user = pb.authStore.record as UsersRecord | null;
 
     const [openModal, setOpenModal] = useState("");
     const [isMobile, _] = useDevice();
+
+    async function duplicate() {
+        pb.collection("filament").create({ ...filament, id: undefined, prints: [] })
+            .then(onDuplicate)
+            .catch(e => toastError("Could not duplicate filament", e));
+    }
 
     return <>
         <div
@@ -89,6 +105,7 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                             {!storagesList && <Spinner />}
                         </DropdownSubContent>
                     </DropdownSub>
+                    <DropdownItem onClick={duplicate}>Duplicate</DropdownItem>
                     <DropdownItem onClick={() => setOpenModal("qr")}>QR Code</DropdownItem>
                     <DropdownItem onClick={() => setOpenModal("delete")} danger>Delete</DropdownItem>
                 </DropdownContent>
@@ -103,7 +120,7 @@ export default function FilamentCard({ filament, storagesList, noninteractable, 
                 </p>
                 {user?.advancedView && <p className="text-xs text-gray-500">{filament.id}</p>}
 
-                <div className="flex flex-col mb-2 items-center w-full *:justify-center">
+                <div className="flex flex-col mb-2 md:gap-0 gap-1 items-center w-full *:justify-center">
                     {(
                         filament.storage && storagesList && !!storagesList.length &&
                         ((user?.shownFilamentCardKeys as string[]) ?? []).includes("storage")
