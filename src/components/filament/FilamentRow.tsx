@@ -22,7 +22,7 @@ export default function FilamentRow({ filament }: { filament: FilamentRecord }) 
             if (!filamentKey)
                 return null;
 
-            return <td>
+            return <td key={key}>
                 {filamentKey.render ?
                     (filamentKey.render(filament) ?? <EmptyCell />) :
                     (filament[filamentKey.key] ? `${filament[filamentKey.key]}` : <EmptyCell />)

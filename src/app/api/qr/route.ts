@@ -23,7 +23,12 @@ export async function GET(req: NextRequest) {
     if (!dataParam)
         return NextResponse.json({ error: "Fill out all required fields." }, { status: 400 });
 
-    const data = JSON.parse(atob(dataParam)) as QRData;
+    let data: QRData;
+    try {
+        data = JSON.parse(atob(dataParam)) as QRData;
+    } catch {
+        return NextResponse.json({ error: "Fill out all required fields." }, { status: 400 });
+    }
 
     if (!data.title || !data.id || !data.fields || !data.material || !data.color || !data.format)
         return NextResponse.json({ error: "Fill out all required fields." }, { status: 400 });

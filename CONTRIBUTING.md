@@ -10,7 +10,7 @@ We follow a strict set of guidelines for PRs to Filatrack. If you do not follow 
 - Code should be self-explanatory, or commented otherwise. Overusing comments is a sign that your code isn't readable.
 - Be open to code review. Your PR likely won't be accepted on the first pass, so expect some feedback! No one is perfect.
 
-## Dev enviornment
+## Dev environment
 
 Make a copy of `.env.example` named `.env`, and fill out all of the values.
 

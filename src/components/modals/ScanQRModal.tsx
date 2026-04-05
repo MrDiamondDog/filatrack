@@ -26,7 +26,7 @@ export default function ScanQRModal(props: ModalProps) {
 
         navigator.mediaDevices.getUserMedia({
             video: {
-                facingMode: "enviornment",
+                facingMode: "environment",
             },
             audio: false,
         })

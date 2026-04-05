@@ -14,7 +14,7 @@ There definitely are bugs. Please report bugs in the issues on this repo instead
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for info on how to set up your development enviornment, or join the Discord!
+See [CONTRIBUTING.md](CONTRIBUTING.md) for info on how to set up your development environment, or join the Discord!
 
 ## Self-Hosting
 
