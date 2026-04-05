@@ -17,7 +17,7 @@ PRE-ship:
 -[x] Buttons on individual filament page
 -[x] Feedback page
 -[x] Customize what is shown on filament cards/table
--[ ] Avatar editing
+-[x] Avatar editing
 -[ ] Unit Settings (1-1.5hr)
 -[ ] Seperate table shown filament keys
 -[ ] MOBILE SUPPORT (4hr)

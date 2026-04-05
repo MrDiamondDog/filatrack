@@ -14,6 +14,7 @@ import Tab from "@/components/base/tabs/Tab";
 import Tablist from "@/components/base/tabs/Tablist";
 import FilamentPresetCard from "@/components/filament/FilamentPresetCard";
 import CreateFilamentPresetModal from "@/components/modals/CreateFilamentPresetModal";
+import EditAvatarModal from "@/components/modals/EditAvatarModal";
 import { QRFieldSelector } from "@/components/modals/PrintFilamentQRModal";
 import UserTag from "@/components/settings/UserTag";
 import { logout } from "@/lib/auth";
@@ -113,7 +114,14 @@ export default function SettingsPage() {
             <Tablist tabs={{ account: "Account", preferences: "Preferences", appearance: "Appearance" }} activeTab="account">
                 <Tab name="account" className="max-w-300">
                     <div className="bg-bg-light rounded-lg p-4 flex gap-2 w-fit mt-2 items-center">
-                        <img src={pb.files.getURL(userData, userData.avatar!)} className="rounded-full size-30" />
+                        <div className="relative w-full">
+                            <img src={pb.files.getURL(userData, userData.avatar!)} className="rounded-full size-30 object-cover" />
+                            <div className={`absolute inset-0 rounded-full opacity-0 hover:opacity-100 
+                                transition-opacity bg-[#000000a4] cursor-pointer`}
+                            onClick={() => setOpenModal("avatar")}>
+                                <Pencil size={32} className="absolute-center" />
+                            </div>
+                        </div>
                         <div className="w-full">
                             <div className="flex gap-2 items-center">
                                 {!editing && <h2>{userData.name}</h2>}
@@ -400,6 +408,11 @@ export default function SettingsPage() {
                 </Button>
             </ModalFooter>
         </Modal>
+
+        <EditAvatarModal
+            open={openModal === "avatar"}
+            onClose={() => setOpenModal("")}
+        />
 
         <CreateFilamentPresetModal open={openModal === "filament-preset"} onClose={() => setOpenModal("")}
             onCreate={p => setFilamentPresets([...filamentPresets, p])} />

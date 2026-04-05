@@ -105,7 +105,7 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
                     </>}
                     <div className="text-center">
                         <Subtext>Mass</Subtext>
-                        {grams(filament.mass)}/{grams(filament.initialMass)}
+                        {grams((filament.mass ?? 0))}/{grams(filament.initialMass)}
                     </div>
                     <Divider vertical />
                     {!!filament.nozzleTemperature && <>
