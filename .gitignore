@@ -6,3 +6,5 @@ pocketbase.exe
 pb_data
 src/types/pb.ts
 pb_migrations
+transfer/*.txt
+transfer/*.sql
