@@ -12,7 +12,7 @@ import { defaultUserSettings } from "@/lib/user";
 import { getPublicEnv } from "@/public-env";
 import { useSearchParams } from "next/navigation";
 import { AuthMethodsList } from "pocketbase";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function LoginPage() {
     const [providers, setProviders] = useState<AuthMethodsList>();
@@ -29,7 +29,7 @@ export default function LoginPage() {
             .then(setProviders);
     }, []);
 
-    return (<Suspense fallback={<Spinner />}>
+    return (<>
         <LandingBackground />
 
         <main className="absolute-center bg-bg-light rounded-lg p-4 md:w-fit w-3/4">
@@ -69,5 +69,5 @@ export default function LoginPage() {
 
             <a href="/about/privacy-policy">Privacy Policy</a>
         </main>
-    </Suspense>);
+    </>);
 }
