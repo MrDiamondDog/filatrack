@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createCanvas, loadImage, registerFont } from "canvas";
 import QRCode from "qrcode";
+import { baseUrl } from "@/constants";
 
 type QRDataField = { title: string, data: string };
 
@@ -125,7 +126,7 @@ export async function GET(req: NextRequest) {
     const qrcodeSize = 250;
 
     const qrcodeCanvas = createCanvas(qrcodeSize, qrcodeSize);
-    await QRCode.toCanvas(qrcodeCanvas, `https://filatrack.app/app/filament/${data.id}`, {
+    await QRCode.toCanvas(qrcodeCanvas, `${baseUrl}app/filament/${data.id}`, {
         width: qrcodeSize,
         margin: 0,
         errorCorrectionLevel: "low",

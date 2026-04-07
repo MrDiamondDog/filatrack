@@ -1,4 +1,3 @@
-import { prodUrl } from "@/constants";
 import "./globals.css";
 import { Metadata } from "next";
 import { Lexend } from "next/font/google";
@@ -6,6 +5,7 @@ import HolyLoader from "holy-loader";
 import { Toaster } from "sonner";
 import { CheckCircle2, CircleAlert, Info } from "lucide-react";
 import { PublicEnv } from "@/public-env";
+import { baseUrl } from "@/constants";
 
 const lexend = Lexend({
     variable: "--font-lexend",
@@ -46,11 +46,11 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Filatrack",
         description: "The simplest way to track 3d printing filament!",
-        url: prodUrl,
+        url: baseUrl,
         siteName: "Filatrack",
         images: [
             {
-                url: `${prodUrl}apple-touch-icon.png`,
+                url: `${baseUrl}apple-touch-icon.png`,
             },
         ],
     },
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
         card: "summary",
         site: "@drew_rat",
         creator: "@drew_rat",
-        images: `${prodUrl}/apple-touch-icon.png`,
+        images: `${baseUrl}/apple-touch-icon.png`,
     },
 };
 

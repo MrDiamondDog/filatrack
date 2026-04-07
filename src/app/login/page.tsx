@@ -2,15 +2,31 @@
 
 import { pb } from "@/api/pb";
 import SSOButton from "@/components/auth/SSOButton";
+import Button from "@/components/base/Button";
 import Divider from "@/components/base/Divider";
+import Input from "@/components/base/Input";
 import Spinner from "@/components/base/Spinner";
 import LandingBackground from "@/components/landing/LandingBackground";
-import { Suspense, useEffect } from "react";
-import { FaGoogle, FaGithub } from "react-icons/fa6";
+import { login } from "@/lib/auth";
+import { defaultUserSettings } from "@/lib/user";
+import { getPublicEnv } from "@/public-env";
+import { useSearchParams } from "next/navigation";
+import { AuthMethodsList } from "pocketbase";
+import { Suspense, useEffect, useState } from "react";
 
 export default function LoginPage() {
+    const [providers, setProviders] = useState<AuthMethodsList>();
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const searchParams = useSearchParams();
+
     useEffect(() => {
         pb.authStore.clear();
+
+        pb.collection("users").listAuthMethods()
+            .then(setProviders);
     }, []);
 
     return (<Suspense fallback={<Spinner />}>
@@ -21,16 +37,35 @@ export default function LoginPage() {
 
             <Divider />
 
-            <div className="flex flex-col gap-2">
-                <SSOButton provider="google" icon={<FaGoogle />}>
-                    Sign in with Google
-                </SSOButton>
-                <SSOButton provider="github" icon={<FaGithub />}>
-                    Sign in with GitHub
-                </SSOButton>
-            </div>
-
-            <Divider />
+            {providers ? <div>
+                {providers.password.enabled && <>
+                    <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
+                    <Input label="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+                    <Button
+                        className="w-full my-2"
+                        disabled={!email || !password ||
+                            !email.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)}
+                        onClick={() => pb.collection("users").authWithPassword(email, password, defaultUserSettings)
+                            .then(res => login(res, searchParams.get("to") ?? undefined))
+                        }
+                    >
+                        Login
+                    </Button>
+                    <p>Don't have an account yet? <a href="/signup">Sign Up</a></p>
+                    <a href="/login/reset">Reset Password</a>
+                    <Divider />
+                </>}
+                {providers.oauth2.enabled && <div className="flex flex-col gap-2">
+                    {providers.oauth2.providers.map(provider => <SSOButton
+                        provider={provider.name}
+                        icon={<img src={`${getPublicEnv().PB_URL}_/images/oauth2/${provider.name}.svg`} className="size-5" />}
+                    >
+                        Sign in with {provider.displayName}
+                    </SSOButton>
+                    )}
+                    <Divider />
+                </div>}
+            </div> : <Spinner />}
 
             <a href="/about/privacy-policy">Privacy Policy</a>
         </main>

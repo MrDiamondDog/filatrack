@@ -1,4 +1,5 @@
 import Divider from "@/components/base/Divider";
+import { endpoints } from "@/constants";
 import Link from "next/link";
 
 export const privacyPolicyLastUpdate = new Date("April 11, 2026 00:00:00 GMT-0600");
@@ -146,8 +147,8 @@ export default function PrivacyPolicyPage() {
 
             <p>You can reach us via the following:</p>
             <ul>
-                <li>Fill out this form: <Link href="/about/contact">https://filatrack.app/about/contact</Link></li>
-                <li>Visit our Discord server: <Link href="/discord">https://filatrack.app/discord</Link></li>
+                <li>Fill out this form: <Link href="/about/contact">{endpoints.contact}</Link></li>
+                <li>Visit our Discord server: <Link href="/discord">{endpoints.discord}</Link></li>
             </ul>
         </div>
     );

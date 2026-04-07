@@ -12,6 +12,7 @@ import { useState } from "react";
 import { FaDiscord, FaGithub } from "react-icons/fa6";
 import { pb } from "@/api/pb";
 import { UsersRecord } from "@/types/pb";
+import { endpoints } from "@/constants";
 
 export function MobileSidebar() {
     return (<div className="z-1 bottom-0 left-0 right-0 h-15 bg-bg-light p-2 px-4 fixed flex items-center justify-around gap-2">
@@ -55,8 +56,8 @@ export default function Sidebar() {
 
         <div>
             <SidebarItem href="/about/feedback"><MessageSquareText size={24} /> Feedback</SidebarItem>
-            <SidebarItem href="https://github.com/mrdiamonddog/filatrack"><FaGithub size={24} /> GitHub</SidebarItem>
-            <SidebarItem href="https://discord.gg/HUjRATbH2g"><FaDiscord size={24} /> Discord</SidebarItem>
+            <SidebarItem href={endpoints.github}><FaGithub size={24} /> GitHub</SidebarItem>
+            <SidebarItem href={endpoints.discord}><FaDiscord size={24} /> Discord</SidebarItem>
             {!user.supporter && <SidebarItem href="/about/support"
                 className="mb-2 bg-[#e41d5f26] text-[#ffb2cb]"
             >

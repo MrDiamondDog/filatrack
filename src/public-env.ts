@@ -4,5 +4,6 @@ import { createPublicEnv } from "next-public-env";
 export const { getPublicEnv, PublicEnv } = createPublicEnv({
     NODE_ENV: process.env.NODE_ENV,
     PRODUCTION: process.env.PRODUCTION === "true",
+    APP_URL: process.env.APP_URL,
     PB_URL: process.env.PB_URL,
 });

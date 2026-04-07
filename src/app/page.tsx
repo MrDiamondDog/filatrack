@@ -61,7 +61,7 @@ export default function Home() {
                     </LandingCardHeader>
                     <Subtext>
                         Filatrack is completely free open source software. We are welcome to bug reports and contributions as well!
-                        Learn more on the <Link href="https://github.com/mrdiamonddog/filatrack">GitHub</Link>.
+                        Learn more on the <Link href={endpoints.github}>GitHub</Link>.
                     </Subtext>
                 </LandingCard>
                 <LandingCard>

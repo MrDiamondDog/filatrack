@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Modal, { ModalHeader, ModalProps } from "../base/Modal";
 import QrScanner from "qr-scanner";
 import { useRouter } from "next/navigation";
+import { baseUrl } from "@/constants";
 
 export default function ScanQRModal(props: ModalProps) {
     const cameraVideo = useRef<HTMLVideoElement | null>(null);
@@ -37,7 +38,7 @@ export default function ScanQRModal(props: ModalProps) {
                 const scanner = new QrScanner(
                     cameraVideo.current!,
                     res => {
-                        if (!res.data.startsWith("https://filatrack.app/"))
+                        if (!res.data.startsWith(`${baseUrl}`))
                             return;
 
                         props.onClose();
