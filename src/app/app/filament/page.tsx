@@ -14,7 +14,7 @@ export default function FilamentPage() {
     const searchParams = useSearchParams();
     // Backwards compatibility with old qr codes
     if (searchParams.get("f"))
-        redirect(`/app/filament/${searchParams.get("f")}`);
+        redirect(`/app/filament/short/${searchParams.get("f")}`);
 
     const user = pb.authStore.record as unknown as UsersResponse;
 
