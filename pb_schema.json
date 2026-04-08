@@ -359,6 +359,17 @@
       },
       {
         "hidden": false,
+        "id": "date299739652",
+        "max": "",
+        "min": "",
+        "name": "lastSeenPrivacyPolicy",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "date"
+      },
+      {
+        "hidden": false,
         "id": "autodate2990389176",
         "name": "created",
         "onCreate": true,

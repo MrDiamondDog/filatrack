@@ -1,3 +1,5 @@
+import { privacyPolicyLastUpdate } from "@/app/about/privacy-policy/page";
+
 export const defaultUserSettings = {
     filamentSort: "name",
     shownFilamentCardKeys: ["storage", "brand", "material", "mass"],
@@ -29,4 +31,5 @@ export const defaultUserSettings = {
         ],
         format: "SVG",
     },
+    lastSeenPrivacyPolicy: privacyPolicyLastUpdate,
 };

@@ -22,7 +22,7 @@ PRE-ship:
 -[x] Selfhosting
 -[x] Customizable self-hosting auth methods
 -[x] Selfhosting docs
--[ ] Privacy policy update banner
+-[x] Privacy policy update banner
 -[x] Transfer script
 
 POST-ship:

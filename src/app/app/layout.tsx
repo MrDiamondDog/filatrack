@@ -1,4 +1,5 @@
 import Sidebar from "@/components/sidebar/Sidebar";
+import PrivacyPolicyChecker from "@/components/util/PrivacyPolicyChecker";
 import { AnimatePresence } from "motion/react";
 import { Metadata } from "next";
 import { Suspense } from "react";
@@ -20,5 +21,7 @@ export default async function AppLayout({
                 {children}
             </Suspense>
         </AnimatePresence>
+
+        <PrivacyPolicyChecker />
     </div>;
 }
