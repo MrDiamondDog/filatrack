@@ -43,6 +43,8 @@ export default function LoginPage() {
         pb.collection("users").authWithPassword(email, password, defaultUserSettings)
             .then(res => login(res, searchParams.get("to") ?? undefined))
             .catch(e => {
+                if (e.message.includes("NEXT_REDIRECT"))
+                    return;
                 console.error(e);
                 setError(e.message);
             });
