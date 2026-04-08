@@ -1,6 +1,7 @@
 "use client";
 
 import { pb } from "@/api/pb";
+import ProfilePicture from "@/components/auth/ProfilePicture";
 import Button, { ButtonStyles } from "@/components/base/Button";
 import Checkbox from "@/components/base/Checkbox";
 import Divider from "@/components/base/Divider";
@@ -114,9 +115,7 @@ export default function SettingsPage() {
                         <div className="w-full">
                             <div className="w-full flex gap-3 items-center">
                                 <div className="relative">
-                                    <img src={pb.files.getURL(userData, userData.avatar!)}
-                                        className="rounded-full size-20 object-cover"
-                                    />
+                                    <ProfilePicture size={64} />
                                     <div className={`absolute inset-0 rounded-full opacity-0 hover:opacity-100 
                                 transition-opacity bg-[#000000a4] cursor-pointer`}
                                     onClick={() => setOpenModal("avatar")}>

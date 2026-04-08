@@ -21,6 +21,8 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const [error, setError] = useState("");
+
     const searchParams = useSearchParams();
 
     useEffect(() => {
@@ -30,13 +32,33 @@ export default function LoginPage() {
             .then(setProviders);
     }, []);
 
+    useEffect(() => {
+        setError("");
+    }, [email, password]);
+
+    function auth() {
+        if (!email || !password || !email.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/))
+            return;
+
+        pb.collection("users").authWithPassword(email, password, defaultUserSettings)
+            .then(res => login(res, searchParams.get("to") ?? undefined))
+            .catch(e => {
+                console.error(e);
+                setError(e.message);
+            });
+    }
+
     return (<>
         <LandingBackground />
 
-        <main className="absolute-center bg-bg-light rounded-lg p-4 md:w-fit w-3/4">
+        <main className="absolute-center bg-bg-light rounded-lg p-4 md:w-fit w-3/4" onKeyDown={e => e.key === "Enter" && auth()}>
             <h2 className="text-center w-full">Login</h2>
 
             <Divider />
+
+            {error && <div className="bg-danger-secondary border-2 border-danger p-2 rounded-lg">
+                {error}
+            </div>}
 
             {providers ? <div>
                 {providers.password.enabled && <>
@@ -46,9 +68,7 @@ export default function LoginPage() {
                         className="w-full my-2"
                         disabled={!email || !password ||
                             !email.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)}
-                        onClick={() => pb.collection("users").authWithPassword(email, password, defaultUserSettings)
-                            .then(res => login(res, searchParams.get("to") ?? undefined))
-                        }
+                        onClick={auth}
                     >
                         Login
                     </Button>
@@ -60,6 +80,7 @@ export default function LoginPage() {
                     {providers.oauth2.providers.map(provider => <SSOButton
                         provider={provider.name}
                         icon={<img src={`${getPublicEnv().PB_URL}_/images/oauth2/${provider.name}.svg`} className="size-5" />}
+                        key={provider.name}
                     >
                         Sign in with {provider.displayName}
                     </SSOButton>

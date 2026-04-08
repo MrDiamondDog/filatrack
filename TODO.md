@@ -19,8 +19,8 @@ PRE-ship:
 -[x] Customize what is shown on filament cards/table
 -[x] Avatar editing
 -[x] MOBILE SUPPORT (4hr)
--[ ] Selfhosting
--[ ] Customizable self-hosting auth methods
+-[x] Selfhosting
+-[x] Customizable self-hosting auth methods
 -[x] Selfhosting docs
 -[ ] Privacy policy update banner
 -[x] Transfer script

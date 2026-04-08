@@ -33,6 +33,10 @@ export default function SignupPage() {
             .then(setProviders);
     }, []);
 
+    useEffect(() => {
+        setError("");
+    }, [email, username, password, passwordConfirm]);
+
     function signup() {
         setError("");
 
@@ -48,7 +52,10 @@ export default function SignupPage() {
 
         pb.collection("users").create({ ...defaultUserSettings, name: username, email, password, passwordConfirm })
             .then(() => router.push("/app"))
-            .catch(e => setError(e.message));
+            .catch(e => {
+                console.error(e);
+                setError(e.message);
+            });
     }
 
     return <Suspense fallback={<Spinner />}>
@@ -59,6 +66,10 @@ export default function SignupPage() {
 
             <Divider />
 
+            {error && <div className="bg-danger-secondary border-2 border-danger p-2 rounded-lg">
+                {error}
+            </div>}
+
             {providers ? <div>
                 {providers.password.enabled ? <>
                     <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
@@ -68,7 +79,6 @@ export default function SignupPage() {
                         onChange={e => setConfirmPassword(e.target.value)} />
                     <Button
                         className="w-full my-2"
-                        disabled={!!error}
                         onClick={signup}
                     >
                         Sign Up

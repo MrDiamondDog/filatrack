@@ -60,6 +60,9 @@ export default function FilamentChart({ filament }: { filament: FilamentRecord[]
         }
     }, [chartMode, filament]);
 
+    if (!filament.length)
+        return null;
+
     return <div>
         <div className="w-full flex justify-center mb-2">
             <Tablist

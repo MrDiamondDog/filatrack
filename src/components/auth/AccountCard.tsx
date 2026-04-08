@@ -7,6 +7,7 @@ import { useState } from "react";
 import Divider from "../base/Divider";
 import { AnimateSize } from "../util/AnimateSize";
 import { logout } from "@/lib/auth";
+import ProfilePicture from "./ProfilePicture";
 
 export function AccountCard() {
     const user = pb.authStore.record as unknown as UsersRecord | null;
@@ -22,7 +23,7 @@ export function AccountCard() {
         <div className="bg-bg rounded-lg p-2 w-full">
             <div className="flex justify-between items-center cursor-pointer w-full" onClick={() => setOpen(o => !o)}>
                 <div className="flex gap-2 items-center w-full overflow-x-hidden">
-                    <img src={user.avatar && pb.files.getURL(user, user.avatar)} className="size-7 rounded-full object-cover" />
+                    <ProfilePicture size={32} />
                     <p className="overflow-x-hidden text-ellipsis text-nowrap">{user.name}</p>
                 </div>
 
