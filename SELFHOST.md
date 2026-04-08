@@ -2,7 +2,7 @@
 
 This guide will provide all the information you need to self host Filatrack. It's relatively simple!
 
-> !NOTE
+> [!NOTE]
 > You can host everything locally if you want- you'll only be able to access Filatrack locally (obviously)
 > If you want to access Filatrack from other places, set up a reverse proxy.
 
@@ -62,7 +62,7 @@ Windows:
 
 Replace `pocketbase url` with the Pocketbase URL you plan on using, and `app url` with the URL you plan on using to access your instance!
 
-> !WARNING
+> [!WARNING]
 > BOTH URLs need a trailing slash! (http://example.com/ <<) 
 
 If there are no errors, then Filatrack should be running on port 3000! Make sure your pocketbase instance is still running otherwise
@@ -95,7 +95,7 @@ You can turn on the methods you want by clicking the dropdown and selecting `Ena
 
 For OAuth, you'll have to get credentials from the providers you choose. Set the redirect URI to `https://[pocketbase url]/api/oauth2-redirect`.
 
-> !NOTE
+> [!NOTE]
 > Filatrack currently doesn't support OTP or MFA. Turning these on will not work.
 
 That should be it! Try logging in/signing up on Filatrack.
@@ -104,5 +104,5 @@ That should be it! Try logging in/signing up on Filatrack.
 
 If you're confused at any step of the process, we're willing to help! Please visit the [Discord server](https://discord.gg/HUjRATbH2g).
 
-> !WARNING
+> [!WARNING]
 > PLEASE do not open an issue if you're having issues, unless you are actually reporting a bug or feature request.
