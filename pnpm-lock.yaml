@@ -42,8 +42,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1(next@16.2.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
       drizzle-orm:
-        specifier: ^0.44.7
-        version: 0.44.7(@prisma/client@6.9.0(prisma@6.9.0(typescript@5.9.3))(typescript@5.9.3))(pg@8.16.0)(postgres@3.4.8)(prisma@6.9.0(typescript@5.9.3))
+        specifier: ^0.45.2
+        version: 0.45.2(@prisma/client@6.9.0(prisma@6.9.0(typescript@5.9.3))(typescript@5.9.3))(pg@8.16.0)(postgres@3.4.8)(prisma@6.9.0(typescript@5.9.3))
       lucide-react:
         specifier: ^0.513.0
         version: 0.513.0(react@19.2.4)
@@ -2115,8 +2115,8 @@ packages:
     resolution: {integrity: sha512-7OZcmQUrdGI+DUNNsKBn1aW8qSoKuTH7d0mYgSP8bAzdFzKoovxEFnoGQp2dVs82EOJeYycqRtciopszwUf8bw==}
     hasBin: true
 
-  drizzle-orm@0.44.7:
-    resolution: {integrity: sha512-quIpnYznjU9lHshEOAYLoZ9s3jweleHlZIAWR/jX9gAWNg/JhQ1wj0KGRf7/Zm+obRrYd9GjPVJg790QY9N5AQ==}
+  drizzle-orm@0.45.2:
+    resolution: {integrity: sha512-kY0BSaTNYWnoDMVoyY8uxmyHjpJW1geOmBMdSSicKo9CIIWkSxMIj2rkeSR51b8KAPB7m+qysjuHme5nKP+E5Q==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=4'
@@ -5318,7 +5318,7 @@ snapshots:
       esbuild: 0.25.12
       tsx: 4.21.0
 
-  drizzle-orm@0.44.7(@prisma/client@6.9.0(prisma@6.9.0(typescript@5.9.3))(typescript@5.9.3))(pg@8.16.0)(postgres@3.4.8)(prisma@6.9.0(typescript@5.9.3)):
+  drizzle-orm@0.45.2(@prisma/client@6.9.0(prisma@6.9.0(typescript@5.9.3))(typescript@5.9.3))(pg@8.16.0)(postgres@3.4.8)(prisma@6.9.0(typescript@5.9.3)):
     optionalDependencies:
       '@prisma/client': 6.9.0(prisma@6.9.0(typescript@5.9.3))(typescript@5.9.3)
       pg: 8.16.0
