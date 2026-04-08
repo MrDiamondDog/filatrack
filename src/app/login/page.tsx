@@ -10,6 +10,7 @@ import LandingBackground from "@/components/landing/LandingBackground";
 import { login } from "@/lib/auth";
 import { defaultUserSettings } from "@/lib/user";
 import { getPublicEnv } from "@/public-env";
+import Link from "@mui/material/Link";
 import { useSearchParams } from "next/navigation";
 import { AuthMethodsList } from "pocketbase";
 import { useEffect, useState } from "react";
@@ -51,8 +52,8 @@ export default function LoginPage() {
                     >
                         Login
                     </Button>
-                    <p>Don't have an account yet? <a href="/signup">Sign Up</a></p>
-                    <a href="/login/reset">Reset Password</a>
+                    <p>Don't have an account yet? <Link href="/signup">Sign Up</Link></p>
+                    <Link href="/login/reset">Reset Password</Link>
                     <Divider />
                 </>}
                 {providers.oauth2.enabled && <div className="flex flex-col gap-2">

@@ -6,6 +6,7 @@ import Divider from "@/components/base/Divider";
 import Input from "@/components/base/Input";
 import Spinner from "@/components/base/Spinner";
 import LandingBackground from "@/components/landing/LandingBackground";
+import Link from "next/link";
 import { Suspense, useState } from "react";
 
 export default function ResetPasswordPage() {
@@ -40,11 +41,11 @@ export default function ResetPasswordPage() {
             {emailSent && <div className="flex flex-col gap-2">
                 <p className="text-wrap whitespace-pre-wrap">
                     An email has been sent containing instructions to reset your password.{"\n"}
-                    <a href="/login/reset">Send Again</a>
+                    <Link href="/login/reset">Send Again</Link>
                 </p>
             </div>}
 
-            <a href="/login">Login</a>
+            <Link href="/login">Login</Link>
         </main>
     </Suspense>);
 }
