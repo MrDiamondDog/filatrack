@@ -1,21 +1,12 @@
-import { auth } from "@/auth";
-import Spinner from "@/components/Spinner";
-import { redirect } from "next/navigation";
+import Spinner from "@/components/base/Spinner";
 import { Suspense } from "react";
 
-export default async function LoginLayout({
+export default function LoginLayout({
     children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-    const session = await auth();
-
-    if (session)
-        return redirect("/app");
-
-    return (
-        <Suspense fallback={<Spinner />}>
-            {children}
-        </Suspense>
-    );
+    return <Suspense fallback={<Spinner />}>
+        {children}
+    </Suspense>;
 }

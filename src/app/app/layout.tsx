@@ -1,31 +1,27 @@
-import { auth } from "@/auth";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/sidebar/Sidebar";
+import PrivacyPolicyChecker from "@/components/util/PrivacyPolicyChecker";
+import { AnimatePresence } from "motion/react";
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
-import { RandomDialogs } from "../../lib/dialogs";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Filatrack App",
-    description: "Super-simple tracking of all your 3d printing filaments",
+    title: "Filatrack Dashboard",
 };
 
 export default async function AppLayout({
     children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-    const session = await auth();
+    return <div className="flex flex-row w-full overflow-hidden">
+        <Sidebar />
 
-    if (!session || !session.user)
-        redirect("/login");
+        <AnimatePresence>
+            <Suspense>
+                {children}
+            </Suspense>
+        </AnimatePresence>
 
-    return (<>
-        <main className="flex flex-col-reverse md:flex-row w-screen md:bg-bg-light overflow-x-hidden">
-            <Sidebar session={session} />
-
-            <RandomDialogs />
-
-            {children}
-        </main>
-    </>);
+        <PrivacyPolicyChecker />
+    </div>;
 }

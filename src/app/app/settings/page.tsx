@@ -1,299 +1,404 @@
 "use client";
 
-import { sidebarWidth } from "@/lib/constants";
-import { app } from "@/lib/db";
-import { handleApiError } from "@/lib/errors";
-import { useDevice, useObjectState } from "@/lib/hooks";
-import Button, { ButtonStyles } from "@/components/Button";
-import Divider from "@/components/Divider";
-import MassPicker from "@/components/filament/MassPicker";
-import MaterialPicker from "@/components/filament/MaterialPicker";
-import SearchTipsModal from "@/components/filament/SearchTips";
-import Footer from "@/components/Footer";
-import Input from "@/components/Input";
-import Modal, { ModalFooter } from "@/components/Modal";
-import Spinner from "@/components/Spinner";
-import Subtext from "@/components/Subtext";
-import Tab from "@/components/tabs/Tab";
-import Tablist from "@/components/tabs/Tablist";
-import { UserSettings } from "@/db/types";
-import { X } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { pb } from "@/api/pb";
+import ProfilePicture from "@/components/auth/ProfilePicture";
+import Button, { ButtonStyles } from "@/components/base/Button";
+import Checkbox from "@/components/base/Checkbox";
+import Divider from "@/components/base/Divider";
+import Input from "@/components/base/Input";
+import Modal, { ModalFooter, ModalHeader } from "@/components/base/Modal";
+import MotionContainer from "@/components/base/MotionContainer";
+import { Select } from "@/components/base/Select";
+import Spinner from "@/components/base/Spinner";
+import Subtext from "@/components/base/Subtext";
+import Tab from "@/components/base/tabs/Tab";
+import Tablist from "@/components/base/tabs/Tablist";
+import FilamentPresetCard from "@/components/filament/FilamentPresetCard";
+import CreateFilamentPresetModal from "@/components/modals/CreateFilamentPresetModal";
+import EditAvatarModal from "@/components/modals/EditAvatarModal";
+import { QRFieldSelector } from "@/components/modals/PrintFilamentQRModal";
+import UserTag from "@/components/settings/UserTag";
+import { logout } from "@/lib/auth";
+import { filamentCardKeys, filamentTableKeys, getFilamentCardKey, getFilamentTableKey } from "@/lib/filamentKeys";
+import { deleteFromArray, modifyArrayItem, moveArrayItem } from "@/lib/util/array";
+import { toastError } from "@/lib/util/error";
+import { useObjectState } from "@/lib/util/hooks";
+import {
+    FilamentPresetsRecord,
+    UsersFilamentSortOptions,
+    UsersRecord,
+} from "@/types/pb";
+import { QRSettings } from "@/types/users";
+import { startHolyLoader, stopHolyLoader } from "holy-loader";
+import { ChevronDown, ChevronUp, Heart, Pencil, Plus, Save, Spool, Trash2, X } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
+function FilamentKeyField({ title, onMove, onDelete }: { title: string, onMove: (dir: "up" | "down") => void, onDelete: () => void }) {
+    return (<div className="flex items-center justify-between">
+        <p>{title}</p>
+        <div className="flex gap-1 items-center text-gray-500 *:cursor-pointer">
+            <ChevronUp size={20} onClick={() => onMove("up")} />
+            <ChevronDown size={20} onClick={() => onMove("down")} />
+            <Trash2 size={20} onClick={onDelete} />
+        </div>
+    </div>);
+}
+
 export default function SettingsPage() {
-    const [isMobile, width] = useDevice();
+    const user = pb.authStore.record as unknown as UsersRecord | null;
 
-    const { data: session } = useSession();
+    if (!user)
+        return null;
 
-    const [loading, setLoading] = useState(false);
-    const [saveLoading, setSaveLoading] = useState(false);
+    const [userData, setUserData] = useObjectState({ ...user });
+    const [filamentPresets, setFilamentPresets] = useState<FilamentPresetsRecord[]>([]);
 
-    const [username, setUsernameInput] = useState("");
+    const [filamentCount, setFilamentCount] = useState<number>();
+    const [storagesCount, setStoragesCount] = useState<number>();
+    const [printsCount, setPrintsCount] = useState<number>();
 
-    const [userSettings, setUserSettingsData] = useObjectState<UserSettings>({
-        userId: "",
-        timeFormat: "12-hour",
-        dateFormat: "mm/dd/yyyy",
-        defaultMaterial: "PLA",
-        materialPickerOptions: [],
-        defaultMass: 1000,
-        seenSearchTips: false,
-        additionalFilamentModifier: 0,
-    });
+    const [openModal, setOpenModal] = useState("");
 
-    const [modal, setModal] = useState("");
-    const [deleteAccountConfirm, setDeleteAccountConfirm] = useState(false);
+    const [editing, setEditing] = useState(false);
+    const [usernameInput, setUsernameInput] = useState(userData.name);
 
-    const [newMaterialValue, setNewMaterialValue] = useState("");
+    const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
-    const [allowAnalytics, setAllowAnalytics] = useState((window.localStorage.getItem("allowAnalytics") ?? "true") === "true");
+    const isDNT = navigator.doNotTrack === "yes" || navigator.doNotTrack === "1";
 
-    useEffect(() => {
-        if (!session)
-            return;
-
-        setLoading(true);
-
-        setUsernameInput(session.user!.name!);
-
-        app.settings.getUserSettings().then(r => setUserSettingsData(r.data ?? {}));
-
-        setLoading(false);
-    }, [session]);
-
-    useEffect(() => {
-        window.localStorage.setItem("allowAnalytics", `${allowAnalytics}`);
-    }, [allowAnalytics]);
-
-    async function saveUsername() {
-        setSaveLoading(true);
-
-        const res = await app.settings.setUsername(username);
-
-        if (res.error)
-            handleApiError(res.error, "toast");
-
-        setSaveLoading(false);
-    }
-
-    async function saveSettings() {
-        setSaveLoading(true);
-
-        const res = await app.settings.updateUserSettings(userSettings);
-
-        if (res.error)
-            handleApiError(res.error, "toast");
-        else
-            setUserSettingsData(res.data);
-
-        setSaveLoading(false);
+    async function updateSettings(newSettings: Partial<UsersRecord>) {
+        startHolyLoader();
+        await pb.collection("users").update(user!.id, { ...newSettings })
+            .then(setUserData)
+            .catch(e => {
+                toastError("Could not update user", e);
+            });
+        stopHolyLoader();
     }
 
     async function deleteAccount() {
-        setModal("");
-        setDeleteAccountConfirm(false);
+        if (!deleteConfirmation)
+            return void setDeleteConfirmation(true);
 
-        setSaveLoading(false);
-
-        await app.settings.deleteUser();
-
-        signOut();
+        pb.collection("users").delete(user!.id)
+            .then(logout);
     }
 
-    function submitMaterialPickerOption() {
-        if (!newMaterialValue)
-            return;
+    useEffect(() => {
+        pb.collection("filamentPresets").getFullList({
+            filter: `user.id = "${user.id}"`,
+        })
+            .then(setFilamentPresets)
+            .catch(e => toastError("Could not fetch filament presets", e));
 
-        if (userSettings.materialPickerOptions.includes(newMaterialValue))
-            return;
+        pb.collection("filament").getList()
+            .then(res => setFilamentCount(res.totalItems))
+            .catch(e => toastError("Could not fetch filament", e));
 
-        setUserSettingsData({
-            materialPickerOptions: [
-                ...userSettings.materialPickerOptions,
-                newMaterialValue,
-            ],
-        });
+        pb.collection("storage").getList()
+            .then(res => setStoragesCount(res.totalItems))
+            .catch(e => toastError("Could not fetch filament", e));
 
-        setNewMaterialValue("");
-    }
+        pb.collection("prints").getList()
+            .then(res => setPrintsCount(res.totalItems))
+            .catch(e => toastError("Could not fetch filament", e));
+    }, []);
 
-    return (<div
-        className="bg-bg w-full p-4 pt-2 mb-[75px] md:mb-0 h-full"
-        style={{ marginLeft: (!width || isMobile) ? undefined : sidebarWidth }}
-    >
-        <Tablist tabs={["Account", "Preferences"]} activeTab="Account">
-            <Tab name="Account" className="w-[200px]">
-                <h1>Account</h1>
+    useEffect(() => {
+        setDeleteConfirmation(false);
+    }, [openModal]);
 
-                {(!session || loading) && <Spinner />}
+    return (<>
+        <MotionContainer>
+            <Tablist tabs={{ account: "Account", preferences: "Preferences", appearance: "Appearance" }} activeTab="account">
+                <Tab name="account" className="max-w-300">
+                    <div className="bg-bg-light rounded-lg p-4 flex gap-2 w-fit my-2 items-center">
+                        <div className="w-full">
+                            <div className="w-full flex gap-3 items-center">
+                                <div className="relative">
+                                    <ProfilePicture size={64} />
+                                    <div className={`absolute inset-0 rounded-full opacity-0 hover:opacity-100 
+                                transition-opacity bg-[#000000a4] cursor-pointer`}
+                                    onClick={() => setOpenModal("avatar")}>
+                                        <Pencil size={32} className="absolute-center" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="flex gap-2 items-center">
+                                        {!editing && <h2>{userData.name}</h2>}
+                                        {editing && <Input value={usernameInput} onChange={e => setUsernameInput(e.target.value)} />}
 
-                {(session && !loading) && <>
-                    <img src={session.user!.image!} className="rounded-full w-[100px] a-hide" />
-
-                    <Input label="Username" value={username} onChange={e => setUsernameInput(e.target.value)} maxLength={12}
-                        className="a-hide" />
-
-                    <Divider />
-
-                    <Button look={ButtonStyles.danger} onClick={() => setModal("delete")}>Delete Account</Button>
-
-                    <Divider />
-
-                    <Input type="checkbox" label="Analytics" checked={allowAnalytics}
-                        onChange={e => setAllowAnalytics(e.target.checked)}
-                    />
-                    <Subtext className="w-[250%]">
-                        Filatrack collects completely anonymous, analytics to see how many
-                        people are using Filatrack and to see how we can improve.<br />
-                        Please feel free to turn this off; we understand privacy.
-                    </Subtext>
-
-                    <Divider />
-
-                    <Button loading={saveLoading} onClick={saveUsername}>Save</Button>
-                </>}
-
-                <Modal open={modal === "delete"} onClose={() => setModal("")} danger title="Delete Account">
-                    <Subtext>Delete all of your data involving Filatrack.</Subtext>
-                    <Divider />
-
-                    <p className="min-w-[300px] md:min-w-0">
-                        Are you SURE you want to DELETE your Filatrack account?
-                        This will delete ALL data, including added filament and their logs.
-                        This action is IRREVERSABLE.
-                    </p>
-
-                    <Divider />
-
-                    <Input
-                        type="checkbox"
-                        label="I wish to delete all of my data from Filatrack."
-                        onChange={e => setDeleteAccountConfirm(e.target.checked)}
-                        checked={deleteAccountConfirm}
-                    />
-
-                    <ModalFooter>
-                        <Button onClick={() => setModal("")} look={ButtonStyles.secondary}>Cancel</Button>
-                        <Button
-                            onClick={deleteAccount}
-                            look={ButtonStyles.danger}
-                            disabled={!deleteAccountConfirm}
-                        >Continue</Button>
-                    </ModalFooter>
-                </Modal>
-            </Tab>
-            <Tab name="Preferences">
-                <h1>Preferences</h1>
-
-                {(!session || loading) && <Spinner />}
-
-                {!loading && <>
-                    {/* <p>Time Format</p>
-                    <Select value={userSettings.timeFormat} onChange={e => setUserSettingsData({ timeFormat: e.target.value })}>
-                        <option value="12-hour">12-hour</option>
-                        <option value="24-hour">24-hour</option>
-                    </Select>
-
-                    <p>Date Format</p>
-                    <Select value={userSettings.dateFormat} onChange={e => setUserSettingsData({ dateFormat: e.target.value })}>
-                        <option value="mm/dd/yyyy">mm/dd/yyyy</option>
-                        <option value="dd/mm/yyyy">dd/mm/yyyy</option>
-                        <option value="yyyy/mm/dd">yyyy/mm/dd</option>
-                    </Select> */}
-
-                    <Divider />
-
-                    <Button onClick={() => setModal("search")}>View Search Tips</Button>
-                    <SearchTipsModal open={modal === "search"} onClose={() => setModal("")} />
-
-                    <Divider />
-
-                    <Input
-                        label="Additional Filament Modifier (g)"
-                        type="number"
-                        value={userSettings.additionalFilamentModifier}
-                        onChange={e => setUserSettingsData({ additionalFilamentModifier: parseInt(e.target.value) })}
-                    />
-                    <Subtext>When you log filament, this value will be added to account for purge material or waste.</Subtext>
-
-                    <Divider />
-
-                    <b>Default Material</b>
-                    <Button onClick={() => setModal("materialpickeroptions")}>Edit Options</Button>
-                    <div>
-                        <MaterialPicker
-                            value={userSettings.defaultMaterial}
-                            onChange={v => setUserSettingsData({ defaultMaterial: v })}
-                            userSettings={userSettings}
-                        />
+                                        {!editing && <Pencil
+                                            className="text-gray-500 cursor-pointer"
+                                            onClick={() => setEditing(true)}
+                                        />}
+                                        {editing && <>
+                                            <Save
+                                                className="text-primary cursor-pointer"
+                                                onClick={() => {
+                                                    setEditing(false);
+                                                    updateSettings({ name: usernameInput });
+                                                }}
+                                            />
+                                            <X
+                                                className="text-danger cursor-pointer"
+                                                onClick={() => {
+                                                    setEditing(false);
+                                                    setUsernameInput(userData.name);
+                                                }}
+                                            />
+                                        </>}
+                                    </div>
+                                    <div className="flex gap-1 items-center md:flex-nowarp flex-wrap">
+                                        {userData.supporter && <UserTag hexColor="#ffb2cb"><Heart size={16} /> Supporter</UserTag>}
+                                        {userData.legacy && <UserTag hexColor="#0dd599"><Spool size={16} /> Early User</UserTag>}
+                                    </div>
+                                </div>
+                            </div>
+                            <Divider />
+                            <div className="w-full flex">
+                                <Divider vertical />
+                                <div>
+                                    <h3>Filament</h3>
+                                    <Divider />
+                                    <h2>{filamentCount ?? <Spinner />}</h2>
+                                </div>
+                                <Divider vertical />
+                                <div>
+                                    <h3>Storages</h3>
+                                    <Divider />
+                                    <h2>{storagesCount ?? <Spinner />}</h2>
+                                </div>
+                                <Divider vertical />
+                                <div>
+                                    <h3>Prints</h3>
+                                    <Divider />
+                                    <h2>{printsCount ?? <Spinner />}</h2>
+                                </div>
+                                <Divider vertical />
+                            </div>
+                            <Divider />
+                            <div className="*:w-full w-full flex gap-1">
+                                <Button look={ButtonStyles.secondary} onClick={() => {
+                                    logout();
+                                    pb.authStore.clear();
+                                }}>Log Out</Button>
+                                <Button look={ButtonStyles.danger} onClick={() => setOpenModal("delete")}>Delete Account</Button>
+                            </div>
+                        </div>
                     </div>
-
-                    <Divider />
-
-                    <b>Default Filament Mass</b>
+                    <Checkbox checked={!!user.allowAnalytics} onCheckedChange={c => updateSettings({ allowAnalytics: c })}>
+                        Allow Analytics
+                    </Checkbox>
+                    {!isDNT && <Subtext className="whitespace-pre-wrap">
+                        Filatrack collects comepletely anonymous analytics to watch trends and improve UX.{"\n"}
+                        Please feel free to turn this off if you would not like to participate.
+                    </Subtext>}
+                    {isDNT && <Subtext>
+                        Analytics are automatically turned off because your browser is sending a DNT signal.
+                    </Subtext>}
+                    <Link href="/about/privacy-policy">Privacy Policy</Link>
+                </Tab>
+                <Tab name="preferences" className="max-w-150">
                     <div>
-                        <MassPicker
-                            values={{ currentMass: userSettings.defaultMass, startingMass: userSettings.defaultMass }}
-                            onChange={v => setUserSettingsData({ defaultMass: v.currentMass })}
-                            noHelper
-                        />
-                    </div>
+                        <h2 className="mt-2">Defaults</h2>
+                        <Subtext>The defaults for various options.</Subtext>
 
-                    <Divider />
-
-                    <Button loading={saveLoading} onClick={saveSettings}>Save</Button>
-
-                    <Modal open={modal === "materialpickeroptions"} onClose={() => setModal("")} title="Edit Material Picker Options">
-                        <Subtext>Edit the default options for the material picker</Subtext>
                         <Divider />
 
-                        <div className="flex gap-2 w-full">
-                            <Input
-                                placeholder="PLA, ABS, etc."
-                                className="w-full"
-                                onKeyDown={e => {
-                                    if (e.key !== "Enter")
-                                        return;
+                        <p>Filament Sorting</p>
+                        <Select
+                            options={{
+                                name: "Name",
+                                color: "Color",
+                                material: "Material",
+                                brand: "Brand",
+                                updated: "Recent",
+                            }}
+                            value={userData.filamentSort}
+                            onChange={v => updateSettings({ filamentSort: v as UsersFilamentSortOptions })}
+                        />
 
-                                    submitMaterialPickerOption();
-                                }}
-                                maxLength={15}
-                                value={newMaterialValue}
-                                onChange={e => setNewMaterialValue(e.target.value)}
+                        <p>Default QR code options</p>
+                        <div className="bg-bg-light rounded-lg p-2">
+                            <QRFieldSelector
+                                fields={(userData.defaultQrSettings as QRSettings)?.fields ?? []}
+                                onListUpdate={f => updateSettings({
+                                    defaultQrSettings: { ...(userData.defaultQrSettings as object), fields: f },
+                                })}
                             />
-                            <Button onClick={submitMaterialPickerOption}>Add</Button>
-                        </div>
 
-                        <div className="flex flex-wrap gap-1 mt-2 max-w-[400px]">
-                            {userSettings.materialPickerOptions.map((v, i) => (
-                                <div
-                                    className={`bg-bg-lighter rounded-full px-3 py-1 
-                                        text-center flex items-center justify-between`}
-                                    key={v}
-                                >
-                                    {v}
-                                    <X
-                                        className="text-gray-500 cursor-pointer min-w-[24px] ml-1"
-                                        onClick={() => setUserSettingsData({
-                                            materialPickerOptions: [
-                                                ...userSettings.materialPickerOptions.slice(0, i),
-                                                ...userSettings.materialPickerOptions.slice(i + 1),
-                                            ],
+                            <p>Format</p>
+                            <Select
+                                options={{ PNG: "PNG", SVG: "SVG" }}
+                                value={(userData.defaultQrSettings as QRSettings)?.format ?? "SVG"}
+                                onChange={f => updateSettings({
+                                    defaultQrSettings: { ...(userData.defaultQrSettings as object), format: f },
+                                })}
+                            />
+                        </div>
+                    </div>
+                    <Divider />
+                    <div>
+                        <div className="flex justify-between items-center">
+                            <h2>Filament Presets</h2>
+                            <Button onClick={() => setOpenModal("filament-preset")}><Plus /></Button>
+                        </div>
+                        <Subtext>Presets you can use to autofill common values when making filament.</Subtext>
+
+                        <div className="flex gap-2 flex-wrap">
+                            {filamentPresets.map(p => <FilamentPresetCard
+                                key={p.id} preset={p} onModify={p => setFilamentPresets(modifyArrayItem(filamentPresets, p, "id"))}
+                                onDelete={() => setFilamentPresets(deleteFromArray(filamentPresets, p, "id"))}
+                            />)}
+                            {!filamentPresets.length && <p>You don't have any filament presets yet.</p>}
+                        </div>
+                    </div>
+                    <Divider />
+                    <div>
+                        <div className="flex justify-between items-center">
+                            <h2>Custom Attributes</h2>
+                            <Button disabled onClick={() => setOpenModal("custom-attribute")}><Plus /></Button>
+                        </div>
+                        <Subtext>
+                            Allows you to track filament properties that Filatrack doesn't have.
+                        </Subtext>
+
+                        <p>Coming soon!</p>
+
+                        {/* <div className="flex flex-col gap-2">
+                            {userSettings.expand.customAttributes?.map(a => <CustomAttributeCard attribute={a} />)}
+                        </div> */}
+                    </div>
+
+                    <Divider />
+
+                    <Checkbox checked={userData.advancedView ?? false} onCheckedChange={c => updateSettings({ advancedView: c })}>
+                        Advanced View
+                    </Checkbox>
+                </Tab>
+                <Tab name="appearance" className="max-w-150">
+                    {/* TODO: For the love of god this tab is awful. Split these into components */}
+                    <h2>Filament Card/Table Display</h2>
+                    <Subtext>Change data what is displayed on filament cards and tables.</Subtext>
+
+                    <div className="bg-bg-light rounded-lg p-2 flex gap-2 w-fit">
+                        <div>
+                            <p>Card Fields</p>
+                            <div className="flex flex-col gap-1 bg-bg-lighter rounded-lg p-2">
+                                {((user.shownFilamentCardKeys ?? []) as string[]).map((key, i) => {
+                                    const filamentKey = getFilamentCardKey(key);
+                                    if (!filamentKey)
+                                        return null;
+                                    return <FilamentKeyField
+                                        title={filamentKey.title}
+                                        key={i}
+                                        onMove={dir => updateSettings({
+                                            shownFilamentCardKeys:
+                                                moveArrayItem((user.shownFilamentCardKeys ?? []) as string[], i, dir),
                                         })}
-                                    />
-                                </div>
-                            ))}
+                                        onDelete={() => updateSettings({
+                                            shownFilamentCardKeys:
+                                                deleteFromArray((user.shownFilamentCardKeys ?? []) as string[], key),
+                                        })}
+                                    />;
+                                })}
+                            </div>
+
+                            <p>Add Fields</p>
+                            <Select
+                                options={{
+                                    ...Object.fromEntries(
+                                        filamentCardKeys.map(k => !((user.shownFilamentCardKeys as string[]) ?? []).includes(k.key) &&
+                                        [k.key, k.title]
+                                        ).filter(e => !!e)
+                                    ),
+                                }}
+                                placeholder="Select a field to add"
+                                value=""
+                                onChange={v => updateSettings({
+                                    shownFilamentCardKeys: [...((user.shownFilamentCardKeys ?? []) as string[]), v],
+                                })}
+                            />
                         </div>
+                        <Divider vertical />
+                        <div>
+                            <p>Table Fields</p>
+                            <div className="flex flex-col gap-1 bg-bg-lighter rounded-lg p-2">
+                                {((user.shownFilamentTableKeys ?? []) as string[]).map((key, i) => {
+                                    const filamentKey = getFilamentTableKey(key);
+                                    if (!filamentKey)
+                                        return null;
+                                    return <FilamentKeyField
+                                        title={filamentKey.title}
+                                        key={i}
+                                        onMove={dir => updateSettings({
+                                            shownFilamentTableKeys:
+                                                moveArrayItem((user.shownFilamentTableKeys ?? []) as string[], i, dir),
+                                        })}
+                                        onDelete={() => updateSettings({
+                                            shownFilamentTableKeys:
+                                                deleteFromArray((user.shownFilamentTableKeys ?? []) as string[], key),
+                                        })}
+                                    />;
+                                })}
+                            </div>
 
-                        <ModalFooter>
-                            <Button onClick={() => saveSettings().then(() => setModal(""))} loading={saveLoading}>Save</Button>
-                        </ModalFooter>
-                    </Modal>
+                            <p>Add Fields</p>
+                            <Select
+                                options={{
+                                    ...Object.fromEntries(
+                                        filamentTableKeys
+                                            .map(k => !((user.shownFilamentTableKeys as string[]) ?? []).includes(k.key) &&
+                                                [k.key, k.title]
+                                            ).filter(e => !!e)
+                                    ),
+                                }}
+                                placeholder="Select a field to add"
+                                value=""
+                                onChange={v => updateSettings({
+                                    shownFilamentTableKeys: [...((user.shownFilamentTableKeys ?? []) as string[]), v],
+                                })}
+                            />
+                        </div>
+                    </div>
+                </Tab>
+            </Tablist>
+
+        </MotionContainer>
+
+        <Modal title="Delete Filatrack Account" open={openModal === "delete"} onClose={() => setOpenModal("")} danger>
+            <ModalHeader>Permanently delete your Filatrack account and all associated data.</ModalHeader>
+            <h3>This action is permanent!</h3>
+            <div className="whitespace-pre-wrap">
+                Once deleted, your data can not be retrieved.{"\n"}
+                All filament, storages, and prints will be permanently lost.{"\n"}
+                {(userData.supporter || userData.legacy) && <>
+                    You will also lose the following user tags:
+                    <div className="flex gap-1 w-full justify-center">
+                        {userData.supporter && <UserTag hexColor="#ffb2cb"><Heart size={16} /> Supporter</UserTag>}
+                        {userData.legacy && <UserTag hexColor="#0dd599"><Spool size={16} /> Early User</UserTag>}
+                    </div>
+                    You may not get these back, even if you make a new account.{"\n"}
                 </>}
-            </Tab>
-        </Tablist>
+                <b>Are you sure you want to continue?</b>
+            </div>
+            <ModalFooter>
+                <Button onClick={() => setOpenModal("")}>Cancel</Button>
+                <Button look={ButtonStyles.danger} className="text-nowrap" onClick={deleteAccount}>
+                    {deleteConfirmation ? "Are you sure?" : "Delete Account"}
+                </Button>
+            </ModalFooter>
+        </Modal>
 
-        <Footer />
-    </div>);
+        <EditAvatarModal
+            open={openModal === "avatar"}
+            onClose={() => setOpenModal("")}
+        />
+
+        <CreateFilamentPresetModal open={openModal === "filament-preset"} onClose={() => setOpenModal("")}
+            onCreate={p => setFilamentPresets([...filamentPresets, p])} />
+        {/* <CreateCustomAttributeModal open={openModal === "custom-attribute"} onClose={() => setOpenModal("")} /> */}
+    </>);
 }

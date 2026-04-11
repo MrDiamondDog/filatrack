@@ -4,9 +4,9 @@ A super-duper simple way to track your 3d printing filament!
 
 ![image](/public/app_example.png)
 
-Made with Next.JS, Auth.JS, Drizzle ORM, and Supabase!
+Made with Next.JS and Pocketbase!
 
-Join the [Discord server](https://filatrack.app/discord) for more info and feature requests!
+Join the [Discord server](https://discord.gg/HUjRATbH2g) for more info and feature requests!
 
 ## Bugs
 
@@ -14,7 +14,11 @@ There definitely are bugs. Please report bugs in the issues on this repo instead
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md)
+See [CONTRIBUTING.md](CONTRIBUTING.md) for info on how to set up your development environment, or join the Discord!
+
+## Self-Hosting
+
+Filatrack is fully self-hostable! See [SELFHOST.md](SELFHOST.md)
 
 ## Star History
 

@@ -1,22 +1,29 @@
 # Contributing
 
-Thank you for your interest in contributing!
+Thank you for your interest in contributing to Filatrack! Please follow this guide before making your first pull request.
 
-PLEASE check the Discord to see if someone is already working on what you want to add! Odds are, someone might be.
+## Guidelines
 
-[Discord server](https://filatrack.app/discord)
+We follow a strict set of guidelines for PRs to Filatrack. If you do not follow these guidelines, your PR will not be accepted.
 
-## Installation (also for self-hosting)
+- **No AI**. AI code will not be of any use, and especially if the whole PR is AI-generated. Trust me, I can tell.
+- Code should be self-explanatory, or commented otherwise. Overusing comments is a sign that your code isn't readable.
+- Be open to code review. Your PR likely won't be accepted on the first pass, so expect some feedback! No one is perfect.
 
-1. Install [PNPM](https://pnpm.io/)
-2. Clone the repo: `git clone https://github.com/MrDiamondDog/filatrack/`
-3. Install dependencies: `pnpm i`
-4. Copy `.env.example` to `.env` and fill out values
-6. Run dev server: `pnpm dev`
-7. Now start implementing!
+## Dev environment
 
-## Standards
+Make a copy of `.env.example` named `.env`, and fill out all of the values.
 
-Here at Filatrack we have *some* standards. Please install the ESlint plugin in VSCode so your code is uniform across the whole project. Make sure you test your features with `pnpm build`, which will also catch ESlint errors!
+Start with the Next.JS app:
 
-Be open to code review as well!
+- `pnpm i`
+- `pnpm dev`
+
+You'll need to set up a Pocketbase instance for anything to work.
+
+- Download the pocketbase exe from https://pocketbase.io/docs/
+- Place it in the Filatrack folder, then run `pocketbase serve`.
+- It should open a browser with a superuser sign up. Put in whatever info you want, this is a local instance.
+- Go to Settings > Import Collections, and import the `pb_schema.json`.
+- Go to the `users` collection and set up Google and/or GitHub OAuth.
+- Run `pnpm build-types` to generate Typescript types.

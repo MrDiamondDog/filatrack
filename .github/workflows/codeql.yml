@@ -2,7 +2,7 @@ name: "CodeQL Analysis"
 
 on:
   push:
-    branches: [ "master", "dev", "overhaul" ]
+    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 

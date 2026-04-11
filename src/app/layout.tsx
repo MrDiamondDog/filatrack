@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
-import { Lexend } from "next/font/google";
 import "./globals.css";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { SessionProvider } from "next-auth/react";
+import { Metadata } from "next";
+import { Lexend } from "next/font/google";
+import HolyLoader from "holy-loader";
 import { Toaster } from "sonner";
 import { CheckCircle2, CircleAlert, Info } from "lucide-react";
-import { prodUrl } from "../lib/constants";
-import Analytics from "@/components/Analytics";
-// import { RandomDialogs } from "./lib/dialogs";
+import { PublicEnv } from "@/public-env";
+import { baseUrl } from "@/constants";
+import Analytics from "@/components/base/Analytics";
 
 const lexend = Lexend({
     variable: "--font-lexend",
@@ -16,7 +15,7 @@ const lexend = Lexend({
 
 export const metadata: Metadata = {
     title: "Filatrack - Simple Filament Tracking",
-    description: "Super-simple tracking of all your 3d printing filaments!",
+    description: "The simplest 3d printing filament tracker. Free forever, no ads, open-source, self-hostable!!",
     icons: [
         {
             url: "/favicon-96x96.png",
@@ -47,12 +46,12 @@ export const metadata: Metadata = {
     keywords: ["filament", "3d printing", "tracker", "spool", "pla", "filament tracking", "track filament"],
     openGraph: {
         title: "Filatrack",
-        description: "A super-simple way to keep inventory of your filament rolls.",
-        url: prodUrl,
+        description: "The simplest way to track 3d printing filament!",
+        url: baseUrl,
         siteName: "Filatrack",
         images: [
             {
-                url: `${prodUrl}apple-touch-icon.png`,
+                url: `${baseUrl}apple-touch-icon.png`,
             },
         ],
     },
@@ -60,30 +59,27 @@ export const metadata: Metadata = {
         card: "summary",
         site: "@drew_rat",
         creator: "@drew_rat",
-        images: `${prodUrl}/apple-touch-icon.png`,
+        images: `${baseUrl}/apple-touch-icon.png`,
     },
 };
 
 export default function RootLayout({
     children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
     return (
         <html lang="en">
-            <head>
-                <Analytics />
-            </head>
             <body
-                className={`${lexend.variable} antialiased has-[.nobg]:bg-white bg-bg`}
+                className={`${lexend.className} antialiased bg-bg`}
             >
-                <SessionProvider
-                    refetchOnWindowFocus={false}
-                >
-                    {children}
-                </SessionProvider>
+                <PublicEnv />
 
-                <SpeedInsights />
+                <HolyLoader
+                    color="linear-gradient(to right, #3263ce, #3364ce)"
+                />
+
+                {children}
 
                 <Toaster
                     className="toaster group"
@@ -102,7 +98,8 @@ export default function RootLayout({
                     }}
                 />
 
-                {/* For modals */}
+                <Analytics />
+
                 <div id="portal-root" />
             </body>
         </html>

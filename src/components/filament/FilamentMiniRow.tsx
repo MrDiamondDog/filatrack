@@ -1,0 +1,24 @@
+import { grams } from "@/lib/util/units";
+import Subtext from "../base/Subtext";
+import FilamentIcon from "./FilamentIcon";
+import { FilamentRecord } from "@/types/pb";
+
+export default function FilamentMiniRow({ filament }: { filament: FilamentRecord }) {
+    return <div className="flex gap-2 items-center w-full">
+        <FilamentIcon filament={filament} size={32} />
+        <div className="relative w-full">
+            <div className="absolute top-0 left-0 right-0 bg-bg-light w-full h-1 rounded-full">
+                <div className="absolute top-0 left-0 bg-primary h-full rounded-full"
+                    style={{ width: `${(filament.mass ?? 0) / filament.initialMass * 100}%` }}
+                />
+            </div>
+
+            <div className="flex gap-2 items-center pt-1 justify-between w-full">
+                <p>{filament.name}</p>
+                <Subtext>{grams((filament.mass ?? 0))}/{grams(filament.initialMass)}</Subtext>
+                <Subtext>{filament.material}</Subtext>
+                <Subtext>{filament.brand}</Subtext>
+            </div>
+        </div>
+    </div>;
+}
