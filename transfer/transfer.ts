@@ -112,6 +112,7 @@ async function importUser(userId: string) {
                 }) : undefined,
         name: user.name,
         legacy: true,
+        allowAnalytics: true,
         ...defaultUserSettings,
     })
         .catch(pbError);
