@@ -65,6 +65,8 @@ export default function SettingsPage() {
 
     const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
+    const isDNT = navigator.doNotTrack === "yes" || navigator.doNotTrack === "1";
+
     async function updateSettings(newSettings: Partial<UsersRecord>) {
         startHolyLoader();
         await pb.collection("users").update(user!.id, { ...newSettings })
@@ -111,7 +113,7 @@ export default function SettingsPage() {
         <MotionContainer>
             <Tablist tabs={{ account: "Account", preferences: "Preferences", appearance: "Appearance" }} activeTab="account">
                 <Tab name="account" className="max-w-300">
-                    <div className="bg-bg-light rounded-lg p-4 flex gap-2 w-fit mt-2 items-center">
+                    <div className="bg-bg-light rounded-lg p-4 flex gap-2 w-fit my-2 items-center">
                         <div className="w-full">
                             <div className="w-full flex gap-3 items-center">
                                 <div className="relative">
@@ -186,6 +188,16 @@ export default function SettingsPage() {
                             </div>
                         </div>
                     </div>
+                    <Checkbox checked={!!user.allowAnalytics} onCheckedChange={c => updateSettings({ allowAnalytics: c })}>
+                        Allow Analytics
+                    </Checkbox>
+                    {!isDNT && <Subtext className="whitespace-pre-wrap">
+                        Filatrack collects comepletely anonymous analytics to watch trends and improve UX.{"\n"}
+                        Please feel free to turn this off if you would not like to participate.
+                    </Subtext>}
+                    {isDNT && <Subtext>
+                        Analytics are automatically turned off because your browser is sending a DNT signal.
+                    </Subtext>}
                     <Link href="/about/privacy-policy">Privacy Policy</Link>
                 </Tab>
                 <Tab name="preferences" className="max-w-150">

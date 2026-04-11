@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import { CheckCircle2, CircleAlert, Info } from "lucide-react";
 import { PublicEnv } from "@/public-env";
 import { baseUrl } from "@/constants";
+import Analytics from "@/components/base/Analytics";
 
 const lexend = Lexend({
     variable: "--font-lexend",
@@ -96,6 +97,8 @@ export default function RootLayout({
                         info: <Info size={20} />,
                     }}
                 />
+
+                <Analytics />
 
                 <div id="portal-root" />
             </body>
