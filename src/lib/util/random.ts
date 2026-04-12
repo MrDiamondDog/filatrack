@@ -52,7 +52,6 @@ export function randomFilament(): Create<FilamentRecord> {
 
     return {
         name,
-        prints: [],
         brand: randomFrom(randomFilamentBrands),
         color: randomFilamentNames[name as keyof typeof randomFilamentNames]!,
         material: randomFrom(randomFilamentMaterials),
