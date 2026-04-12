@@ -25,15 +25,19 @@ PRE-ship:
 -[x] Privacy policy update banner
 -[x] Transfer script
 
+BUGS:
+-[ ] Edit filament storage option
+-[ ] Price field decimals
+
 POST-ship:
--[ ] Custom attributes
--[ ] Bulk Editing
+-[ ] Comment code (if desperate)
+-[ ] Default view setting (table/card)
 -[ ] Favorites
+-[ ] Bulk Editing
+-[ ] Custom attributes
 -[ ] Scanned barcode database (a long ass time)
--[ ] Filament sharing? (2hr)
+-[ ] Filament/storage sharing (2hr)
 -[ ] Public Filament Presets (4hr)
 -[ ] Another thing on the dashboard page?
--[ ] Default view setting (table/card)
--[ ] Comment code (if desperate)
 -[ ] Mobile Vibrations
 -[ ] Translations support

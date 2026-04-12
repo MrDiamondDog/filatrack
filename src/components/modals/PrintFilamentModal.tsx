@@ -47,7 +47,6 @@ export default function PrintFilamentModal({ filament, onPrintCreate, ...props }
         });
 
         await pb.collection("filament").update(filament.id, {
-            prints: [...filament.prints ?? [], newPrint.id],
             mass: (filament.mass ?? 0) - print.totalFilamentUsed,
         })
             .then(() => {

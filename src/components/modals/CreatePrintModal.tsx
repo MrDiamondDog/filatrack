@@ -47,7 +47,6 @@ export default function CreatePrintModal({ onCreate, ...props }: { onCreate: (p:
         });
 
         await Promise.all(selectedFilament.map(f => pb.collection("filament").update(f.id, {
-            prints: [...f.prints ?? [], newPrint.id],
             mass: (f.mass ?? 0) - filamentUsed[f.id],
         })))
             .then(res => {

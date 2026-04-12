@@ -16,7 +16,6 @@ import PrintList from "@/components/prints/PrintList";
 import { toastError } from "@/lib/util/error";
 import { useDevice } from "@/lib/util/hooks";
 import { celcius, grams } from "@/lib/util/units";
-import { FilamentWithPrints } from "@/types/filament";
 import { FilamentRecord, PrintsRecord, UsersRecord } from "@/types/pb";
 import { ArrowLeft, Pencil, Printer, QrCode, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -31,8 +30,9 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
 
     const [openModal, setOpenModal] = useState("");
 
-    const [filamentList, setFilamentList] = useState<FilamentWithPrints[]>([]);
-    const [filament, setFilament] = useState<FilamentWithPrints>();
+    const [filamentList, setFilamentList] = useState<FilamentRecord[]>();
+    const [filament, setFilament] = useState<FilamentRecord>();
+    const [prints, setPrints] = useState<PrintsRecord[]>();
 
     const [isMobile, _] = useDevice();
 
@@ -40,15 +40,20 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
 
     useEffect(() => {
         params.then(p => {
-            pb.collection("filament").getFullList<FilamentRecord & { expand: { prints: PrintsRecord[] }}>({
+            pb.collection("filament").getFullList({
                 filter: `user.id = "${user.id}"`,
-                expand: "prints",
             })
                 .then(res => {
                     setFilamentList(res);
                     setFilament(res.find(f => f.id === p.id));
                 })
                 .catch(e => toastError("Could not fetch filament", e));
+
+            pb.collection("prints").getFullList({
+                filter: `user.id = "${user.id}" && filamentRolls ~ "${p.id}"`,
+            })
+                .then(setPrints)
+                .catch(e => toastError("Could not fetch prints", e));
         });
     }, []);
 
@@ -59,20 +64,6 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
         await pb.collection("filament").delete(filament.id)
             .then(() => router.push("/app/filament"))
             .catch(e => toastError("Could not delete filament", e));
-    }
-
-    async function editFilament(newFilament: FilamentRecord) {
-        if (!filament)
-            return;
-
-        setFilament({ ...newFilament, expand: { prints: filament.expand.prints } });
-    }
-
-    async function printFilament(print: PrintsRecord) {
-        if (!filament)
-            return;
-
-        setFilament({ ...filament, expand: { prints: [...filament.expand.prints, print] } });
     }
 
     return <MotionContainer>
@@ -135,7 +126,7 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
                         {!isMobile && <Divider vertical />}
                     </>}
 
-                    <div className="text-center"><Subtext>Total Prints</Subtext> {filament.prints?.length}</div>
+                    <div className="text-center"><Subtext>Total Prints</Subtext> {prints?.length}</div>
 
                     {!isMobile && <Divider vertical />}
                 </div>
@@ -143,7 +134,7 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
 
                 <h3>Prints With This Filament</h3>
 
-                <PrintList prints={filament.expand.prints ?? []} filament={filamentList} />
+                <PrintList prints={prints ?? []} filament={filamentList ?? []} />
 
                 <DeleteModal
                     open={openModal === "delete"}
@@ -157,7 +148,7 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
                     open={openModal === "edit"}
                     onClose={() => setOpenModal("")}
                     initial={filament}
-                    onCreate={editFilament}
+                    onCreate={setFilament}
                     storages={[]}
                 />
 
@@ -171,7 +162,7 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
                     open={openModal === "print"}
                     onClose={() => setOpenModal("")}
                     filament={filament}
-                    onPrintCreate={printFilament}
+                    onPrintCreate={p => setPrints([...(prints ?? []), p])}
                 />
             </>}
         </Suspense>
