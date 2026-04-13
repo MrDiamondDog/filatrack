@@ -2,22 +2,21 @@
 
 FROM node:25-alpine AS base
 
-# Install python/pip (required for some node-gyp)
-ENV PYTHONUNBUFFERED=1
-RUN apk add --no-cache python3 && ln -sf python3 /usr/bin/python
-
-# Install pkg-config for node-gyp
-RUN apk --no-cache add pkgconf pixman-dev cairo-dev cairo pango-dev jpeg-dev build-base
-
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+# Install python/pip (required for some node-gyp)
+# Install pkg-config for node-gyp
+# Install all required packages for node-canvas
+# Install curl because it's required for coolify healthchecks
+ENV PYTHONUNBUFFERED=1
+RUN apk --no-cache add libc6-compat python3 pkgconf pixman-dev cairo-dev cairo pango-dev jpeg-dev build-base curl
+RUN ln -sf python3 /usr/bin/python
 
 # Install dependencies only when needed
 FROM base AS deps
 
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
+# Install dependencies
 COPY package.json pnpm-lock.yaml* ./
 RUN npm install -g corepack -f
 RUN corepack enable pnpm && pnpm i --frozen-lockfile
@@ -30,8 +29,6 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN npm install -g corepack -f
-RUN corepack enable pnpm
 RUN pnpm run build-types
 RUN pnpm run build
 
