@@ -29,6 +29,8 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
+RUN npm install -g corepack -f
+RUN corepack enable pnpm
 RUN pnpm run build-types
 RUN pnpm run build
 
