@@ -25,6 +25,7 @@ import { toastError } from "@/lib/util/error";
 import { useObjectState } from "@/lib/util/hooks";
 import {
     FilamentPresetsRecord,
+    UsersDefaultViewOptions,
     UsersFilamentSortOptions,
     UsersRecord,
 } from "@/types/pb";
@@ -206,6 +207,16 @@ export default function SettingsPage() {
                         <Subtext>The defaults for various options.</Subtext>
 
                         <Divider />
+
+                        <p>Filament List View</p>
+                        <Select
+                            options={{
+                                card: "Cards",
+                                table: "Table",
+                            }}
+                            value={userData.defaultView || "card"}
+                            onChange={v => updateSettings({ defaultView: v as UsersDefaultViewOptions })}
+                        />
 
                         <p>Filament Sorting</p>
                         <Select

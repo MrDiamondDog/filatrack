@@ -350,12 +350,17 @@
       },
       {
         "hidden": false,
-        "id": "bool2891912115",
-        "name": "advancedView",
+        "id": "select1036217959",
+        "maxSelect": 1,
+        "name": "defaultView",
         "presentable": false,
         "required": false,
         "system": false,
-        "type": "bool"
+        "type": "select",
+        "values": [
+          "card",
+          "table"
+        ]
       },
       {
         "hidden": false,
@@ -372,6 +377,15 @@
         "hidden": false,
         "id": "bool553376046",
         "name": "allowAnalytics",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "bool"
+      },
+      {
+        "hidden": false,
+        "id": "bool2891912115",
+        "name": "advancedView",
         "presentable": false,
         "required": false,
         "system": false,
