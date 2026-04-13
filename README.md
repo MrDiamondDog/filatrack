@@ -8,6 +8,24 @@ Made with Next.JS and Pocketbase!
 
 Join the [Discord server](https://discord.gg/HUjRATbH2g) for more info and feature requests!
 
+## Philosophy
+
+I made Filatrack as a solution to a problem. I could never find an elegant solution for tracking Filament that was free, open-source and 
+able to sync easily between computers. Spreadsheets just didn't cut it for me, and you're likely getting tired of it too. So I made
+Filatrack, everything I wanted and more. 
+
+I also wanted to make Filatrack not limited to a 'free tier', and not have any higher paid tier in general. I have found many ways to host things
+with no cost to me. Shout out to Hack Club for running awesome programs to help with domain costs!
+
+The only way I possibly make money from this is from the community. This project accepts donations through GitHub sponsors or Buy me a Coffee.
+
+## Roadmap
+
+I've got some exciting things coming up that may take a while, including but not limited to:
+- Custom Attributes
+- Preset database for easy adding, including barcode scanning
+- Filament/storage sharing
+
 ## Bugs
 
 There definitely are bugs. Please report bugs in the issues on this repo instead of Discord.

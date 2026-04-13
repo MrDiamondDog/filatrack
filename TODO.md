@@ -31,7 +31,7 @@ BUGS:
 
 POST-ship:
 -[x] Default view setting (table/card)
--[ ] Custom analytics
+-[x] Custom analytics
 -[ ] Favorites
 -[ ] Bulk Editing
 -[ ] Custom attributes
