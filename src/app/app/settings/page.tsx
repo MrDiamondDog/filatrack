@@ -18,6 +18,7 @@ import CreateFilamentPresetModal from "@/components/modals/CreateFilamentPresetM
 import EditAvatarModal from "@/components/modals/EditAvatarModal";
 import { QRFieldSelector } from "@/components/modals/PrintFilamentQRModal";
 import UserTag from "@/components/settings/UserTag";
+import { analyticsEvent } from "@/lib/analytics";
 import { logout } from "@/lib/auth";
 import { filamentCardKeys, filamentTableKeys, getFilamentCardKey, getFilamentTableKey } from "@/lib/filamentKeys";
 import { deleteFromArray, modifyArrayItem, moveArrayItem } from "@/lib/util/array";
@@ -81,6 +82,8 @@ export default function SettingsPage() {
     async function deleteAccount() {
         if (!deleteConfirmation)
             return void setDeleteConfirmation(true);
+
+        analyticsEvent("DELETE_USER", { });
 
         pb.collection("users").delete(user!.id)
             .then(logout);

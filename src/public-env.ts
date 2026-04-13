@@ -6,4 +6,6 @@ export const { getPublicEnv, PublicEnv } = createPublicEnv({
     PRODUCTION: process.env.PRODUCTION === "true",
     APP_URL: process.env.APP_URL,
     PB_URL: process.env.PB_URL,
+    SWETRIX_URL: process.env.SWETRIX_URL,
+    SWETRIX_ID: process.env.SWETRIX_ID,
 });

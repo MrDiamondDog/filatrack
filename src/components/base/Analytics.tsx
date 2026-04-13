@@ -1,6 +1,7 @@
 "use client";
 
 import { pb } from "@/api/pb";
+import { getPublicEnv } from "@/public-env";
 import { UsersRecord } from "@/types/pb";
 import { useEffect } from "react";
 import * as Swetrix from "swetrix";
@@ -12,11 +13,13 @@ export default function Analytics() {
         return;
 
     useEffect(() => {
-        if (!user.allowAnalytics)
+        const [id, url] = [getPublicEnv().SWETRIX_ID, getPublicEnv().SWETRIX_URL];
+
+        if (!user.allowAnalytics || !id || !url)
             return;
 
-        Swetrix.init("8FhyFx9cOt6l", {
-            apiURL: "https://a.filatrack.app/backend/v1/log",
+        Swetrix.init(id, {
+            apiURL: url,
             devMode: true,
             respectDNT: true,
         });

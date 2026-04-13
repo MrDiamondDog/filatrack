@@ -1,5 +1,6 @@
 "use client";
 
+import { analyticsEvent } from "@/lib/analytics";
 import { useDevice } from "@/lib/util/hooks";
 import { motion } from "motion/react";
 import Link from "next/link";
@@ -18,7 +19,9 @@ export function MobileSidebarItem({ children, href }: { href: string } & React.P
     </Link>);
 }
 
-export default function SidebarItem({ children, href, className }: { href: string, className?: string } & React.PropsWithChildren) {
+type Props = { href: string, className?: string, tracked?: boolean } & React.PropsWithChildren;
+
+export default function SidebarItem({ children, href, className, tracked }: Props) {
     const [isMobile, _] = useDevice();
 
     if (isMobile)
@@ -27,7 +30,7 @@ export default function SidebarItem({ children, href, className }: { href: strin
     const active = usePathname() === href;
 
     return (<Link href={href} className={`unstyled flex flex-row items-center gap-2 rounded-lg p-2 mb-1
-       transition-colors relative ${className}`}>
+       transition-colors relative ${className}`} onClick={() => tracked && analyticsEvent("OUTBOUND_CLICK", { url: href })}>
         {children}
 
         {active && <motion.div

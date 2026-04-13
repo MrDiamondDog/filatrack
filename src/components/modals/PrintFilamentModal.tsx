@@ -9,6 +9,7 @@ import Link from "next/link";
 import { FilamentRecord, PrintsRecord, UsersRecord } from "@/types/pb";
 import { Create } from "@/types/general";
 import { pb } from "@/api/pb";
+import { analyticsEvent } from "@/lib/analytics";
 
 type Props = {
     filament: FilamentRecord;
@@ -40,6 +41,8 @@ export default function PrintFilamentModal({ filament, onPrintCreate, ...props }
             return void setError("Please fill out all required fields.");
 
         setLoading(true);
+
+        analyticsEvent("PRINT_CREATE", { filamentCount: 1 });
 
         const newPrint = await pb.collection("prints").create({
             user: user.id,

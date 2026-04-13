@@ -7,6 +7,7 @@ import { Create } from "@/types/general";
 import { StorageRecord } from "@/types/pb";
 import { pb } from "@/api/pb";
 import { StorageWithFilament } from "@/types/storage";
+import { analyticsEvent } from "@/lib/analytics";
 
 type Props = {
     initial?: StorageRecord;
@@ -44,6 +45,8 @@ export default function CreateStorageModal(props: Props) {
             return void setError("Please fill out all required fields.");
 
         setLoading(true);
+
+        analyticsEvent("STORAGE_CREATE", { });
 
         if (!props.initial)
             await pb.collection("storage").create<StorageWithFilament>({ ...storage, user: user!.id }, { expand: "filament" })

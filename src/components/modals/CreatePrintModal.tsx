@@ -10,6 +10,7 @@ import Subtext from "../base/Subtext";
 import { grams } from "@/lib/util/units";
 import { FilamentRecord, PrintsRecord } from "@/types/pb";
 import { pb } from "@/api/pb";
+import { analyticsEvent } from "@/lib/analytics";
 
 export default function CreatePrintModal({ onCreate, ...props }: { onCreate: (p: PrintsRecord) => void } & ModalProps) {
     const user = pb.authStore.record;
@@ -36,6 +37,8 @@ export default function CreatePrintModal({ onCreate, ...props }: { onCreate: (p:
             return void setError("Please fill out all required fields.");
 
         setLoading(true);
+
+        analyticsEvent("PRINT_CREATE", { filamentCount: selectedFilament.length });
 
         const newPrint = await pb.collection("prints").create({
             label,

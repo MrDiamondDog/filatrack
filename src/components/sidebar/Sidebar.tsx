@@ -56,9 +56,9 @@ export default function Sidebar() {
 
         <div>
             <SidebarItem href="/about/feedback"><MessageSquareText size={24} /> Feedback</SidebarItem>
-            <SidebarItem href={endpoints.github}><FaGithub size={24} /> GitHub</SidebarItem>
-            <SidebarItem href={endpoints.discord}><FaDiscord size={24} /> Discord</SidebarItem>
-            {!user.supporter && <SidebarItem href="/about/support"
+            <SidebarItem tracked href={endpoints.github}><FaGithub size={24} /> GitHub</SidebarItem>
+            <SidebarItem tracked href={endpoints.discord}><FaDiscord size={24} /> Discord</SidebarItem>
+            {!user.supporter && <SidebarItem tracked href="/about/support"
                 className="mb-2 bg-[#e41d5f26] text-[#ffb2cb]"
             >
                 <Heart /> Support
