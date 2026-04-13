@@ -16,6 +16,7 @@ import { Create } from "@/types/general";
 import { StorageWithFilament } from "@/types/storage";
 import StoragePicker from "../storage/StoragePicker";
 import Subtext from "../base/Subtext";
+import { analyticsEvent } from "@/lib/analytics";
 
 type Props = {
     initial?: FilamentRecord;
@@ -78,6 +79,8 @@ export default function CreateFilamentModal(props: Props) {
             return void setError("Invalid filament mass.");
 
         setLoading(true);
+
+        analyticsEvent("FILAMENT_CREATE", { material: filament.material, brand: filament.brand });
 
         async function addToStorage(newFilament: FilamentRecord) {
             if (!filament.storage)

@@ -12,6 +12,7 @@ import Subtext from "../base/Subtext";
 import { pb } from "@/api/pb";
 import { QRSettings } from "@/types/users";
 import { createZip, getImageBlob, ZipFile } from "@/lib/util/qr";
+import { analyticsEvent } from "@/lib/analytics";
 
 export type QRDisplayField = { title: string, render?: (f: FilamentRecord) => string, key?: keyof FilamentRecord };
 
@@ -129,6 +130,8 @@ export default function PrintFilamentQRModal({ filament, ...props }: { filament:
         const tab = window.open("about:blank", "mozillaTab");
         if (!tab)
             return;
+
+        analyticsEvent("QR_CREATE", { count: qrdata.length });
 
         for (const qrcode of qrdata) {
             const img = document.createElement("img");

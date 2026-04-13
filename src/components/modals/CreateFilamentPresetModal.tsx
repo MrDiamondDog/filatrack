@@ -10,6 +10,7 @@ import Button from "../base/Button";
 import { pb } from "@/api/pb";
 import { Create } from "@/types/general";
 import { FilamentPresetsRecord, FilamentPresetsSpoolTypeOptions } from "@/types/pb";
+import { analyticsEvent } from "@/lib/analytics";
 
 type Props = {
     initial?: FilamentPresetsRecord;
@@ -43,6 +44,8 @@ export default function CreateFilamentPresetModal(props: Props) {
             return void setError("Please fill out all required fields.");
 
         setLoading(true);
+
+        analyticsEvent("PRESET_CREATE", {});
 
         if (!props.initial)
             await pb.collection("filamentPresets").create({ ...preset, user: user.id })

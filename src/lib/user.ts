@@ -1,7 +1,8 @@
 import { privacyPolicyLastUpdate } from "@/app/about/privacy-policy/page";
+import { UsersDefaultViewOptions, UsersFilamentSortOptions, UsersRecord } from "@/types/pb";
 
-export const defaultUserSettings = {
-    filamentSort: "name",
+export const defaultUserSettings: Partial<UsersRecord> = {
+    filamentSort: "name" as UsersFilamentSortOptions,
     shownFilamentCardKeys: ["storage", "brand", "material", "mass"],
     shownFilamentTableKeys: [
         "storage",
@@ -31,5 +32,6 @@ export const defaultUserSettings = {
         ],
         format: "SVG",
     },
-    lastSeenPrivacyPolicy: privacyPolicyLastUpdate,
+    defaultView: "card" as UsersDefaultViewOptions,
+    lastSeenPrivacyPolicy: privacyPolicyLastUpdate as unknown as string,
 };

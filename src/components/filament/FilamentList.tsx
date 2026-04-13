@@ -33,7 +33,7 @@ type Props = {
     storagesList: StorageWithFilament[];
     presets?: FilamentPresetsRecord[];
     title?: string;
-    viewLock?: "cards" | "table";
+    viewLock?: "card" | "table";
     allowAdd?: boolean;
     allowEdit?: boolean;
     allowSort?: boolean;
@@ -60,7 +60,8 @@ export default function FilamentList({
 
     const [isMobile, _] = useDevice();
 
-    const [view, setView] = useState<"cards" | "table">(viewLock ?? "cards");
+    // Set to view lock, fallback to user's default view, fallback to card view if neither are set
+    const [view, setView] = useState<"card" | "table">((viewLock ?? user.defaultView) || "card");
     const [editMode, setEditMode] = useState(false);
 
     const [selectedFilament, setSelectedFilament] = useState<FilamentRecord[]>([]);
@@ -167,9 +168,9 @@ export default function FilamentList({
 
                 <div className="flex gap-2 items-center justify-end md:flex-nowrap flex-wrap">
                     {(!viewLock && !editMode) && <Tablist
-                        tabs={{ cards: <Images />, table: <TableIcon /> }}
+                        tabs={{ card: <Images />, table: <TableIcon /> }}
                         activeTab={view}
-                        onTabChange={v => setView(v as "cards" | "table")}
+                        onTabChange={v => setView(v as "card" | "table")}
                     />}
 
                     {allowEdit && <Button onClick={() => {
@@ -214,7 +215,7 @@ export default function FilamentList({
             <Divider />
         </>}
 
-        {view === "cards" && <div className="grid grid-cols-2 md:flex flex-row flex-wrap w-full gap-2 mb-2">
+        {view === "card" && <div className="grid grid-cols-2 md:flex flex-row flex-wrap w-full gap-2 mb-2">
             {displayedFilament.map(f => <FilamentCard
                 filament={f}
                 key={f.id}
@@ -282,7 +283,7 @@ export default function FilamentList({
         }
 
         {/* For testing, change to true to enable */}
-        {false && <Button onClick={() => {
+        {true && <Button onClick={() => {
             const f = randomFilament();
             pb.collection("filament").create({ ...f, user: user!.id })
                 .then(res => onListModified?.([...filament, res]))

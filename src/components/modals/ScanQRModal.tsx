@@ -3,6 +3,7 @@ import Modal, { ModalHeader, ModalProps } from "../base/Modal";
 import QrScanner from "qr-scanner";
 import { useRouter } from "next/navigation";
 import { baseUrl } from "@/constants";
+import { analyticsEvent } from "@/lib/analytics";
 
 export default function ScanQRModal(props: ModalProps) {
     const cameraVideo = useRef<HTMLVideoElement | null>(null);
@@ -40,6 +41,8 @@ export default function ScanQRModal(props: ModalProps) {
                     res => {
                         if (!res.data.startsWith(`${baseUrl}`))
                             return;
+
+                        analyticsEvent("SCAN_QR", { });
 
                         props.onClose();
                         router.push(new URL(res.data).pathname);

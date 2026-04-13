@@ -30,8 +30,8 @@ BUGS:
 -[ ] Price field decimals
 
 POST-ship:
--[ ] Comment code (if desperate)
--[ ] Default view setting (table/card)
+-[x] Default view setting (table/card)
+-[x] Custom analytics
 -[ ] Favorites
 -[ ] Bulk Editing
 -[ ] Custom attributes
@@ -40,4 +40,5 @@ POST-ship:
 -[ ] Public Filament Presets (4hr)
 -[ ] Another thing on the dashboard page?
 -[ ] Mobile Vibrations
+-[ ] Comment code (if desperate)
 -[ ] Translations support
