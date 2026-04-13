@@ -19,6 +19,8 @@ with no cost to me. Shout out to Hack Club for running awesome programs to help 
 
 The only way I possibly make money from this is from the community. This project accepts donations through GitHub sponsors or Buy me a Coffee.
 
+The Filatrack overhaul was made for Hack Club's Flavortown!
+
 ## Roadmap
 
 I've got some exciting things coming up that may take a while, including but not limited to:
