@@ -28,18 +28,20 @@ PRE-ship:
 BUGS:
 -[x] Edit filament storage option
 -[x] Empty log freezing
--[ ] Price field decimals
+-[x] Price field decimals
+
+LITTLE THINGS:
+-[ ] Make initial spinner more interesting
+-[ ] Complete advanced mode
+-[ ] Mobile Vibrations
 
 POST-ship:
 -[x] Default view setting (table/card)
 -[x] Custom analytics
--[ ] Favorites
 -[ ] Bulk Editing
 -[ ] Custom attributes
--[ ] Scanned barcode database (a long ass time)
+-[ ] Filament preset database, including barcode scanning
 -[ ] Filament/storage sharing (2hr)
--[ ] Public Filament Presets (4hr)
 -[ ] Another thing on the dashboard page?
--[ ] Mobile Vibrations
 -[ ] Comment code (if desperate)
 -[ ] Translations support
