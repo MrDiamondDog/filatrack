@@ -37,7 +37,7 @@ export default function PrintFilamentModal({ filament, onPrintCreate, ...props }
     async function printFilament() {
         setError("");
 
-        if (!print.filamentUsage)
+        if (!print.filamentUsage || print.totalFilamentUsed === 0)
             return void setError("Please fill out all required fields.");
 
         setLoading(true);
@@ -47,7 +47,14 @@ export default function PrintFilamentModal({ filament, onPrintCreate, ...props }
         const newPrint = await pb.collection("prints").create({
             user: user.id,
             ...print,
-        });
+        })
+            .catch(e => {
+                setLoading(false);
+                setError(e.message);
+            });
+
+        if (!newPrint)
+            return;
 
         await pb.collection("filament").update(filament.id, {
             mass: (filament.mass ?? 0) - print.totalFilamentUsed,
@@ -66,10 +73,9 @@ export default function PrintFilamentModal({ filament, onPrintCreate, ...props }
                 onPrintCreate(newPrint);
             })
             .catch(e => {
-                console.error(e);
                 setLoading(false);
                 setError(e.message);
-            });;
+            });
     }
 
     return <Modal {...props} title="Print Filament">

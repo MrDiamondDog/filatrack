@@ -12,7 +12,7 @@ import { Dropdown, DropdownContent, DropdownItem, DropdownSub, DropdownSubConten
     from "../base/Dropdown";
 import { DeleteModal } from "../modals/DeleteModal";
 import FilamentMiniRow from "./FilamentMiniRow";
-import { moveFilament } from "@/lib/filament";
+import { moveOrRemoveFilament } from "@/lib/filament";
 import Link from "next/link";
 import Spinner from "../base/Spinner";
 import Button from "../base/Button";
@@ -91,7 +91,7 @@ export default function FilamentCard({
                                 key={s.id}
                                 onClick={async e => {
                                     e.preventDefault();
-                                    const res = await moveFilament(filament, s.id, storagesList);
+                                    const res = await moveOrRemoveFilament(filament, s.id, storagesList);
                                     if (!res)
                                         return;
                                     onStoragesModify?.(res.newStorages);
@@ -184,7 +184,10 @@ export default function FilamentCard({
         <CreateFilamentModal
             open={openModal === "edit"}
             onClose={() => setOpenModal("")}
-            onCreate={f => onModify?.(f)}
+            onCreate={(f, s) => {
+                onModify?.(f);
+                onStoragesModify?.(s);
+            }}
             initial={filament}
             storages={storagesList}
         />

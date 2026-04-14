@@ -7,12 +7,13 @@ import { modifyArrayItem } from "@/lib/util/array";
 
 type SelectProps = {
     options: Record<string, React.ReactNode>;
+    disabledOptions?: string[]
     value: string;
     onChange: (val: string) => void;
     placeholder?: string;
 } & Omit<React.SelectHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "children">
 
-export function Select({ options, value, onChange, placeholder, ...props }: SelectProps) {
+export function Select({ options, value, onChange, placeholder, disabledOptions, ...props }: SelectProps) {
     return (
         <Dropdown>
             <DropdownTrigger asChild>
@@ -29,6 +30,7 @@ export function Select({ options, value, onChange, placeholder, ...props }: Sele
                         onClick={() => onChange(k)}
                         className={`${value === k && "border-primary!"} border-2 border-transparent`}
                         key={k}
+                        disabled={disabledOptions?.includes(k)}
                     >
                         {options[k]}
                     </DropdownItem>)

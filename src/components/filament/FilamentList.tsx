@@ -23,7 +23,7 @@ import Input from "../base/Input";
 import { Select } from "../base/Select";
 import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../base/Dropdown";
 import StorageMiniCard from "../storage/StorageMiniCard";
-import { moveFilament } from "@/lib/filament";
+import { moveOrRemoveFilament } from "@/lib/filament";
 import PrintFilamentQRModal from "../modals/PrintFilamentQRModal";
 import { getFilamentTableKey } from "@/lib/filamentKeys";
 import { useDevice } from "@/lib/util/hooks";
@@ -83,7 +83,7 @@ export default function FilamentList({
     async function moveSelected(destination: string) {
         await new Promise<void>(async(resolve, reject) => {
             for (const f of selectedFilament)
-                await moveFilament(f, destination, storagesList)
+                await moveOrRemoveFilament(f, destination, storagesList)
                     .catch(reject);
             resolve();
         })
@@ -282,8 +282,7 @@ export default function FilamentList({
             />
         }
 
-        {/* For testing, change to true to enable */}
-        {true && <Button onClick={() => {
+        {process.env.NODE_ENV === "development" && <Button onClick={() => {
             const f = randomFilament();
             pb.collection("filament").create({ ...f, user: user!.id })
                 .then(res => onListModified?.([...filament, res]))
@@ -291,7 +290,10 @@ export default function FilamentList({
         }}>Add Random</Button>}
 
         <CreateFilamentModal open={openModal === "create"} onClose={() => setOpenModal("")}
-            onCreate={f => onListModified?.([...filament, f])} storages={storagesList} presets={presets}
+            onCreate={(f, s) => {
+                onListModified?.([...filament, f]);
+                onStoragesModified?.(s);
+            }} storages={storagesList} presets={presets}
         />
 
         <PrintFilamentQRModal

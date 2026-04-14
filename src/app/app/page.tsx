@@ -29,6 +29,8 @@ export default function DashboardPage() {
     const [storages, setStorages] = useState<StorageWithFilament[]>();
     const [presets, setPresets] = useState<FilamentPresetsRecord[]>();
 
+    const [recentFilament, setRecentFilament] = useState<FilamentRecord[]>();
+
     const [openModal, setOpenModal] = useState("");
 
     useEffect(() => {
@@ -52,6 +54,15 @@ export default function DashboardPage() {
             .catch(e => toastError("Could not fetch filament", e));
     }, []);
 
+    useEffect(() => {
+        if (!filament)
+            return;
+
+        setRecentFilament(filament
+            .sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime())
+            .slice(0, isMobile ? 4 : 3));
+    }, [filament]);
+
     return (<MotionContainer>
         {(filament && storages && presets) ? <>
             <div className="flex justify-between items-center">
@@ -61,7 +72,8 @@ export default function DashboardPage() {
                     <Button className="flex gap-1 items-center" onClick={() => setOpenModal("scan")}>
                         <ScanLine size={32} /> {!isMobile && "Scan"}
                     </Button>
-                    <CreateButton onFilamentCreate={f => setFilament([...filament, f])} storages={storages} presets={presets} />
+                    <CreateButton onFilamentCreate={f => setFilament([...filament, f])} onStoragesModify={setStorages}
+                        storages={storages} presets={presets} />
                 </div>
             </div>
 
@@ -84,12 +96,10 @@ export default function DashboardPage() {
                 <div className="w-full">
                     <FilamentList
                         title="Recent Filament"
-                        filament={(filament)
-                            .sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime())
-                            .slice(0, isMobile ? 4 : 3)}
+                        filament={recentFilament ?? []}
                         viewLock="card"
                         storagesList={storages}
-                        onListModified={setFilament}
+                        onListModified={setRecentFilament}
                         onStoragesModified={setStorages}
                     />
                 </div>

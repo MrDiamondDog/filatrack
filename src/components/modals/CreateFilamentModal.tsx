@@ -17,10 +17,11 @@ import { StorageWithFilament } from "@/types/storage";
 import StoragePicker from "../storage/StoragePicker";
 import Subtext from "../base/Subtext";
 import { analyticsEvent } from "@/lib/analytics";
+import { addFilament, moveFilament, removeFilament } from "@/lib/filament";
 
 type Props = {
     initial?: FilamentRecord;
-    onCreate: (f: FilamentRecord) => void;
+    onCreate: (f: FilamentRecord, s: StorageWithFilament[]) => void;
     storages: StorageWithFilament[];
     presets?: FilamentPresetsRecord[];
 } & ModalProps;
@@ -82,22 +83,28 @@ export default function CreateFilamentModal(props: Props) {
 
         analyticsEvent("FILAMENT_CREATE", { material: filament.material, brand: filament.brand });
 
-        async function addToStorage(newFilament: FilamentRecord) {
-            if (!filament.storage)
-                return;
-            return await pb.collection("storage").update(filament.storage, {
-                "filament+": newFilament.id,
-            });
+        async function modifyFilamentStorage(newFilament: FilamentRecord) {
+            if (filament.storage && (props.initial && props.initial.storage !== filament.storage))
+                // Add/move
+                return moveFilament({ ...newFilament, storage: props.initial.storage }, filament.storage, props.storages);
+            else if (props.initial && !filament.storage && props.initial.storage)
+                // Remove it from existing storage
+                return removeFilament({ ...newFilament, storage: props.initial.storage }, props.initial.storage, props.storages);
+
+            return { newFilament, newStorages: props.storages };
         }
 
         if (!props.initial)
             await pb.collection("filament").create({ ...filament, user: user.id })
                 .then(res => {
                     setLoading(false);
-                    addToStorage(res);
                     reset();
                     props.onClose();
-                    props.onCreate(res);
+                    if (filament.storage)
+                        addFilament(res, res.storage, props.storages).then(res => res &&
+                            props.onCreate(res.newFilament, res.newStorages));
+                    else
+                        props.onCreate(res, props.storages);
                 })
                 .catch(e => {
                     console.error(e);
@@ -108,9 +115,12 @@ export default function CreateFilamentModal(props: Props) {
             await pb.collection("filament").update(props.initial.id, { ...filament, user: user.id })
                 .then(res => {
                     setLoading(false);
-                    addToStorage(res);
-                    props.onClose();
-                    props.onCreate(res);
+                    modifyFilamentStorage(res).then(res => {
+                        reset();
+                        props.onClose();
+                        if (res)
+                            props.onCreate(res.newFilament, res.newStorages);
+                    });
                 })
                 .catch(e => {
                     console.error(e);
@@ -166,14 +176,12 @@ export default function CreateFilamentModal(props: Props) {
                 <p>Color<RequiredStar /></p>
                 <FilamentColorPicker value={filament.color} onChange={color => setFilament({ color })}/>
 
-                {!props.initial && <>
-                    <p>Storage</p>
-                    <StoragePicker
-                        value={filament.storage ?? ""}
-                        storages={props.storages}
-                        onChange={s => setFilament({ storage: s.id })}
-                    />
-                </>}
+                <p>Storage</p>
+                <StoragePicker
+                    value={filament.storage ?? ""}
+                    storages={props.storages}
+                    onChange={s => setFilament({ storage: s?.id })}
+                />
             </Drawer>
 
             <Drawer label="Spool Details" open={drawer === 1} onChange={open => setDrawer(open ? 1 : -1)}>
@@ -203,7 +211,7 @@ export default function CreateFilamentModal(props: Props) {
                     placeholder=""
                     type="number"
                     value={filament.cost}
-                    onChange={e => setFilament({ cost: parseInt(e.target.value) })}
+                    onChange={e => setFilament({ cost: parseFloat(e.target.value) })}
                 />
 
                 <Input

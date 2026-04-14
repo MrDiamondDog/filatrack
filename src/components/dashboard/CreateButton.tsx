@@ -6,18 +6,18 @@ import Button from "../base/Button";
 import { useState } from "react";
 import CreateFilamentModal from "../modals/CreateFilamentModal";
 import CreateStorageModal from "../modals/CreateStorageModal";
-import { FilamentPresetsRecord, FilamentRecord, StorageResponse } from "@/types/pb";
+import { FilamentPresetsRecord, FilamentRecord } from "@/types/pb";
 import { StorageWithFilament } from "@/types/storage";
 import { useDevice } from "@/lib/util/hooks";
 
 type Props = {
     onFilamentCreate?: (f: FilamentRecord) => void;
-    onStorageCreate?: (s: StorageResponse) => void;
+    onStoragesModify?: (s: StorageWithFilament[]) => void;
     storages: StorageWithFilament[];
     presets: FilamentPresetsRecord[];
 };
 
-export default function CreateButton({ onFilamentCreate, onStorageCreate, storages, presets }: Props) {
+export default function CreateButton({ onFilamentCreate, onStoragesModify, storages, presets }: Props) {
     const [isMobile, _] = useDevice();
     const [openModal, setOpenModal] = useState("");
 
@@ -36,8 +36,11 @@ export default function CreateButton({ onFilamentCreate, onStorageCreate, storag
             </DropdownContent>
         </Dropdown>
 
-        <CreateFilamentModal open={openModal === "filament"} onClose={() => setOpenModal("")} onCreate={f => onFilamentCreate?.(f)}
-            storages={storages} />
-        <CreateStorageModal open={openModal === "storage"} onClose={() => setOpenModal("")} onCreate={s => onStorageCreate?.(s)}  />
+        <CreateFilamentModal open={openModal === "filament"} onClose={() => setOpenModal("")} onCreate={(f, s) => {
+            onFilamentCreate?.(f);
+            onStoragesModify?.(s);
+        }} storages={storages} />
+        <CreateStorageModal open={openModal === "storage"} onClose={() => setOpenModal("")}
+            onCreate={s => onStoragesModify?.([...storages, s])}  />
     </>;
 }

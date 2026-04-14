@@ -26,7 +26,8 @@ PRE-ship:
 -[x] Transfer script
 
 BUGS:
--[ ] Edit filament storage option
+-[x] Edit filament storage option
+-[x] Empty log freezing
 -[ ] Price field decimals
 
 POST-ship:
