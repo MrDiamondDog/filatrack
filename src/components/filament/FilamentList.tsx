@@ -282,8 +282,7 @@ export default function FilamentList({
             />
         }
 
-        {/* For testing, change to true to enable */}
-        {true && <Button onClick={() => {
+        {process.env.NODE_ENV === "development" && <Button onClick={() => {
             const f = randomFilament();
             pb.collection("filament").create({ ...f, user: user!.id })
                 .then(res => onListModified?.([...filament, res]))
