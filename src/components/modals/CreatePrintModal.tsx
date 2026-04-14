@@ -33,7 +33,8 @@ export default function CreatePrintModal({ onCreate, ...props }: { onCreate: (p:
         if (selectedFilament.length === 0)
             return void setError("Please select one or more filament.");
 
-        if (Object.values(filamentUsed).filter(v => !v || v <= 0).length > 0)
+        if (Object.values(filamentUsed).filter(v => !v || v <= 0).length > 0 ||
+            Object.values(filamentUsed).length !== selectedFilament.length)
             return void setError("Please fill out all required fields.");
 
         setLoading(true);
@@ -47,7 +48,15 @@ export default function CreatePrintModal({ onCreate, ...props }: { onCreate: (p:
             filamentUsage: filamentUsed,
             totalFilamentUsed: Object.values(filamentUsed).reduce((prev, curr) => prev + curr, 0),
             totalRollsUsed: selectedFilament.length,
-        });
+        })
+            .catch(e => {
+                console.error(e);
+                setLoading(false);
+                setError(e.message);
+            });
+
+        if (!newPrint)
+            return;
 
         await Promise.all(selectedFilament.map(f => pb.collection("filament").update(f.id, {
             mass: (f.mass ?? 0) - filamentUsed[f.id],
