@@ -211,7 +211,7 @@ export default function CreateFilamentModal(props: Props) {
                     placeholder=""
                     type="number"
                     value={filament.cost}
-                    onChange={e => setFilament({ cost: parseInt(e.target.value) })}
+                    onChange={e => setFilament({ cost: parseFloat(e.target.value) })}
                 />
 
                 <Input
