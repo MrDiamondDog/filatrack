@@ -17,6 +17,7 @@ import { toastError } from "@/lib/util/error";
 import { useDevice } from "@/lib/util/hooks";
 import { celcius, grams } from "@/lib/util/units";
 import { FilamentRecord, PrintsRecord, UsersRecord } from "@/types/pb";
+import { StorageWithFilament } from "@/types/storage";
 import { ArrowLeft, Pencil, Printer, QrCode, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -33,6 +34,7 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
     const [filamentList, setFilamentList] = useState<FilamentRecord[]>();
     const [filament, setFilament] = useState<FilamentRecord>();
     const [prints, setPrints] = useState<PrintsRecord[]>();
+    const [storages, setStorages] = useState<StorageWithFilament[]>();
 
     const [isMobile, _] = useDevice();
 
@@ -54,6 +56,13 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
             })
                 .then(setPrints)
                 .catch(e => toastError("Could not fetch prints", e));
+
+            pb.collection("storage").getFullList<StorageWithFilament>({
+                filter: `user.id = "${user.id}"`,
+                expand: "filament",
+            })
+                .then(setStorages)
+                .catch(e => toastError("Could not fetch storages", e));
         });
     }, []);
 
@@ -68,7 +77,7 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
 
     return <MotionContainer>
         <Suspense fallback={<Spinner />}>
-            {filament && <>
+            {(filament && prints && storages) && <>
                 <Link href="/app/filament" className="flex items-center gap-1"><ArrowLeft /> Back</Link>
                 <Divider />
 
@@ -129,6 +138,13 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
                     <div className="text-center"><Subtext>Total Prints</Subtext> {prints?.length}</div>
 
                     {!isMobile && <Divider vertical />}
+
+                    {filament.storage && <><div className="text-center">
+                        <Subtext>Storage</Subtext>
+                        {storages.find(s => s.id === filament.storage)?.name}
+                    </div>
+
+                    {!isMobile && <Divider vertical />}</>}
                 </div>
                 <Divider />
 
@@ -148,8 +164,11 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
                     open={openModal === "edit"}
                     onClose={() => setOpenModal("")}
                     initial={filament}
-                    onCreate={setFilament}
-                    storages={[]}
+                    onCreate={(f, s) => {
+                        setFilament(f);
+                        setStorages(s);
+                    }}
+                    storages={storages}
                 />
 
                 <PrintFilamentQRModal
@@ -162,7 +181,7 @@ export default function FilamentPage({ params }: { params: Promise<{ id: string 
                     open={openModal === "print"}
                     onClose={() => setOpenModal("")}
                     filament={filament}
-                    onPrintCreate={p => setPrints([...(prints ?? []), p])}
+                    onPrintCreate={p => setPrints([...prints, p])}
                 />
             </>}
         </Suspense>
