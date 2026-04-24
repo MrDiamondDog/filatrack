@@ -6,6 +6,7 @@ import Divider from "@/components/base/Divider";
 import Input from "@/components/base/Input";
 import Spinner from "@/components/base/Spinner";
 import LandingBackground from "@/components/landing/LandingBackground";
+import { emailRegex } from "@/lib/util/regex";
 import Link from "next/link";
 import { Suspense, useState } from "react";
 
@@ -15,7 +16,7 @@ export default function ResetPasswordPage() {
     const [canSend, setCanSend] = useState(true);
 
     function sendEmail() {
-        if (!canSend || !email.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/))
+        if (!canSend || !email.match(emailRegex))
             return;
 
         pb.collection("users").requestPasswordReset(email);

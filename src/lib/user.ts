@@ -34,4 +34,5 @@ export const defaultUserSettings: Partial<UsersRecord> = {
     },
     defaultView: "card" as UsersDefaultViewOptions,
     lastSeenPrivacyPolicy: privacyPolicyLastUpdate as unknown as string,
+    allowAnalytics: true,
 };

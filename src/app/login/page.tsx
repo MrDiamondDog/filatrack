@@ -9,6 +9,7 @@ import Spinner from "@/components/base/Spinner";
 import LandingBackground from "@/components/landing/LandingBackground";
 import { login } from "@/lib/auth";
 import { defaultUserSettings } from "@/lib/user";
+import { emailRegex } from "@/lib/util/regex";
 import { getPublicEnv } from "@/public-env";
 import Link from "@mui/material/Link";
 import { useSearchParams } from "next/navigation";
@@ -37,7 +38,7 @@ export default function LoginPage() {
     }, [email, password]);
 
     function auth() {
-        if (!email || !password || !email.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/))
+        if (!email || !password || !email.match(emailRegex))
             return;
 
         pb.collection("users").authWithPassword(email, password, defaultUserSettings)
@@ -69,7 +70,7 @@ export default function LoginPage() {
                     <Button
                         className="w-full my-2"
                         disabled={!email || !password ||
-                            !email.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)}
+                            !email.match(emailRegex)}
                         onClick={auth}
                     >
                         Login

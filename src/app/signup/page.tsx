@@ -7,6 +7,7 @@ import Input from "@/components/base/Input";
 import Spinner from "@/components/base/Spinner";
 import LandingBackground from "@/components/landing/LandingBackground";
 import { defaultUserSettings } from "@/lib/user";
+import { emailRegex } from "@/lib/util/regex";
 import { redirect, useRouter } from "next/navigation";
 import { AuthMethodsList } from "pocketbase";
 import { useState, useEffect, Suspense } from "react";
@@ -41,7 +42,7 @@ export default function SignupPage() {
         setError("");
 
         if (!username || !email || !password ||
-                !email.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/) || password !== passwordConfirm)
+                !email.match(emailRegex) || password !== passwordConfirm)
             return void setError("Please input a valid email and password.");
 
         if (username.length < 4 || username.length > 20)
