@@ -2,6 +2,7 @@ import Button, { ButtonStyles } from "@/components/base/Button";
 import Divider from "@/components/base/Divider";
 import Subtext from "@/components/base/Subtext";
 import CardDetail from "@/components/util/CardDetail";
+import { endpoints } from "@/constants";
 import { ArrowLeft, Calendar, DollarSign, ExternalLink, Gift, Heart } from "lucide-react";
 import Link from "next/link";
 
@@ -48,7 +49,7 @@ export default function SupportPage() {
             <Divider />
 
             <Subtext>If you choose to donate, please DM me on Discord (@mrdiamonddog) to claim your benefits!</Subtext>
-            <Link href="/discord" target="_blank" className="w-full unstyled">
+            <Link href={endpoints.discord} target="_blank" className="w-full unstyled">
                 <Button className="w-full flex gap-1 items-center" look={ButtonStyles.secondary}>
                     Discord <ExternalLink />
                 </Button>

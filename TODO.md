@@ -38,10 +38,10 @@ LITTLE THINGS:
 POST-ship:
 -[x] Default view setting (table/card)
 -[x] Custom analytics
--[ ] Bulk Editing
 -[ ] Custom attributes
--[ ] Filament preset database, including barcode scanning
--[ ] Filament/storage sharing (2hr)
+-[ ] Bulk Editing
 -[ ] Another thing on the dashboard page?
 -[ ] Comment code (if desperate)
+-[ ] Filament preset database, including barcode scanning (need more users)
+-[ ] Filament/storage sharing (2hr)
 -[ ] Translations support
